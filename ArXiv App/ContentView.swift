@@ -28,6 +28,9 @@ struct ContentView: View {
     
     /// Estado de error para mostrar mensajes al usuario
     @State private var errorMessage: String?
+    
+    /// Paper seleccionado en macOS para NavigationSplitView
+    @State private var selectedPaper: ArXivPaper?
 
     /// Define la estructura visual de la vista principal
     var body: some View {
@@ -35,15 +38,32 @@ struct ContentView: View {
         // Diseño específico para macOS con NavigationSplitView
         NavigationSplitView {
             // Barra lateral en macOS
-            SidebarView(onLatestPapersSelected: loadLatestPapers)
-        } detail: {
+            SidebarView(onLatestPapersSelected: {
+                await loadLatestPapers()
+                selectedPaper = nil // Volver a la vista principal
+            })
+        } content: {
             // Vista principal de artículos
             PapersListView(
                 papers: papers,
                 isLoading: isLoading,
                 errorMessage: $errorMessage,
-                loadLatestPapers: loadLatestPapers
+                loadLatestPapers: loadLatestPapers,
+                selectedPaper: $selectedPaper
             )
+        } detail: {
+            // Vista de detalle o placeholder
+            if let paper = selectedPaper {
+                PaperDetailView(paper: paper, onBackToList: {
+                    selectedPaper = nil
+                })
+            } else {
+                ContentUnavailableView(
+                    "Selecciona un artículo",
+                    systemImage: "doc.text",
+                    description: Text("Elige un paper de la lista para ver los detalles")
+                )
+            }
         }
         .navigationTitle("ArXiv Papers")
         .task {
@@ -81,6 +101,9 @@ struct ContentView: View {
         isLoading = true
         errorMessage = nil
         
+        // Registra el tiempo de inicio para garantizar una duración mínima de carga
+        let startTime = Date()
+        
         do {
             // Intenta primero con la consulta específica
             var latestPapers = try await arxivService.fetchLatestPapers(count: 10)
@@ -111,10 +134,29 @@ struct ContentView: View {
                 errorMessage = "Error guardando en base de datos: \(error.localizedDescription)"
             }
             
+            // Asegura que la animación de carga dure al menos 1 segundo
+            let elapsedTime = Date().timeIntervalSince(startTime)
+            let minimumLoadingTime: TimeInterval = 1.0
+            
+            if elapsedTime < minimumLoadingTime {
+                let remainingTime = minimumLoadingTime - elapsedTime
+                try await Task.sleep(nanoseconds: UInt64(remainingTime * 1_000_000_000))
+            }
+            
             isLoading = false
         } catch {
             print("❌ Error loading papers: \(error.localizedDescription)")
             errorMessage = error.localizedDescription
+            
+            // Asegura que la animación de carga dure al menos 1 segundo incluso en caso de error
+            let elapsedTime = Date().timeIntervalSince(startTime)
+            let minimumLoadingTime: TimeInterval = 1.0
+            
+            if elapsedTime < minimumLoadingTime {
+                let remainingTime = minimumLoadingTime - elapsedTime
+                try? await Task.sleep(nanoseconds: UInt64(remainingTime * 1_000_000_000))
+            }
+            
             isLoading = false
         }
     }
@@ -172,37 +214,56 @@ struct ArXivPaperRow: View {
 /// Proporciona navegación y opciones adicionales en la interfaz de macOS
 struct SidebarView: View {
     let onLatestPapersSelected: () async -> Void
+    @State private var selectedSection: String? = "latest"
     
     var body: some View {
-        List {
-            Button(action: {
+        List(selection: $selectedSection) {
+            // Botón activo para últimos papers
+            HStack {
+                Label("Últimos Papers", systemImage: "doc.text")
+                Spacer()
+            }
+            .contentShape(Rectangle())
+            .onTapGesture {
                 Task {
                     await onLatestPapersSelected()
                 }
-            }) {
-                Label("Últimos Papers", systemImage: "doc.text")
-                    .foregroundColor(.primary)
+                selectedSection = "latest"
             }
-            .buttonStyle(PlainButtonStyle())
+            .listRowBackground(selectedSection == "latest" ? Color.accentColor.opacity(0.3) : Color.clear)
+            .tag("latest")
             
-            NavigationLink(destination: EmptyView()) {
-                Label("Favoritos", systemImage: "heart")
-            }
+            // Botones desactivados temporalmente
+            Label("Favoritos", systemImage: "heart")
+                .foregroundColor(.secondary)
+                .onTapGesture {
+                    // Funcionalidad pendiente
+                }
             
-            NavigationLink(destination: EmptyView()) {
-                Label("Búsqueda", systemImage: "magnifyingglass")
-            }
+            Label("Búsqueda", systemImage: "magnifyingglass")
+                .foregroundColor(.secondary)
+                .onTapGesture {
+                    // Funcionalidad pendiente
+                }
             
             Section("Categorías") {
-                NavigationLink(destination: EmptyView()) {
-                    Label("Computer Science", systemImage: "laptopcomputer")
-                }
-                NavigationLink(destination: EmptyView()) {
-                    Label("Mathematics", systemImage: "function")
-                }
-                NavigationLink(destination: EmptyView()) {
-                    Label("Physics", systemImage: "atom")
-                }
+                Label("Computer Science", systemImage: "laptopcomputer")
+                    .foregroundColor(.secondary)
+                    .onTapGesture {
+                        // Funcionalidad pendiente
+                    }
+                
+                Label("Mathematics", systemImage: "function")
+                    .foregroundColor(.secondary)
+                    .onTapGesture {
+                        // Funcionalidad pendiente
+                    }
+                
+                Label("Physics", systemImage: "atom")
+                    .foregroundColor(.secondary)
+                    .onTapGesture {
+                        // Funcionalidad pendiente
+                    }
             }
         }
         .listStyle(SidebarListStyle())
@@ -218,6 +279,27 @@ struct PapersListView: View {
     @Binding var errorMessage: String?
     let loadLatestPapers: () async -> Void
     @State private var shouldRefreshOnAppear = false
+    
+    // Parámetro opcional para macOS NavigationSplitView
+    @Binding var selectedPaper: ArXivPaper?
+    
+    // Inicializador para iOS (sin selectedPaper)
+    init(papers: [ArXivPaper], isLoading: Bool, errorMessage: Binding<String?>, loadLatestPapers: @escaping () async -> Void) {
+        self.papers = papers
+        self.isLoading = isLoading
+        self._errorMessage = errorMessage
+        self.loadLatestPapers = loadLatestPapers
+        self._selectedPaper = .constant(nil)
+    }
+    
+    // Inicializador para macOS (con selectedPaper)
+    init(papers: [ArXivPaper], isLoading: Bool, errorMessage: Binding<String?>, loadLatestPapers: @escaping () async -> Void, selectedPaper: Binding<ArXivPaper?>) {
+        self.papers = papers
+        self.isLoading = isLoading
+        self._errorMessage = errorMessage
+        self.loadLatestPapers = loadLatestPapers
+        self._selectedPaper = selectedPaper
+    }
     
     var body: some View {
         VStack {
@@ -272,18 +354,19 @@ struct PapersListView: View {
                 }
             } else {
                 // Lista de artículos de ArXiv
-                List(papers, id: \.id) { paper in
-                    NavigationLink(destination: PaperDetailView(paper: paper)) {
-                        ArXivPaperRow(paper: paper)
-                    }
-                    #if os(macOS)
-                    .listRowSeparator(.hidden)
-                    #endif
-                }
                 #if os(macOS)
+                List(papers, id: \.id, selection: $selectedPaper) { paper in
+                    ArXivPaperRow(paper: paper)
+                        .tag(paper)
+                }
                 .listStyle(PlainListStyle())
                 .frame(minWidth: 400)
                 #else
+                List(papers, id: \.id) { paper in
+                    NavigationLink(destination: PaperDetailView(paper: paper, onBackToList: nil)) {
+                        ArXivPaperRow(paper: paper)
+                    }
+                }
                 .listStyle(DefaultListStyle())
                 #endif
             }
@@ -344,6 +427,7 @@ struct PapersListView: View {
 /// Se navega desde la lista principal en ambas plataformas
 struct PaperDetailView: View {
     let paper: ArXivPaper
+    let onBackToList: (() -> Void)?
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.dismiss) private var dismiss
     
@@ -436,30 +520,6 @@ struct PaperDetailView: View {
                     }
                 }
                 
-                Divider()
-                
-                // Botón para volver al inicio en iOS
-                #if os(iOS)
-                VStack(spacing: 12) {
-                    Text("Navegación")
-                        .font(.headline)
-                    
-                    Button(action: {
-                        dismiss()
-                    }) {
-                        HStack {
-                            Image(systemName: "house.fill")
-                            Text("Volver a Últimos Papers")
-                        }
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
-                        .background(Color.green)
-                        .cornerRadius(10)
-                    }
-                }
-                #endif
-                
                 Spacer(minLength: 50)
             }
             .padding()
@@ -481,6 +541,8 @@ struct PaperDetailView: View {
                 #endif
                 
                 #if os(macOS)
+                
+                
                 Button("Compartir") {
                     // Funcionalidad de compartir para macOS
                 }
@@ -494,7 +556,7 @@ struct PaperDetailView: View {
                     Button("Añadir a favoritos", action: {})
                     Button("Copiar enlace", action: {})
                 } primaryAction: {
-                    Image(systemName: "ellipsis.circle")
+                    //Image(systemName: "ellipsis.circle")
                 }
                 #endif
             }

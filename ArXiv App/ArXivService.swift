@@ -9,7 +9,7 @@ import Foundation
 
 /// Servicio encargado de comunicarse con la API de ArXiv
 /// Maneja las peticiones HTTP y el parsing de respuestas XML
-final class ArXivService {
+final class ArXivService: @unchecked Sendable {
     /// URL base de la API de ArXiv (usando HTTPS para cumplir con ATS)
     private let baseURL = "https://export.arxiv.org/api/query"
     
@@ -17,7 +17,7 @@ final class ArXivService {
     /// - Parameter count: Número de artículos a obtener (por defecto 10)
     /// - Returns: Array de artículos de ArXiv
     /// - Throws: Error si falla la petición o el parsing
-    func fetchLatestPapers(count: Int = 10) async throws -> [ArXivPaper] {
+    nonisolated func fetchLatestPapers(count: Int = 10) async throws -> [ArXivPaper] {
         // Construye la URL con parámetros para obtener los últimos artículos
         // Usa una consulta más específica que garantice resultados
         guard let url = URL(string: "\(baseURL)?search_query=cat:cs.AI&start=0&max_results=\(count)&sortBy=submittedDate&sortOrder=descending") else {
@@ -63,7 +63,7 @@ final class ArXivService {
     
     /// Función alternativa para obtener los últimos artículos usando una consulta simple
     /// Útil cuando la consulta principal no funciona
-    func fetchRecentPapers(count: Int = 10) async throws -> [ArXivPaper] {
+    nonisolated func fetchRecentPapers(count: Int = 10) async throws -> [ArXivPaper] {
         // Usa una consulta muy simple sin filtros complejos
         guard let url = URL(string: "\(baseURL)?search_query=*&start=0&max_results=\(count)") else {
             throw ArXivError.invalidURL
@@ -108,7 +108,7 @@ final class ArXivService {
     /// - Returns: Array de artículos parseados
     /// - Throws: Error si falla el parsing
     private func parseArXivXML(_ data: Data) throws -> [ArXivPaper] {
-        let parser = ArXivXMLParser()
+        let parser = ArXivSimpleParser()
         do {
             return try parser.parse(data)
         } catch {

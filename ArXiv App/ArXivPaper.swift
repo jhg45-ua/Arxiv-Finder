@@ -11,7 +11,7 @@ import SwiftData
 /// Modelo de datos que representa un artículo científico de ArXiv
 /// Almacena la información principal de cada paper para acceso offline
 @Model
-final class ArXivPaper {
+final class ArXivPaper: @unchecked Sendable {
     /// Identificador único del artículo en ArXiv (ej: "2023.12345v1")
     var id: String
     

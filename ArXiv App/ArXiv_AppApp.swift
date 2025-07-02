@@ -13,11 +13,10 @@ import SwiftData
 @main
 struct ArXiv_AppApp: App {
     /// Contenedor compartido de modelo de datos que gestiona la persistencia de la aplicación
-    /// Se configura con SwiftData para manejar el almacenamiento local de elementos
+    /// Se configura con SwiftData para manejar el almacenamiento local de artículos de ArXiv
     var sharedModelContainer: ModelContainer = {
         // Define el esquema de datos que incluye todos los modelos de la aplicación
         let schema = Schema([
-            Item.self, // Modelo principal para almacenar elementos
             ArXivPaper.self, // Modelo para artículos de ArXiv
         ])
         
