@@ -35,15 +35,14 @@ struct ContentView: View {
         // Diseño específico para macOS con NavigationSplitView
         NavigationSplitView {
             // Barra lateral en macOS
-            SidebarView()
+            SidebarView(onLatestPapersSelected: loadLatestPapers)
         } detail: {
             // Vista principal de artículos
             PapersListView(
                 papers: papers,
                 isLoading: isLoading,
                 errorMessage: $errorMessage,
-                loadLatestPapers: loadLatestPapers,
-                loadMockPapers: loadMockPapers
+                loadLatestPapers: loadLatestPapers
             )
         }
         .navigationTitle("ArXiv Papers")
@@ -60,8 +59,7 @@ struct ContentView: View {
                 papers: papers,
                 isLoading: isLoading,
                 errorMessage: $errorMessage,
-                loadLatestPapers: loadLatestPapers,
-                loadMockPapers: loadMockPapers
+                loadLatestPapers: loadLatestPapers
             )
             .navigationTitle("ArXiv Papers")
             .navigationBarTitleDisplayMode(.large)
@@ -120,52 +118,6 @@ struct ContentView: View {
             isLoading = false
         }
     }
-    
-    /// Carga datos de prueba cuando la API no está disponible
-    /// Útil para desarrollo y testing sin conexión
-    @MainActor
-    private func loadMockPapers() {
-        let mockPapers = [
-            ArXivPaper(
-                id: "2024.01001",
-                title: "Advanced Machine Learning Techniques for Scientific Computing",
-                summary: "This paper presents novel approaches to applying machine learning in scientific computing contexts, with particular focus on optimization and prediction tasks.",
-                authors: "Smith, J., Johnson, A., Williams, R.",
-                publishedDate: Date(),
-                pdfURL: "https://arxiv.org/pdf/2024.01001.pdf",
-                linkURL: "https://arxiv.org/abs/2024.01001",
-                categories: "cs.LG, cs.SC"
-            ),
-            ArXivPaper(
-                id: "2024.01002",
-                title: "Quantum Computing Applications in Cryptography",
-                summary: "An exploration of quantum computing methodologies and their implications for modern cryptographic systems.",
-                authors: "Brown, K., Davis, M.",
-                publishedDate: Calendar.current.date(byAdding: .day, value: -1, to: Date()) ?? Date(),
-                pdfURL: "https://arxiv.org/pdf/2024.01002.pdf",
-                linkURL: "https://arxiv.org/abs/2024.01002",
-                categories: "quant-ph, cs.CR"
-            ),
-            ArXivPaper(
-                id: "2024.01003",
-                title: "Neural Networks for Natural Language Processing",
-                summary: "A comprehensive study of neural network architectures designed for natural language understanding and generation tasks.",
-                authors: "Garcia, L., Martinez, C., Rodriguez, P.",
-                publishedDate: Calendar.current.date(byAdding: .day, value: -2, to: Date()) ?? Date(),
-                pdfURL: "https://arxiv.org/pdf/2024.01003.pdf",
-                linkURL: "https://arxiv.org/abs/2024.01003",
-                categories: "cs.CL, cs.AI"
-            )
-        ]
-        
-        // Añade los papers mock a la base de datos
-        for paper in mockPapers {
-            modelContext.insert(paper)
-        }
-        
-        try? modelContext.save()
-        print("📝 Loaded \(mockPapers.count) mock papers for testing")
-    }
 }
 
 /// Vista que representa una fila individual de artículo en la lista
@@ -219,11 +171,19 @@ struct ArXivPaperRow: View {
 /// Vista de barra lateral para macOS
 /// Proporciona navegación y opciones adicionales en la interfaz de macOS
 struct SidebarView: View {
+    let onLatestPapersSelected: () async -> Void
+    
     var body: some View {
         List {
-            NavigationLink(destination: EmptyView()) {
+            Button(action: {
+                Task {
+                    await onLatestPapersSelected()
+                }
+            }) {
                 Label("Últimos Papers", systemImage: "doc.text")
+                    .foregroundColor(.primary)
             }
+            .buttonStyle(PlainButtonStyle())
             
             NavigationLink(destination: EmptyView()) {
                 Label("Favoritos", systemImage: "heart")
@@ -257,21 +217,59 @@ struct PapersListView: View {
     let isLoading: Bool
     @Binding var errorMessage: String?
     let loadLatestPapers: () async -> Void
-    let loadMockPapers: () -> Void
+    @State private var shouldRefreshOnAppear = false
     
     var body: some View {
         VStack {
             if isLoading {
                 // Indicador de carga mientras se obtienen los datos
-                ProgressView("Cargando artículos...")
+                VStack(spacing: 16) {
+                    ProgressView()
+                        .scaleEffect(1.2)
+                    Text("Cargando los últimos artículos de ArXiv...")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                .padding()
+            } else if let error = errorMessage {
+                // Mensaje de error prominente cuando hay problemas de conexión
+                ContentUnavailableView(
+                    "Error al cargar artículos",
+                    systemImage: "wifi.exclamationmark",
+                    description: Text(error)
+                )
+                .overlay(alignment: .bottom) {
+                    VStack(spacing: 12) {
+                        Button("Reintentar") {
+                            Task {
+                                await loadLatestPapers()
+                            }
+                        }
+                        .buttonStyle(.borderedProminent)
+                        
+                        Button("Limpiar error") {
+                            errorMessage = nil
+                        }
+                        .buttonStyle(.bordered)
+                    }
                     .padding()
+                }
             } else if papers.isEmpty {
-                // Mensaje cuando no hay artículos disponibles
+                // Mensaje cuando no hay artículos disponibles pero no hay error
                 ContentUnavailableView(
                     "No hay artículos disponibles",
                     systemImage: "doc.text",
-                    description: Text("Presiona actualizar para cargar los últimos papers de ArXiv")
+                    description: Text("No se encontraron artículos. Verifica tu conexión a internet e intenta nuevamente.")
                 )
+                .overlay(alignment: .bottom) {
+                    Button("Cargar artículos") {
+                        Task {
+                            await loadLatestPapers()
+                        }
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .padding()
+                }
             } else {
                 // Lista de artículos de ArXiv
                 List(papers, id: \.id) { paper in
@@ -290,6 +288,15 @@ struct PapersListView: View {
                 #endif
             }
         }
+        .onAppear {
+            // Recarga automáticamente cuando se vuelve a la vista principal
+            if shouldRefreshOnAppear && !papers.isEmpty {
+                Task {
+                    await loadLatestPapers()
+                }
+            }
+            shouldRefreshOnAppear = true
+        }
         .toolbar {
             ToolbarItemGroup(placement: toolbarPlacement) {
                 Button(action: {
@@ -301,13 +308,16 @@ struct PapersListView: View {
                 }
                 .disabled(isLoading)
                 
-                // Botón para cargar datos de prueba en caso de problemas de conexión
+                #if os(iOS)
                 Button(action: {
-                    loadMockPapers()
+                    Task {
+                        await loadLatestPapers()
+                    }
                 }) {
-                    Label("Datos de Prueba", systemImage: "doc.text.fill")
+                    Label("Inicio", systemImage: "house")
                 }
                 .disabled(isLoading)
+                #endif
                 
                 #if os(macOS)
                 Button(action: {
@@ -317,13 +327,6 @@ struct PapersListView: View {
                 }
                 #endif
             }
-        }
-        .alert("Error", isPresented: .constant(errorMessage != nil)) {
-            Button("OK") {
-                errorMessage = nil
-            }
-        } message: {
-            Text(errorMessage ?? "")
         }
     }
     
@@ -341,6 +344,8 @@ struct PapersListView: View {
 /// Se navega desde la lista principal en ambas plataformas
 struct PaperDetailView: View {
     let paper: ArXivPaper
+    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         ScrollView {
@@ -365,6 +370,24 @@ struct PaperDetailView: View {
                 
                 Divider()
                 
+                // Categorías del paper
+                if !paper.categories.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Categorías")
+                            .font(.headline)
+                        
+                        Text(paper.categories)
+                            .font(.subheadline)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(Color.blue.opacity(0.1))
+                            .foregroundColor(.blue)
+                            .cornerRadius(8)
+                    }
+                    
+                    Divider()
+                }
+                
                 // Resumen del paper
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Resumen")
@@ -382,22 +405,62 @@ struct PaperDetailView: View {
                     Text("Enlaces")
                         .font(.headline)
                     
-                    if !paper.pdfURL.isEmpty {
-                        Link(destination: URL(string: paper.pdfURL)!) {
-                            Label("Ver PDF", systemImage: "doc.fill")
-                                .foregroundColor(.blue)
+                    HStack(spacing: 16) {
+                        if !paper.pdfURL.isEmpty {
+                            Link(destination: URL(string: paper.pdfURL)!) {
+                                HStack {
+                                    Image(systemName: "doc.fill")
+                                    Text("Ver PDF")
+                                }
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
+                                .background(Color.red)
+                                .cornerRadius(8)
+                            }
                         }
-                    }
-                    
-                    if !paper.linkURL.isEmpty {
-                        Link(destination: URL(string: paper.linkURL)!) {
-                            Label("Ver en ArXiv", systemImage: "link")
-                                .foregroundColor(.blue)
+                        
+                        if !paper.linkURL.isEmpty {
+                            Link(destination: URL(string: paper.linkURL)!) {
+                                HStack {
+                                    Image(systemName: "link")
+                                    Text("Ver en ArXiv")
+                                }
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
+                                .background(Color.blue)
+                                .cornerRadius(8)
+                            }
                         }
                     }
                 }
                 
-                Spacer()
+                Divider()
+                
+                // Botón para volver al inicio en iOS
+                #if os(iOS)
+                VStack(spacing: 12) {
+                    Text("Navegación")
+                        .font(.headline)
+                    
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        HStack {
+                            Image(systemName: "house.fill")
+                            Text("Volver a Últimos Papers")
+                        }
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .background(Color.green)
+                        .cornerRadius(10)
+                    }
+                }
+                #endif
+                
+                Spacer(minLength: 50)
             }
             .padding()
         }
@@ -410,6 +473,13 @@ struct PaperDetailView: View {
         #endif
         .toolbar {
             ToolbarItemGroup(placement: toolbarPlacement) {
+                #if os(iOS)
+                // Botón de volver para iOS
+                Button("Inicio") {
+                    dismiss()
+                }
+                #endif
+                
                 #if os(macOS)
                 Button("Compartir") {
                     // Funcionalidad de compartir para macOS
@@ -423,7 +493,7 @@ struct PaperDetailView: View {
                     Button("Compartir", action: {})
                     Button("Añadir a favoritos", action: {})
                     Button("Copiar enlace", action: {})
-                } label: {
+                } primaryAction: {
                     Image(systemName: "ellipsis.circle")
                 }
                 #endif
