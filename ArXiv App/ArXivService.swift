@@ -18,9 +18,10 @@ final class ArXivService: @unchecked Sendable {
     /// - Returns: Array de artículos de ArXiv
     /// - Throws: Error si falla la petición o el parsing
     nonisolated func fetchLatestPapers(count: Int = 10) async throws -> [ArXivPaper] {
-        // Construye la URL con parámetros para obtener los últimos artículos
-        // Usa una consulta más específica que garantice resultados
-        guard let url = URL(string: "\(baseURL)?search_query=cat:cs.AI&start=0&max_results=\(count)&sortBy=submittedDate&sortOrder=descending") else {
+        // Construye la URL para obtener los últimos artículos de categorías más activas
+        // Usa sortBy=lastUpdatedDate y sortOrder=descending para obtener los más recientes
+        // Codifica correctamente los espacios como + para OR
+        guard let url = URL(string: "\(baseURL)?search_query=cat:cs.*+OR+cat:stat.*+OR+cat:math.*&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending") else {
             throw ArXivError.invalidURL
         }
         
@@ -61,11 +62,92 @@ final class ArXivService: @unchecked Sendable {
         }
     }
     
+    /// Obtiene artículos de Computer Science de ArXiv
+    /// - Parameter count: Número de artículos a obtener (por defecto 10)
+    /// - Returns: Array de artículos de Computer Science
+    /// - Throws: Error si falla la petición o el parsing
+    nonisolated func fetchComputerSciencePapers(count: Int = 10) async throws -> [ArXivPaper] {
+        // Construye la URL para obtener artículos de Computer Science (categoría cs)
+        // Usa lastUpdatedDate para obtener los más recientes
+        guard let url = URL(string: "\(baseURL)?search_query=cat:cs*&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending") else {
+            throw ArXivError.invalidURL
+        }
+        
+        print("🌐 Fetching Computer Science papers from URL: \(url.absoluteString)")
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw ArXivError.networkError("Respuesta inválida del servidor")
+            }
+            
+            print("📡 HTTP Status: \(httpResponse.statusCode)")
+            
+            guard httpResponse.statusCode == 200 else {
+                throw ArXivError.networkError("Error HTTP: \(httpResponse.statusCode)")
+            }
+            
+            print("📄 Data received: \(data.count) bytes")
+            
+            let papers = try parseArXivXML(data)
+            print("✅ Successfully parsed \(papers.count) Computer Science papers")
+            return papers
+            
+        } catch let error as ArXivError {
+            throw error
+        } catch {
+            print("❌ Network error: \(error.localizedDescription)")
+            throw ArXivError.networkError(error.localizedDescription)
+        }
+    }
+    
+    /// Obtiene artículos de Mathematics de ArXiv
+    /// - Parameter count: Número de artículos a obtener (por defecto 10)
+    /// - Returns: Array de artículos de Mathematics
+    /// - Throws: Error si falla la petición o el parsing
+    nonisolated func fetchMathematicsPapers(count: Int = 10) async throws -> [ArXivPaper] {
+        // Construye la URL para obtener artículos de Mathematics (categoría math)
+        // Usa lastUpdatedDate para obtener los más recientes
+        guard let url = URL(string: "\(baseURL)?search_query=cat:math*&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending") else {
+            throw ArXivError.invalidURL
+        }
+        
+        print("🌐 Fetching Mathematics papers from URL: \(url.absoluteString)")
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw ArXivError.networkError("Respuesta inválida del servidor")
+            }
+            
+            print("📡 HTTP Status: \(httpResponse.statusCode)")
+            
+            guard httpResponse.statusCode == 200 else {
+                throw ArXivError.networkError("Error HTTP: \(httpResponse.statusCode)")
+            }
+            
+            print("📄 Data received: \(data.count) bytes")
+            
+            let papers = try parseArXivXML(data)
+            print("✅ Successfully parsed \(papers.count) Mathematics papers")
+            return papers
+            
+        } catch let error as ArXivError {
+            throw error
+        } catch {
+            print("❌ Network error: \(error.localizedDescription)")
+            throw ArXivError.networkError(error.localizedDescription)
+        }
+    }
+    
     /// Función alternativa para obtener los últimos artículos usando una consulta simple
     /// Útil cuando la consulta principal no funciona
     nonisolated func fetchRecentPapers(count: Int = 10) async throws -> [ArXivPaper] {
-        // Usa una consulta muy simple sin filtros complejos
-        guard let url = URL(string: "\(baseURL)?search_query=*&start=0&max_results=\(count)") else {
+        // Usa una consulta que busca papers recientes en categorías específicas con ordenamiento por fecha
+        // Codifica correctamente los espacios como + para OR
+        guard let url = URL(string: "\(baseURL)?search_query=cat:cs.LG+OR+cat:cs.AI+OR+cat:cs.CV&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending") else {
             throw ArXivError.invalidURL
         }
         
@@ -93,6 +175,43 @@ final class ArXivService: @unchecked Sendable {
             
             let papers = try parseArXivXML(data)
             print("✅ Successfully parsed \(papers.count) papers")
+            return papers
+            
+        } catch let error as ArXivError {
+            throw error
+        } catch {
+            print("❌ Network error: \(error.localizedDescription)")
+            throw ArXivError.networkError(error.localizedDescription)
+        }
+    }
+    
+    /// Función de respaldo final para obtener artículos cuando otras consultas fallan
+    /// Usa una consulta extremadamente simple y confiable
+    nonisolated func fetchFallbackPapers(count: Int = 10) async throws -> [ArXivPaper] {
+        // Usa una consulta simple por categoría específica que siempre funciona con ordenamiento por fecha
+        guard let url = URL(string: "\(baseURL)?search_query=cat:cs.LG&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending") else {
+            throw ArXivError.invalidURL
+        }
+        
+        print("🌐 Fetching from fallback URL: \(url.absoluteString)")
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw ArXivError.networkError("Respuesta inválida del servidor")
+            }
+            
+            print("📡 HTTP Status: \(httpResponse.statusCode)")
+            
+            guard httpResponse.statusCode == 200 else {
+                throw ArXivError.networkError("Error HTTP: \(httpResponse.statusCode)")
+            }
+            
+            print("📄 Data received: \(data.count) bytes")
+            
+            let papers = try parseArXivXML(data)
+            print("✅ Successfully parsed \(papers.count) fallback papers")
             return papers
             
         } catch let error as ArXivError {

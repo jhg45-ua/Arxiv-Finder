@@ -27,6 +27,9 @@ final class ArXivPaper: @unchecked Sendable {
     /// Fecha de publicación del artículo
     var publishedDate: Date
     
+    /// Fecha de última actualización del artículo (si está disponible)
+    var updatedDate: Date?
+    
     /// URL del PDF del artículo en ArXiv
     var pdfURL: String
     
@@ -43,16 +46,18 @@ final class ArXivPaper: @unchecked Sendable {
     ///   - summary: Resumen del artículo
     ///   - authors: Autores del artículo
     ///   - publishedDate: Fecha de publicación
+    ///   - updatedDate: Fecha de última actualización (opcional)
     ///   - pdfURL: URL del PDF
     ///   - linkURL: URL de la página del artículo
     ///   - categories: Categorías científicas
     init(id: String, title: String, summary: String, authors: String, 
-         publishedDate: Date, pdfURL: String, linkURL: String, categories: String) {
+         publishedDate: Date, updatedDate: Date? = nil, pdfURL: String, linkURL: String, categories: String) {
         self.id = id
         self.title = title
         self.summary = summary
         self.authors = authors
         self.publishedDate = publishedDate
+        self.updatedDate = updatedDate
         self.pdfURL = pdfURL
         self.linkURL = linkURL
         self.categories = categories

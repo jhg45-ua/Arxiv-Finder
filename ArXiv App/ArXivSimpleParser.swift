@@ -54,6 +54,7 @@ final class ArXivSimpleParser: @unchecked Sendable {
         let title = extractValue(from: entryXML, pattern: "<title>([^<]+)</title>")
         let summary = extractValue(from: entryXML, pattern: "<summary>([^<]+)</summary>")
         let publishedDateString = extractValue(from: entryXML, pattern: "<published>([^<]+)</published>")
+        let updatedDateString = extractValue(from: entryXML, pattern: "<updated>([^<]+)</updated>")
         
         // Extrae datos complejos
         let authors = extractAuthors(from: entryXML)
@@ -63,6 +64,7 @@ final class ArXivSimpleParser: @unchecked Sendable {
         // Procesa datos
         let cleanId = id.components(separatedBy: "/").last ?? id
         let publishedDate = parseDate(from: publishedDateString)
+        let updatedDate = updatedDateString.isEmpty ? nil : parseDate(from: updatedDateString)
         
         // Valida datos mínimos
         guard !cleanId.isEmpty, !title.isEmpty else { return nil }
@@ -73,6 +75,7 @@ final class ArXivSimpleParser: @unchecked Sendable {
             summary: summary.trimmingCharacters(in: .whitespacesAndNewlines),
             authors: authors,
             publishedDate: publishedDate,
+            updatedDate: updatedDate,
             pdfURL: pdfURL,
             linkURL: linkURL,
             categories: categories
