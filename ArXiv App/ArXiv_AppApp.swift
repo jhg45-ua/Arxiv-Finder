@@ -38,12 +38,12 @@ struct ArXiv_AppApp: App {
         #if os(macOS)
         // Configuración específica para macOS con ventana redimensionable
         WindowGroup {
-            ContentView()
-                .frame(minWidth: 600, minHeight: 900)
+            MainView()
+                .frame(minWidth: 1500, minHeight: 700)
         }
         .windowStyle(.titleBar)
         .windowToolbarStyle(.unified)
-        .defaultSize(width: 900, height: 1000)
+        .defaultSize(width: 1500, height: 700)
         // Inyecta el contenedor de modelo compartido en el entorno de SwiftUI
         // Esto permite que todas las vistas accedan a los datos persistentes
         .modelContainer(sharedModelContainer)
@@ -55,7 +55,7 @@ struct ArXiv_AppApp: App {
         #else
         // Configuración específica para iOS
         WindowGroup {
-            ContentView()
+            MainView()
         }
         // Inyecta el contenedor de modelo compartido en el entorno de SwiftUI
         // Esto permite que todas las vistas accedan a los datos persistentes
