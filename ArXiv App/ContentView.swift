@@ -8,54 +8,32 @@
 import SwiftUI
 import SwiftData
 
+/// Vista principal de la aplicación ArXiv App
+/// Esta vista representa la pantalla inicial que verán los usuarios al abrir la aplicación
 struct ContentView: View {
+    /// Acceso al contexto del modelo de datos para realizar operaciones CRUD
+    /// Permite insertar, actualizar y eliminar elementos de la base de datos
     @Environment(\.modelContext) private var modelContext
+    
+    /// Query que obtiene automáticamente todos los elementos Item de la base de datos
+    /// Se actualiza automáticamente cuando los datos cambian
     @Query private var items: [Item]
 
+    /// Define la estructura visual de la vista principal
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
-                }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-        } detail: {
-            Text("Select an item")
-        }
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
+        VStack {
+            // Texto de bienvenida placeholder
+            // TODO: Reemplazar con la interfaz real de la aplicación ArXiv
+            Text("Hello World!!!")
         }
     }
 }
 
+/// Vista previa para el diseñador de SwiftUI
+/// Permite visualizar la vista durante el desarrollo sin ejecutar toda la aplicación
 #Preview {
     ContentView()
+        // Configura un contenedor de modelo en memoria solo para la vista previa
+        // Esto evita afectar los datos reales durante el desarrollo
         .modelContainer(for: Item.self, inMemory: true)
 }

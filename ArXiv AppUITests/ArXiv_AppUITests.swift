@@ -7,33 +7,48 @@
 
 import XCTest
 
+/// Suite de pruebas de interfaz de usuario para la aplicación ArXiv App
+/// Utiliza XCTest para automatizar interacciones con la UI y validar comportamientos
+/// Las pruebas UI simulan acciones del usuario como toques, deslizamientos y navegación
 final class ArXiv_AppUITests: XCTestCase {
 
+    /// Método de configuración que se ejecuta antes de cada prueba individual
+    /// Establece el estado inicial necesario para las pruebas de UI
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        // Código de configuración aquí. Este método se llama antes de la invocación de cada método de prueba en la clase.
 
-        // In UI tests it is usually best to stop immediately when a failure occurs.
+        // En las pruebas de UI generalmente es mejor detenerse inmediatamente cuando ocurre un fallo
+        // Esto evita que errores cascada enmascaren el problema real
         continueAfterFailure = false
 
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
+        // En las pruebas de UI es importante establecer el estado inicial - como la orientación de la interfaz -
+        // requerido para las pruebas antes de que se ejecuten. El método setUp es un buen lugar para hacer esto.
     }
 
+    /// Método de limpieza que se ejecuta después de cada prueba individual
+    /// Usado para resetear estados o liberar recursos utilizados durante la prueba
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        // Código de limpieza aquí. Este método se llama después de la invocación de cada método de prueba en la clase.
     }
 
+    /// Prueba de ejemplo que demuestra cómo lanzar y probar la aplicación
+    /// @MainActor asegura que la prueba se ejecute en el hilo principal (requerido para UI)
     @MainActor
     func testExample() throws {
-        // UI tests must launch the application that they test.
+        // Las pruebas de UI deben lanzar la aplicación que están probando
         let app = XCUIApplication()
         app.launch()
 
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        // Usa XCTAssert y funciones relacionadas para verificar que las pruebas produzcan los resultados correctos
+        // Ejemplo: XCTAssertTrue(app.staticTexts["Hello World!!!"].exists)
+        // TODO: Implementar pruebas específicas para la funcionalidad de ArXiv
     }
 
+    /// Prueba de rendimiento que mide el tiempo de lanzamiento de la aplicación
+    /// Útil para detectar regresiones de rendimiento en el startup de la app
     @MainActor
     func testLaunchPerformance() throws {
-        // This measures how long it takes to launch your application.
+        // Esto mide cuánto tiempo tarda en lanzarse la aplicación
         measure(metrics: [XCTApplicationLaunchMetric()]) {
             XCUIApplication().launch()
         }
