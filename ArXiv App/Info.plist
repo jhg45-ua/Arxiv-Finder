@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Configuración de App Transport Security para permitir conexiones HTTP a ArXiv -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <!-- Permite conexiones HTTP a export.arxiv.org específicamente -->
+        <key>NSExceptionDomains</key>
+        <dict>
+            <key>export.arxiv.org</key>
+            <dict>
+                <key>NSExceptionAllowsInsecureHTTPLoads</key>
+                <true/>
+                <key>NSExceptionMinimumTLSVersion</key>
+                <string>TLSv1.0</string>
+                <key>NSIncludesSubdomains</key>
+                <true/>
+            </dict>
+        </dict>
+    </dict>
+    
+    <!-- Configuraciones adicionales de la aplicación -->
+    <key>CFBundleName</key>
+    <string>ArXiv App</string>
+    <key>CFBundleDisplayName</key>
+    <string>ArXiv Papers</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.julianhinojosa.arxivapp</string>
+    <key>CFBundleVersion</key>
+    <string>1.0</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+    
+    <!-- Configuraciones de plataforma -->
+    <key>LSMinimumSystemVersion</key>
+    <string>14.0</string>
+    <key>UIMinimumRequiredVersion</key>
+    <string>17.0</string>
+    
+    <!-- Configuraciones de interfaz -->
+    <key>UILaunchScreen</key>
+    <dict/>
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+    <key>UISupportedInterfaceOrientations~ipad</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationPortraitUpsideDown</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+</dict>
+</plist>

@@ -18,6 +18,7 @@ struct ArXiv_AppApp: App {
         // Define el esquema de datos que incluye todos los modelos de la aplicación
         let schema = Schema([
             Item.self, // Modelo principal para almacenar elementos
+            ArXivPaper.self, // Modelo para artículos de ArXiv
         ])
         
         // Configura el modelo para usar almacenamiento persistente (no en memoria)
@@ -33,13 +34,84 @@ struct ArXiv_AppApp: App {
     }()
 
     /// Define la estructura principal de la interfaz de usuario de la aplicación
+    /// Utiliza configuraciones específicas para cada plataforma (iOS/macOS)
     var body: some Scene {
+        #if os(macOS)
+        // Configuración específica para macOS con ventana redimensionable
         WindowGroup {
-            // Vista principal de la aplicación
+            ContentView()
+                .frame(minWidth: 900, minHeight: 700)
+        }
+        .windowStyle(.titleBar)
+        .windowToolbarStyle(.unified)
+        // Inyecta el contenedor de modelo compartido en el entorno de SwiftUI
+        // Esto permite que todas las vistas accedan a los datos persistentes
+        .modelContainer(sharedModelContainer)
+        
+        // Configuración adicional para macOS
+        Settings {
+            SettingsView()
+        }
+        #else
+        // Configuración específica para iOS
+        WindowGroup {
             ContentView()
         }
         // Inyecta el contenedor de modelo compartido en el entorno de SwiftUI
         // Esto permite que todas las vistas accedan a los datos persistentes
         .modelContainer(sharedModelContainer)
+        #endif
     }
 }
+
+/// Vista de configuraciones para macOS
+/// Proporciona opciones de personalización específicas de la plataforma de escritorio
+#if os(macOS)
+struct SettingsView: View {
+    @AppStorage("refreshInterval") private var refreshInterval = 30
+    @AppStorage("maxPapers") private var maxPapers = 10
+    @AppStorage("defaultCategory") private var defaultCategory = "all"
+    
+    var body: some View {
+        TabView {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Configuración General")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Intervalo de actualización (minutos):")
+                    Stepper(value: $refreshInterval, in: 5...120, step: 5) {
+                        Text("\(refreshInterval) minutos")
+                    }
+                }
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Número máximo de papers:")
+                    Stepper(value: $maxPapers, in: 5...50, step: 5) {
+                        Text("\(maxPapers) papers")
+                    }
+                }
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Categoría por defecto:")
+                    Picker("Categoría", selection: $defaultCategory) {
+                        Text("Todas").tag("all")
+                        Text("Computer Science").tag("cs")
+                        Text("Mathematics").tag("math")
+                        Text("Physics").tag("physics")
+                    }
+                    .pickerStyle(MenuPickerStyle())
+                }
+                
+                Spacer()
+            }
+            .padding(20)
+            .frame(width: 400, height: 300)
+            .tabItem {
+                Label("General", systemImage: "gear")
+            }
+        }
+    }
+}
+#endif
