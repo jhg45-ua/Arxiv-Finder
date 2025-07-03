@@ -8,6 +8,37 @@
 import SwiftUI
 import SwiftData
 
+/**
+ * ARQUITECTURA DE LA APLICACIÓN ARXIV APP
+ * =====================================
+ * 
+ * Esta aplicación sigue el patrón Model-View-Controller (MVC):
+ * 
+ * MODELS (Modelos):
+ * - ArXivPaper: Modelo de datos para artículos científicos con SwiftData
+ * 
+ * VIEWS (Vistas):
+ * - MainView: Vista principal que coordina la navegación
+ * - SidebarView: Barra lateral para macOS
+ * - PapersListView: Lista de artículos con adaptaciones multiplataforma
+ * - ArXivPaperRow: Fila individual de artículo
+ * - PaperDetailView: Detalle completo de un artículo
+ * 
+ * CONTROLLERS (Controladores):
+ * - ArXivController: Lógica de negocio y gestión de estado
+ * 
+ * SERVICES (Servicios):
+ * - ArXivService: Comunicación con la API de ArXiv
+ * - ArXivSimpleParser: Parser XML personalizado
+ * 
+ * CARACTERÍSTICAS TÉCNICAS:
+ * - Multiplataforma: iOS y macOS con UI adaptativa
+ * - Persistencia: SwiftData para almacenamiento local
+ * - Networking: URLSession con manejo de errores robusto
+ * - UI: SwiftUI con NavigationStack (iOS) y NavigationSplitView (macOS)
+ * - Concurrencia: async/await con @MainActor para actualizaciones UI
+ */
+
 /// Punto de entrada principal de la aplicación ArXiv App
 /// Esta estructura define la configuración principal de la app y gestiona el contenedor de datos
 @main

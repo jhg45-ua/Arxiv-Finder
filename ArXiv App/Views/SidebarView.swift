@@ -9,10 +9,23 @@ import SwiftUI
 
 /// Vista de barra lateral para macOS
 /// Proporciona navegación y opciones adicionales en la interfaz de macOS
+///
+/// Características principales:
+/// - Navegación por categorías (Últimos, Computer Science, Mathematics)
+/// - Indicación visual de la categoría activa
+/// - Opciones futuras (Favoritos, Búsqueda) con indicadores "Pronto"
+/// - Diseño adaptado específicamente para macOS con colores del sistema
 struct SidebarView: View {
+    /// Categoría actualmente seleccionada
     @Binding var currentCategory: String
+    
+    /// Callback para cargar los últimos papers
     let onLatestPapersSelected: () async -> Void
+    
+    /// Callback para cargar papers de Computer Science
     let onComputerScienceSelected: () async -> Void
+    
+    /// Callback para cargar papers de Mathematics
     let onMathematicsSelected: () async -> Void
     
     var body: some View {
@@ -99,6 +112,16 @@ struct SidebarView: View {
         #endif
     }
     
+    /// Crea un botón personalizado para la barra lateral
+    /// Maneja el estado visual (seleccionado/no seleccionado) y habilitado/deshabilitado
+    /// 
+    /// - Parameters:
+    ///   - title: Texto del botón
+    ///   - icon: Nombre del símbolo SF Symbols
+    ///   - isSelected: Si el botón está actualmente seleccionado
+    ///   - isEnabled: Si el botón está habilitado (por defecto true)
+    ///   - action: Acción a ejecutar cuando se presiona el botón
+    /// - Returns: Vista del botón configurado
     @ViewBuilder
     private func sidebarButton(
         title: String,

@@ -9,20 +9,49 @@ import SwiftUI
 
 /// Vista principal de la lista de papers
 /// Funciona tanto en iOS como en macOS con adaptaciones específicas
+///
+/// Características multiplataforma:
+/// - iOS: Usa NavigationStack con NavigationLink para navegación
+/// - macOS: Compatible con NavigationSplitView usando selectedPaper binding
+/// - Estados: Carga, error, vacío y contenido con datos
+/// - Toolbar adaptativo según la plataforma
 struct PapersListView: View {
+    /// Lista de papers a mostrar
     let papers: [ArXivPaper]
+    
+    /// Indica si está cargando datos
     let isLoading: Bool
+    
+    /// Mensaje de error actual (si existe)
     @Binding var errorMessage: String?
+    
+    /// Función para cargar los últimos papers
     let loadLatestPapers: () async -> Void
+    
+    /// Función opcional para cargar papers de Computer Science (solo iOS)
     let loadComputerSciencePapers: (() async -> Void)?
+    
+    /// Función opcional para cargar papers de Mathematics (solo iOS)
     let loadMathematicsPapers: (() async -> Void)?
+    
+    /// Estado interno para controlar la recarga automática
     @State private var shouldRefreshOnAppear = false
+    
+    /// Categoría actualmente seleccionada
     @State private var currentCategory: String = "latest"
     
-    // Parámetro opcional para macOS NavigationSplitView
+    /// Paper seleccionado para macOS NavigationSplitView
     @Binding var selectedPaper: ArXivPaper?
     
-    // Inicializador para iOS (sin selectedPaper)
+    /// Inicializador para iOS (sin selectedPaper)
+    /// Usado cuando la vista maneja su propia navegación con NavigationLink
+    /// - Parameters:
+    ///   - papers: Lista de papers a mostrar
+    ///   - isLoading: Estado de carga
+    ///   - errorMessage: Binding para mensajes de error
+    ///   - loadLatestPapers: Función para cargar últimos papers
+    ///   - loadComputerSciencePapers: Función opcional para CS papers
+    ///   - loadMathematicsPapers: Función opcional para Math papers
     init(papers: [ArXivPaper], isLoading: Bool, errorMessage: Binding<String?>, loadLatestPapers: @escaping () async -> Void, loadComputerSciencePapers: (() async -> Void)? = nil, loadMathematicsPapers: (() async -> Void)? = nil) {
         self.papers = papers
         self.isLoading = isLoading
@@ -33,7 +62,14 @@ struct PapersListView: View {
         self._selectedPaper = .constant(nil)
     }
     
-    // Inicializador para macOS (con selectedPaper)
+    /// Inicializador para macOS (con selectedPaper)
+    /// Usado con NavigationSplitView donde la selección se maneja externamente
+    /// - Parameters:
+    ///   - papers: Lista de papers a mostrar
+    ///   - isLoading: Estado de carga
+    ///   - errorMessage: Binding para mensajes de error
+    ///   - loadLatestPapers: Función para cargar últimos papers
+    ///   - selectedPaper: Binding del paper seleccionado para el detail view
     init(papers: [ArXivPaper], isLoading: Bool, errorMessage: Binding<String?>, loadLatestPapers: @escaping () async -> Void, selectedPaper: Binding<ArXivPaper?>) {
         self.papers = papers
         self.isLoading = isLoading
