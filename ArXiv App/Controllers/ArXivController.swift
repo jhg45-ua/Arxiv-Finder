@@ -362,3 +362,10 @@ final class ArXivController: ObservableObject {
         }
     }
 }
+
+// MARK: - Notification Names Extension
+extension Notification.Name {
+    static let settingsChanged = Notification.Name("settingsChanged")
+    static let interfaceSettingsChanged = Notification.Name("interfaceSettingsChanged")
+    static let settingsReset = Notification.Name("settingsReset")
+}

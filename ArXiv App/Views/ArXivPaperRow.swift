@@ -12,27 +12,35 @@ import SwiftUI
 struct ArXivPaperRow: View {
     let paper: ArXivPaper
     
+    // MARK: - Settings from AppStorage
+    @AppStorage("fontSize") private var fontSize = 14.0
+    @AppStorage("compactMode") private var compactMode = false
+    @AppStorage("showPreview") private var showPreview = true
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: compactMode ? 8 : 12) {
             // Título del artículo
             Text(paper.title)
-                .font(.title3)
-                .fontWeight(.medium)
-                .lineLimit(4)
+                .font(.system(size: fontSize, weight: .medium))
+                .lineLimit(compactMode ? 2 : 4)
                 .multilineTextAlignment(.leading)
             
-            // Autores del artículo
-            Text(paper.authors)
-                .font(.body)
-                .foregroundColor(.secondary)
-                .lineLimit(3)
+            // Autores del artículo (solo si no está en modo compacto)
+            if !compactMode {
+                Text(paper.authors)
+                    .font(.system(size: fontSize - 2))
+                    .foregroundColor(.secondary)
+                    .lineLimit(2)
+            }
             
-            // Resumen del artículo (mostrar las primeras líneas)
-            Text(paper.summary)
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .lineLimit(2)
-                .padding(.top, 4)
+            // Resumen del artículo (solo si la vista previa está habilitada)
+            if showPreview {
+                Text(paper.summary)
+                    .font(.system(size: fontSize - 4))
+                    .foregroundColor(.secondary)
+                    .lineLimit(compactMode ? 1 : 2)
+                    .padding(.top, 2)
+            }
             
             HStack {
                 // Fechas del paper
@@ -40,15 +48,16 @@ struct ArXivPaperRow: View {
                     // Fecha de publicación
                     Label(paper.publishedDate.formatted(date: .abbreviated, time: .omitted), 
                           systemImage: "calendar")
-                        .font(.caption)
+                        .font(.system(size: fontSize - 6))
                         .foregroundColor(.secondary)
                     
-                    // Fecha de actualización (si existe y es diferente)
-                    if let updatedDate = paper.updatedDate,
+                    // Fecha de actualización (si existe, es diferente y no estamos en modo compacto)
+                    if !compactMode,
+                       let updatedDate = paper.updatedDate,
                        abs(updatedDate.timeIntervalSince(paper.publishedDate)) > 3600 { // Más de 1 hora de diferencia
                         Label("Actualizado: \(updatedDate.formatted(date: .abbreviated, time: .omitted))", 
                               systemImage: "arrow.clockwise")
-                            .font(.caption2)
+                            .font(.system(size: fontSize - 8))
                             .foregroundColor(.orange)
                     }
                 }
@@ -58,25 +67,27 @@ struct ArXivPaperRow: View {
                 // Categorías
                 if !paper.categories.isEmpty {
                     Text(paper.categories.components(separatedBy: " ").first ?? "")
-                        .font(.caption2)
+                        .font(.system(size: fontSize - 6))
                         .foregroundColor(.blue)
-                        .padding(.horizontal, 8)
+                        .padding(.horizontal, 6)
                         .padding(.vertical, 2)
                         .background(Color.blue.opacity(0.1))
                         .cornerRadius(6)
                 }
                 
-                // ID del paper
-                Text("ID: \(paper.id)")
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 2)
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(6)
+                // ID del paper (solo si no está en modo compacto)
+                if !compactMode {
+                    Text("ID: \(paper.id)")
+                        .font(.system(size: fontSize - 8))
+                        .foregroundColor(.secondary)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(6)
+                }
             }
         }
-        .padding(.vertical, 16)
+        .padding(.vertical, compactMode ? 12 : 16)
         #if os(macOS)
         .padding(.horizontal, 20)
         .background(Color.clear)

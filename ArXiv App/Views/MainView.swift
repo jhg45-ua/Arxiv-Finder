@@ -62,6 +62,18 @@ struct MainView: View {
             }
         }
         .navigationTitle("ArXiv Papers")
+        .onKeyPress(.escape) {
+            print("⌨️ Tecla ESC presionada - Deseleccionando paper")
+            selectedPaper = nil
+            return .handled
+        }
+        .onChange(of: selectedPaper) { oldValue, newValue in
+            if let paper = newValue {
+                print("📄 Paper seleccionado: \(paper.title)")
+            } else {
+                print("❌ Paper deseleccionado")
+            }
+        }
         .task {
             // Carga inicial usando configuración por defecto
             await controller.loadPapersWithSettings()
