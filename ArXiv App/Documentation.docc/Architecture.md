@@ -2,10 +2,6 @@
 
 La arquitectura Model-View-Controller implementada en ArXiv App.
 
-@Metadata {
-    @DocumentationExtension(mergeBehavior: append)
-}
-
 ## 🏗️ Visión General de la Arquitectura
 
 ArXiv App implementa una arquitectura **Model-View-Controller (MVC)** moderna adaptada para SwiftUI, combinando los beneficios de la separación de responsabilidades tradicional con la reactividad nativa de SwiftUI.

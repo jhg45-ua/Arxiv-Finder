@@ -2,10 +2,6 @@
 
 Vista especializada para mostrar listas de artículos de ArXiv con funcionalidades de búsqueda y filtrado.
 
-@Metadata {
-    @DocumentationExtension(mergeBehavior: append)
-}
-
 ## Descripción General
 
 ``PapersListView`` es una vista SwiftUI especializada que muestra listas de artículos de ArXiv con funcionalidades avanzadas de búsqueda, filtrado y navegación. Forma parte del patrón MVC como una vista que se comunica exclusivamente con ``ArXivController`` para obtener datos y notificar acciones del usuario.

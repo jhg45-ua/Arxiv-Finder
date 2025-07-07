@@ -2,10 +2,6 @@
 
 Documentación completa de la integración con la API de ArXiv.
 
-@Metadata {
-    @DocumentationExtension(mergeBehavior: append)
-}
-
 ## 🌐 Visión General de la API
 
 ArXiv proporciona una API pública RESTful para acceder a metadatos de artículos científicos. Esta guía documenta cómo ArXiv App interactúa con esta API para obtener, buscar y procesar artículos académicos.

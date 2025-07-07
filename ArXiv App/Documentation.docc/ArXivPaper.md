@@ -2,10 +2,6 @@
 
 El modelo de datos fundamental que representa un artículo académico de ArXiv.
 
-@Metadata {
-    @DocumentationExtension(mergeBehavior: append)
-}
-
 ## Descripción General
 
 ``ArXivPaper`` es la clase principal del modelo de datos que representa un artículo científico del repositorio ArXiv. Utiliza SwiftData para persistencia local y proporciona una estructura completa para almacenar todos los metadatos relevantes de un artículo académico.

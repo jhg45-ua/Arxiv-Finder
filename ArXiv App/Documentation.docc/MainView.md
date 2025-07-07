@@ -2,10 +2,6 @@
 
 La vista principal de la aplicación ArXiv que implementa el patrón MVC.
 
-@Metadata {
-    @DocumentationExtension(mergeBehavior: append)
-}
-
 ## Descripción General
 
 ``MainView`` es el componente central de la interfaz de usuario que actúa como la vista principal en el patrón MVC. Proporciona una experiencia adaptativa que funciona tanto en iOS como macOS, utilizando las mejores prácticas de diseño nativo para cada plataforma.

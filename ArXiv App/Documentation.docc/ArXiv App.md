@@ -3,7 +3,6 @@
 Una aplicación SwiftUI para explorar y buscar artículos académicos del repositorio ArXiv.
 
 @Metadata {
-    @PageImage(purpose: icon, source: "app-icon")
     @PageColor(blue)
 }
 
@@ -89,19 +88,6 @@ Para comenzar con la aplicación ArXiv, explora los siguientes componentes funda
 - ``ArXivPaperRow`` - Celda individual para mostrar información resumida
 - ``SidebarView`` - Barra lateral para navegación y filtros
 - ``SettingsView`` - Configuración de la aplicación
-
-## Guías Detalladas
-
-### 📋 Componentes Principales
-
-Explora las guías detalladas de cada componente:
-
-- <doc:ArXivPaper> - Modelo de datos fundamental con persistencia SwiftData
-- <doc:ArXivController> - Controlador MVC con gestión de estado reactiva
-- <doc:ArXivService> - Servicio de red con manejo robusto de errores
-- <doc:ArXivSimpleParser> - Parser XML especializado para formato Atom
-- <doc:MainView> - Vista principal con adaptación multiplataforma
-- <doc:PapersListView> - Lista optimizada con búsqueda y filtros
 
 ## Guías Detalladas
 

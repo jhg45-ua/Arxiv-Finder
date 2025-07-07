@@ -2,10 +2,6 @@
 
 El controlador principal que maneja la lógica de negocio de la aplicación ArXiv.
 
-@Metadata {
-    @DocumentationExtension(mergeBehavior: append)
-}
-
 ## Descripción General
 
 ``ArXivController`` es el componente central del patrón MVC que actúa como intermediario entre los modelos de datos (``ArXivPaper``) y las vistas SwiftUI. Gestiona el estado de la aplicación, coordina las operaciones asíncronas y proporciona una interfaz reactiva para la UI.

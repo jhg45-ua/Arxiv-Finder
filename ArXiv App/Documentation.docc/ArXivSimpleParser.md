@@ -2,10 +2,6 @@
 
 Parser XML especializado para procesar respuestas de la API de ArXiv.
 
-@Metadata {
-    @DocumentationExtension(mergeBehavior: append)
-}
-
 ## Descripción General
 
 ``ArXivSimpleParser`` es un componente especializado que se encarga de procesar las respuestas XML de la API de ArXiv y convertirlas en objetos ``ArXivPaper`` utilizables en la aplicación. Implementa un parser XML robusto y eficiente que maneja las peculiaridades específicas del formato Atom utilizado por ArXiv.
@@ -402,5 +398,4 @@ struct ParserConfig {
 
 - ``ArXivService`` - Servicio que utiliza el parser
 - ``ArXivPaper`` - Modelo de datos resultado del parsing
-- ``ArXivParserError`` - Tipos de error del parser
 - ``ArXivController`` - Controlador que coordina el parsing

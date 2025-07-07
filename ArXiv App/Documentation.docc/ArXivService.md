@@ -2,10 +2,6 @@
 
 El servicio especializado para la comunicación con la API de ArXiv.
 
-@Metadata {
-    @DocumentationExtension(mergeBehavior: append)
-}
-
 ## Descripción General
 
 ``ArXivService`` es el componente responsable de toda la comunicación con la API externa de ArXiv. Maneja las peticiones HTTP, el procesamiento de respuestas XML y la conversión de datos en objetos ``ArXivPaper``. Este servicio encapsula toda la complejidad de la comunicación con el repositorio ArXiv.
