@@ -7,14 +7,21 @@
 
 import SwiftUI
 
-/// Vista de barra lateral para macOS
-/// Proporciona navegación y opciones adicionales en la interfaz de macOS
+/// Barra lateral de navegación diseñada específicamente para macOS
+/// Parte del NavigationSplitView que proporciona navegación principal
 ///
-/// Características principales:
-/// - Navegación por categorías (Últimos, Computer Science, Mathematics)
-/// - Indicación visual de la categoría activa
-/// - Opciones futuras (Favoritos, Búsqueda) con indicadores "Pronto"
-/// - Diseño adaptado específicamente para macOS con colores del sistema
+/// Funcionalidades:
+/// - Navegación por categorías principales de ArXiv
+/// - Indicadores visuales de la categoría actualmente seleccionada
+/// - Header con branding de la aplicación
+/// - Secciones organizadas por tipo de contenido
+/// - Callbacks asíncronos para cargar datos de cada categoría
+/// - Placeholders para funcionalidades futuras (Favoritos, Búsqueda)
+///
+/// Diseño:
+/// - Colores del sistema macOS para integración nativa
+/// - Iconos SF Symbols para consistencia visual
+/// - Espaciado y tipografía optimizados para escritorio
 struct SidebarView: View {
     /// Categoría actualmente seleccionada
     @Binding var currentCategory: String

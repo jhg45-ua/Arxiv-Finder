@@ -9,7 +9,15 @@ import SwiftUI
 import SwiftData
 
 /// Vista principal de la aplicación ArXiv App siguiendo el patrón MVC
-/// Esta vista actúa como la View en el patrón MVC, delegando la lógica al Controller
+/// Proporciona una interfaz adaptativa que funciona tanto en iOS como macOS
+///
+/// En iOS utiliza NavigationStack para navegación jerárquica
+/// En macOS utiliza NavigationSplitView para navegación en tres columnas
+///
+/// Arquitectura MVC:
+/// - View: Esta vista maneja solo la presentación
+/// - Controller: ArXivController gestiona toda la lógica de negocio
+/// - Model: ArXivPaper representa los datos de artículos
 struct MainView: View {
     /// Controller que maneja la lógica de negocio
     @StateObject private var controller = ArXivController()

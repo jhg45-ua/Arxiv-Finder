@@ -77,32 +77,38 @@ final class ArXivController: ObservableObject {
     
     // MARK: - Public Methods
     
-    /// Carga los últimos papers publicados
+    /// Carga los últimos papers publicados de ArXiv
+    /// Actualiza la propiedad `latestPapers` con los resultados
     func loadLatestPapers() async {
         print("🚀 Controller: Starting to load latest papers...")
         await loadPapers(category: "latest")
     }
     
-    /// Carga papers de Computer Science
+    /// Carga papers de la categoría Computer Science
+    /// Actualiza la propiedad `csPapers` con los resultados
     func loadComputerSciencePapers() async {
         print("🚀 Controller: Starting to load Computer Science papers...")
         await loadPapers(category: "cs")
     }
     
-    /// Carga papers de Mathematics
+    /// Carga papers de la categoría Mathematics
+    /// Actualiza la propiedad `mathPapers` con los resultados
     func loadMathematicsPapers() async {
         print("🚀 Controller: Starting to load Mathematics papers...")
         await loadPapers(category: "math")
     }
     
-    /// Cambia la categoría actual
+    /// Cambia la categoría actual y actualiza la UI
+    /// - Parameter category: Nueva categoría a seleccionar ("latest", "cs", "math")
     func changeCategory(to category: String) {
         currentCategory = category
     }
     
     // MARK: - Private Methods
     
-    /// Método genérico para cargar papers según la categoría
+    /// Método genérico para cargar papers según la categoría especificada
+    /// Gestiona el estado de carga, errores y actualiza las propiedades correspondientes
+    /// - Parameter category: Categoría de papers a cargar ("latest", "cs", "math")
     private func loadPapers(category: String) async {
         isLoading = true
         errorMessage = nil
@@ -202,14 +208,18 @@ final class ArXivController: ObservableObject {
     }
     
     // MARK: - Initialization
+    
+    /// Inicializador del controlador que configura el estado inicial
+    /// Establece la categoría por defecto, configura la actualización automática
+    /// y registra observers para cambios en configuración del usuario
     init() {
-        // Configurar categoría inicial basada en configuración
+        // Configurar categoría inicial basada en configuración del usuario
         currentCategory = defaultCategory
         
-        // Configurar actualización automática si está habilitada
+        // Configurar actualización automática si está habilitada en settings
         setupAutoRefresh()
         
-        // Escuchar cambios en configuración
+        // Escuchar cambios en configuración para reaccionar dinámicamente
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(settingsChanged(_:)),

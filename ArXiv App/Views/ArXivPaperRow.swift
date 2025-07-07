@@ -7,9 +7,23 @@
 
 import SwiftUI
 
-/// Vista de fila para mostrar un paper de ArXiv
-/// Representa la presentación visual de un paper individual en la lista
+/// Vista reutilizable que representa una fila individual de artículo en la lista
+/// Muestra información resumida del paper con diseño adaptativo
+///
+/// Características:
+/// - Título del artículo con truncado inteligente
+/// - Lista de autores (oculta en modo compacto)
+/// - Fecha de publicación formateada
+/// - Vista previa del resumen (opcional)
+/// - Categorías del artículo como badges
+/// - Configuración personalizable via AppStorage
+///
+/// Configuraciones soportadas:
+/// - Tamaño de fuente adjustable
+/// - Modo compacto para mostrar más elementos
+/// - Toggle para mostrar/ocultar vista previa del resumen
 struct ArXivPaperRow: View {
+    /// El artículo a mostrar en esta fila
     let paper: ArXivPaper
     
     // MARK: - Settings from AppStorage

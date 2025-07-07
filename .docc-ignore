@@ -1,0 +1,4 @@
+# DocC ignore file
+# Ignore markdown files in docs folder that are not DocC format
+docs/
+README.md

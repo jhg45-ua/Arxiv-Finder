@@ -7,10 +7,27 @@
 
 import SwiftUI
 
-/// Vista de detalle para mostrar información completa de un paper
-/// Se navega desde la lista principal en ambas plataformas
+/// Vista detallada que muestra toda la información de un artículo científico
+/// Pantalla de destino cuando el usuario selecciona un paper de la lista
+///
+/// Información mostrada:
+/// - Título completo del artículo
+/// - Lista completa de autores
+/// - Fechas de publicación y actualización
+/// - Resumen/abstract completo del paper
+/// - Categorías científicas como badges
+/// - Enlaces para abrir el PDF y la página web del artículo
+/// - Acciones de compartir (iOS) o menús contextuales (macOS)
+///
+/// Navegación:
+/// - iOS: Modal o push navigation con botón de regreso
+/// - macOS: Panel de detalle en NavigationSplitView
+/// - Botones de acción adaptativos según la plataforma
 struct PaperDetailView: View {
+    /// El artículo a mostrar en detalle
     let paper: ArXivPaper
+    
+    /// Callback opcional para regresar a la lista (usado en algunos flujos de navegación)
     let onBackToList: (() -> Void)?
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.dismiss) private var dismiss

@@ -7,14 +7,20 @@
 
 import SwiftUI
 
-/// Vista principal de la lista de papers
-/// Funciona tanto en iOS como en macOS con adaptaciones específicas
+/// Vista que muestra la lista de artículos científicos de ArXiv
+/// Diseñada para funcionar en ambas plataformas con UI adaptativa
 ///
-/// Características multiplataforma:
-/// - iOS: Usa NavigationStack con NavigationLink para navegación
-/// - macOS: Compatible con NavigationSplitView usando selectedPaper binding
-/// - Estados: Carga, error, vacío y contenido con datos
-/// - Toolbar adaptativo según la plataforma
+/// Funcionalidades:
+/// - Lista scrolleable de artículos con información resumida
+/// - Estados visuales: carga, error, vacío, y contenido
+/// - Toolbar con acciones de navegación y recarga
+/// - Búsqueda integrada para filtrar artículos
+/// - Navegación adaptativa (NavigationLink en iOS, binding en macOS)
+///
+/// Arquitectura MVC:
+/// - Esta vista solo maneja la presentación de datos
+/// - Toda la lógica de negocio está delegada al ArXivController
+/// - Los datos provienen del modelo ArXivPaper
 struct PapersListView: View {
     /// Lista de papers a mostrar
     let papers: [ArXivPaper]

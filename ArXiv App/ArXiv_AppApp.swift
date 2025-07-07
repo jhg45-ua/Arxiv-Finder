@@ -40,7 +40,13 @@ import SwiftData
  */
 
 /// Punto de entrada principal de la aplicación ArXiv App
-/// Esta estructura define la configuración principal de la app y gestiona el contenedor de datos
+/// Configura la aplicación, la persistencia de datos y la UI específica por plataforma
+/// 
+/// Responsabilidades:
+/// - Configuración del contenedor SwiftData para persistencia
+/// - Definición de la estructura de ventanas por plataforma
+/// - Inyección del modelo de datos en el entorno SwiftUI
+/// - Configuración de ventanas específicas (macOS: tamaño, estilo; iOS: grupo básico)
 @main
 struct ArXiv_AppApp: App {
     /// Contenedor compartido de modelo de datos que gestiona la persistencia de la aplicación

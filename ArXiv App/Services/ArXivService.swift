@@ -222,10 +222,11 @@ final class ArXivService: @unchecked Sendable {
         }
     }
     
-    /// Parsea la respuesta XML de la API de ArXiv
-    /// - Parameter data: Datos XML recibidos de la API
-    /// - Returns: Array de artículos parseados
-    /// - Throws: Error si falla el parsing
+    /// Método privado que parsea la respuesta XML de la API de ArXiv
+    /// Utiliza ArXivSimpleParser para convertir XML en objetos ArXivPaper
+    /// - Parameter data: Datos XML en bruto recibidos de la API
+    /// - Returns: Array de artículos científicos parseados y validados
+    /// - Throws: ArXivError.parsingError si falla el proceso de parsing
     private func parseArXivXML(_ data: Data) throws -> [ArXivPaper] {
         let parser = ArXivSimpleParser()
         do {
@@ -238,11 +239,16 @@ final class ArXivService: @unchecked Sendable {
 }
 
 /// Enumeración de errores específicos del servicio ArXiv
+/// Define los tipos de errores que pueden ocurrir durante la comunicación con la API
 enum ArXivError: Error, LocalizedError {
+    /// Error cuando la URL construida es inválida
     case invalidURL
+    /// Error de red con mensaje descriptivo
     case networkError(String)
+    /// Error durante el parsing del XML con mensaje descriptivo
     case parsingError(String)
     
+    /// Descripción localizada del error para mostrar al usuario
     var errorDescription: String? {
         switch self {
         case .invalidURL:

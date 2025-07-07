@@ -44,23 +44,18 @@ El proyecto sigue el patrón **Model-View-Controller (MVC)**:
 - `ArXivService`: Comunicación con la API de ArXiv
 - `ArXivSimpleParser`: Parser XML personalizado
 
-## 📚 Documentación Completa
+## 📚 Documentación
 
-Para información detallada sobre el proyecto, consulta nuestra documentación completa:
+Para información detallada consulta la documentación integrada de Xcode:
 
-### 📋 Documentación Principal
-- [📖 Índice de Documentación](DOCUMENTATION.md) - Navegación completa de la documentación
-- [🏗️ Arquitectura MVC](README_MVC.md) - Detalles de la arquitectura implementada
-- [🔧 Arquitectura Técnica](docs/ARCHITECTURE.md) - Documentación técnica profunda
-- [🌐 Guía de API](docs/API_GUIDE.md) - Integración con ArXiv API
+- **Arquitectura MVC**: Consulta la documentación de DocC en Xcode para detalles sobre el diseño y patrones
+- **API de ArXiv**: Documentación completa de la integración con la API disponible en DocC
+- **Componentes**: Documentación detallada de cada componente disponible en Quick Help de Xcode
 
-### 🛠 Para Desarrolladores
-- [💻 Guía de Desarrollo](docs/DEVELOPMENT.md) - Configuración y flujo de desarrollo
-- [🤝 Guía de Contribución](docs/CONTRIBUTING.md) - Cómo contribuir al proyecto
-- [📝 Registro de Cambios](docs/CHANGELOG.md) - Historial de versiones
-
-### 👥 Para Usuarios
-- [📱 Guía del Usuario](docs/USER_GUIDE.md) - Cómo usar la aplicación
+Para acceder a la documentación:
+1. Abre el proyecto en Xcode
+2. Ve a `Product > Build Documentation` o presiona `Cmd + Shift + Control + D`
+3. Explora la documentación generada automáticamente
 
 ## 🚀 Instalación
 
