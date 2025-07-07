@@ -63,8 +63,8 @@ struct MainView: View {
         }
         .navigationTitle("ArXiv Papers")
         .task {
-            // Carga inicial de papers
-            await controller.loadLatestPapers()
+            // Carga inicial usando configuración por defecto
+            await controller.loadPapersWithSettings()
         }
         
         #else
@@ -80,8 +80,8 @@ struct MainView: View {
             )
             .navigationTitle("ArXiv Papers")
             .task {
-                // Carga inicial de papers
-                await controller.loadLatestPapers()
+                // Carga inicial usando configuración por defecto
+                await controller.loadPapersWithSettings()
             }
         }
         #endif
