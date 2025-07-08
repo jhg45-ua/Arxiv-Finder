@@ -50,9 +50,10 @@ release_app:
     - macos
   script:
     - echo "Creating release for version $APP_VERSION (build $BUILD_NUMBER)..."
-    #- echo "Commit message: $COMMIT_MESSAGE"
     - RELEASE_NAME="ArXiv-App-v$APP_VERSION-build$BUILD_NUMBER"
     - zip -r "$RELEASE_NAME.zip" "$APP_NAME.app"
+    - echo "Checking if release already exists..."
+    - glab release delete "v$APP_VERSION-build$BUILD_NUMBER" --yes || echo "Release doesn't exist, continuing..."
     - glab release create "v$APP_VERSION-build$BUILD_NUMBER" "$RELEASE_NAME.zip" --name "ArXiv App v$APP_VERSION (Build $BUILD_NUMBER)" --notes "ArXiv App v$APP_VERSION - $COMMIT_MESSAGE"
   only:
     - main
