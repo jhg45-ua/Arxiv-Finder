@@ -55,21 +55,18 @@ release_app:
     - zip -r "$RELEASE_NAME.zip" "$APP_NAME.app"
     - |
       RELEASE_NOTES="## ArXiv App v$APP_VERSION (Build $BUILD_NUMBER)
-      
+
       ### Cambios en esta versión:
       **$COMMIT_MESSAGE**
-      
+
       ### Información de la release:
-      - **Versión**: $APP_VERSION  
+      - **Versión**: $APP_VERSION
       - **Build**: $BUILD_NUMBER
       - **Commit**: $CI_COMMIT_SHA
       - **Fecha**: $(date '+%Y-%m-%d %H:%M:%S')
-      
+
       ---
       *Release automatizada generada por GitLab CI/CD*"
-    - >
-      glab release create "v$APP_VERSION-build$BUILD_NUMBER" "$RELEASE_NAME.zip"
-      --name "ArXiv App v$APP_VERSION (Build $BUILD_NUMBER)"
-      --notes "$RELEASE_NOTES"
+    - glab release create "v$APP_VERSION-build$BUILD_NUMBER" "$RELEASE_NAME.zip" --name "ArXiv App v$APP_VERSION (Build $BUILD_NUMBER)" --notes "$RELEASE_NOTES"
   only:
     - main

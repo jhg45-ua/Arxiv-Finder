@@ -7,7 +7,9 @@
 
 import SwiftUI
 import UserNotifications
+#if os(macOS)
 import AppKit
+#endif
 
 /// Vista de configuraciones simplificada para la app de ArXiv
 /// Proporciona opciones esenciales con aplicación inmediata de cambios
