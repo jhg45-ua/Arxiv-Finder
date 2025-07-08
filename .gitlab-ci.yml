@@ -51,6 +51,6 @@ release_app:
     - >
       glab release create "v$APP_VERSION-build$BUILD_NUMBER" "$RELEASE_NAME.zip"
       --name "ArXiv App v$APP_VERSION (Build $BUILD_NUMBER)"
-      --notes "Automated release for ArXiv App v$APP_VERSION (Build $BUILD_NUMBER)""
+      --notes "Automated release for ArXiv App v$APP_VERSION (Build $BUILD_NUMBER)"
   only:
     - main
