@@ -51,22 +51,6 @@ release_app:
     - >
       glab release create "v$APP_VERSION-build$BUILD_NUMBER" "$RELEASE_NAME.zip"
       --name "ArXiv App v$APP_VERSION (Build $BUILD_NUMBER)"
-      --notes "Automated release for ArXiv App v$APP_VERSION (Build $BUILD_NUMBER)
-      
-      ## Changes
-      - Updated categories integration with 6 new academic categories
-      - Enhanced UI for both macOS and iOS platforms
-      - Improved documentation and API coverage
-      
-      ## Technical Details
-      - Commit: $CI_COMMIT_SHORT_SHA
-      - Branch: $CI_COMMIT_REF_NAME
-      - Build Date: $(date -u +'%Y-%m-%d %H:%M:%S UTC')
-      
-      ## Installation
-      1. Download the ZIP file
-      2. Extract the ArXiv App.app
-      3. Move to Applications folder
-      4. Run the application"
+      --notes "Automated release for ArXiv App v$APP_VERSION (Build $BUILD_NUMBER)""
   only:
     - main

@@ -31,6 +31,9 @@ struct PapersListView: View {
     /// Mensaje de error actual (si existe)
     @Binding var errorMessage: String?
     
+    /// Controller para manejar la lógica de favoritos
+    let controller: ArXivController?
+    
     /// Función para cargar los últimos papers
     let loadLatestPapers: () async -> Void
     
@@ -82,10 +85,11 @@ struct PapersListView: View {
     ///   - loadStatisticsPapers: Función opcional para Statistics papers
     ///   - loadElectricalEngineeringPapers: Función opcional para Electrical Engineering papers
     ///   - loadEconomicsPapers: Función opcional para Economics papers
-    init(papers: [ArXivPaper], isLoading: Bool, errorMessage: Binding<String?>, loadLatestPapers: @escaping () async -> Void, loadComputerSciencePapers: (() async -> Void)? = nil, loadMathematicsPapers: (() async -> Void)? = nil, loadPhysicsPapers: (() async -> Void)? = nil, loadQuantitativeBiologyPapers: (() async -> Void)? = nil, loadQuantitativeFinancePapers: (() async -> Void)? = nil, loadStatisticsPapers: (() async -> Void)? = nil, loadElectricalEngineeringPapers: (() async -> Void)? = nil, loadEconomicsPapers: (() async -> Void)? = nil) {
+    init(papers: [ArXivPaper], isLoading: Bool, errorMessage: Binding<String?>, controller: ArXivController? = nil, loadLatestPapers: @escaping () async -> Void, loadComputerSciencePapers: (() async -> Void)? = nil, loadMathematicsPapers: (() async -> Void)? = nil, loadPhysicsPapers: (() async -> Void)? = nil, loadQuantitativeBiologyPapers: (() async -> Void)? = nil, loadQuantitativeFinancePapers: (() async -> Void)? = nil, loadStatisticsPapers: (() async -> Void)? = nil, loadElectricalEngineeringPapers: (() async -> Void)? = nil, loadEconomicsPapers: (() async -> Void)? = nil) {
         self.papers = papers
         self.isLoading = isLoading
         self._errorMessage = errorMessage
+        self.controller = controller
         self.loadLatestPapers = loadLatestPapers
         self.loadComputerSciencePapers = loadComputerSciencePapers
         self.loadMathematicsPapers = loadMathematicsPapers
@@ -110,6 +114,7 @@ struct PapersListView: View {
         self.papers = papers
         self.isLoading = isLoading
         self._errorMessage = errorMessage
+        self.controller = nil
         self.loadLatestPapers = loadLatestPapers
         self.loadComputerSciencePapers = nil
         self.loadMathematicsPapers = nil
@@ -182,15 +187,15 @@ struct PapersListView: View {
                 // Lista de artículos de ArXiv
                 #if os(macOS)
                 List(papers, id: \.id, selection: $selectedPaper) { paper in
-                    ArXivPaperRow(paper: paper)
+                    ArXivPaperRow(paper: paper, controller: controller)
                         .tag(paper)
                 }
                 .listStyle(PlainListStyle())
                 .frame(minWidth: 450)
                 #else
                 List(papers, id: \.id) { paper in
-                    NavigationLink(destination: PaperDetailView(paper: paper, onBackToList: nil)) {
-                        ArXivPaperRow(paper: paper)
+                    NavigationLink(destination: PaperDetailView(paper: paper, controller: controller, onBackToList: nil)) {
+                        ArXivPaperRow(paper: paper, controller: controller)
                     }
                 }
                 .listStyle(DefaultListStyle())
@@ -285,6 +290,17 @@ struct PapersListView: View {
                             Task {
                                 currentCategory = "econ"
                                 await loadEcon()
+                            }
+                        }
+                    }
+                    
+                    Divider()
+                    
+                    if let controller = controller {
+                        Button("Favoritos") {
+                            Task {
+                                currentCategory = "favorites"
+                                await controller.loadFavoritePapers()
                             }
                         }
                     }

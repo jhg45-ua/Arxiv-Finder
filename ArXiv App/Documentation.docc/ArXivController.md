@@ -53,6 +53,9 @@ El ``ArXivController`` maneja:
 /// Papers de Economics
 @Published var economicsPapers: [ArXivPaper] = []
 
+/// Papers favoritos del usuario
+@Published var favoritePapers: [ArXivPaper] = []
+
 /// Estado de carga
 @Published var isLoading = false
 ```
@@ -132,6 +135,59 @@ func loadElectricalEngineeringPapers() async {
 func loadEconomicsPapers() async {
     let papers = try await arXivService.fetchEconomicsPapers()
     economicsPapers = papers
+}
+```
+
+### ⭐ Gestión de Favoritos
+
+Maneja la funcionalidad de favoritos con persistencia:
+
+```swift
+/// Carga todos los artículos favoritos desde SwiftData
+func loadFavoritePapers() async {
+    currentCategory = "favorites"
+    isLoading = true
+    defer { isLoading = false }
+    
+    do {
+        if let modelContext = modelContext {
+            let descriptor = FetchDescriptor<ArXivPaper>(
+                predicate: #Predicate<ArXivPaper> { $0.isFavorite == true }
+            )
+            let favoriteResults = try modelContext.fetch(descriptor)
+            favoritePapers = favoriteResults.sorted { 
+                $0.favoritedDate ?? Date.distantPast > $1.favoritedDate ?? Date.distantPast 
+            }
+        }
+    } catch {
+        handleError(error)
+    }
+}
+
+/// Alterna el estado de favorito de un artículo
+func toggleFavorite(for paper: ArXivPaper) {
+    let newFavoriteState = !paper.isFavorite
+    paper.setFavorite(newFavoriteState)
+    
+    // Guardar en SwiftData
+    if let modelContext = modelContext {
+        try? modelContext.save()
+    }
+    
+    // Actualizar lista de favoritos
+    if newFavoriteState {
+        if !favoritePapers.contains(where: { $0.id == paper.id }) {
+            favoritePapers.append(paper)
+            favoritePapers.sort { 
+                $0.favoritedDate ?? Date.distantPast > $1.favoritedDate ?? Date.distantPast 
+            }
+        }
+    } else {
+        favoritePapers.removeAll { $0.id == paper.id }
+    }
+    
+    // Actualizar en todas las categorías
+    updatePaperInAllCategories(paper)
 }
 ```
 

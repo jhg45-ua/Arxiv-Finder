@@ -39,6 +39,12 @@ final class ArXivPaper: @unchecked Sendable {
     /// Categorías científicas del artículo (ej: "cs.AI", "math.CO")
     var categories: String
     
+    /// Indica si el artículo está marcado como favorito
+    var isFavorite: Bool = false
+    
+    /// Fecha cuando se marcó como favorito (solo relevante si isFavorite es true)
+    var favoritedDate: Date?
+    
     /// Inicializador principal para crear un nuevo artículo de ArXiv
     /// - Parameters:
     ///   - id: Identificador único del artículo
@@ -50,8 +56,9 @@ final class ArXivPaper: @unchecked Sendable {
     ///   - pdfURL: URL del PDF
     ///   - linkURL: URL de la página del artículo
     ///   - categories: Categorías científicas
+    ///   - isFavorite: Si está marcado como favorito (por defecto false)
     init(id: String, title: String, summary: String, authors: String, 
-         publishedDate: Date, updatedDate: Date? = nil, pdfURL: String, linkURL: String, categories: String) {
+         publishedDate: Date, updatedDate: Date? = nil, pdfURL: String, linkURL: String, categories: String, isFavorite: Bool = false) {
         self.id = id
         self.title = title
         self.summary = summary
@@ -61,5 +68,14 @@ final class ArXivPaper: @unchecked Sendable {
         self.pdfURL = pdfURL
         self.linkURL = linkURL
         self.categories = categories
+        self.isFavorite = isFavorite
+        self.favoritedDate = isFavorite ? Date() : nil
+    }
+    
+    /// Marca o desmarca el paper como favorito
+    /// - Parameter favorite: true para marcar como favorito, false para desmarcar
+    func setFavorite(_ favorite: Bool) {
+        self.isFavorite = favorite
+        self.favoritedDate = favorite ? Date() : nil
     }
 }

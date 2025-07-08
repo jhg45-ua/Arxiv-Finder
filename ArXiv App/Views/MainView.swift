@@ -19,6 +19,9 @@ import SwiftData
 /// - Controller: ArXivController gestiona toda la lógica de negocio
 /// - Model: ArXivPaper representa los datos de artículos
 struct MainView: View {
+    /// Contexto de modelo para SwiftData
+    @Environment(\.modelContext) private var modelContext
+    
     /// Controller que maneja la lógica de negocio
     @StateObject private var controller = ArXivController()
     
@@ -68,6 +71,10 @@ struct MainView: View {
                 onEconomicsSelected: {
                     await controller.loadEconomicsPapers()
                     selectedPaper = nil // Volver a la vista principal
+                },
+                onFavoritesSelected: {
+                    await controller.loadFavoritePapers()
+                    selectedPaper = nil // Volver a la vista principal
                 }
             )
         } content: {
@@ -82,7 +89,7 @@ struct MainView: View {
         } detail: {
             // Vista de detalle o placeholder
             if let paper = selectedPaper {
-                PaperDetailView(paper: paper, onBackToList: {
+                PaperDetailView(paper: paper, controller: controller, onBackToList: {
                     selectedPaper = nil
                 })
             } else {
@@ -106,6 +113,10 @@ struct MainView: View {
                 print("❌ Paper deseleccionado")
             }
         }
+        .onAppear {
+            // Configurar el contexto del modelo en el controlador
+            controller.modelContext = modelContext
+        }
         .task {
             // Carga inicial usando configuración por defecto
             await controller.loadPapersWithSettings()
@@ -118,6 +129,7 @@ struct MainView: View {
                 papers: controller.filteredPapers,
                 isLoading: controller.isLoading,
                 errorMessage: .constant(controller.errorMessage),
+                controller: controller,
                 loadLatestPapers: { await controller.loadLatestPapers() },
                 loadComputerSciencePapers: { await controller.loadComputerSciencePapers() },
                 loadMathematicsPapers: { await controller.loadMathematicsPapers() },
@@ -129,6 +141,10 @@ struct MainView: View {
                 loadEconomicsPapers: { await controller.loadEconomicsPapers() }
             )
             .navigationTitle("ArXiv Papers")
+            .onAppear {
+                // Configurar el contexto del modelo en el controlador
+                controller.modelContext = modelContext
+            }
             .task {
                 // Carga inicial usando configuración por defecto
                 await controller.loadPapersWithSettings()

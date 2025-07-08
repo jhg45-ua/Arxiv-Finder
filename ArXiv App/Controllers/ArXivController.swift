@@ -7,13 +7,17 @@
 
 import Foundation
 import SwiftUI
-import UserNotifications
+import SwiftData
 import UserNotifications
 
 /// Controller que maneja la lógica de negocio de la aplicación ArXiv
 /// Actúa como intermediario entre los modelos (datos) y las vistas (UI)
 @MainActor
 final class ArXivController: ObservableObject {
+    
+    // MARK: - Properties
+    /// Contexto de modelo para SwiftData
+    var modelContext: ModelContext?
     
     // MARK: - Published Properties
     /// Papers de la categoría "Últimos"
@@ -42,6 +46,9 @@ final class ArXivController: ObservableObject {
     
     /// Papers de Economics
     @Published var economicsPapers: [ArXivPaper] = []
+    
+    /// Papers favoritos del usuario
+    @Published var favoritePapers: [ArXivPaper] = []
     
     /// Estado de carga
     @Published var isLoading = false
@@ -100,6 +107,8 @@ final class ArXivController: ObservableObject {
             return electricalEngineeringPapers
         case "econ":
             return economicsPapers
+        case "favorites":
+            return favoritePapers
         default:
             return latestPapers
         }
@@ -171,7 +180,7 @@ final class ArXivController: ObservableObject {
     }
     
     /// Cambia la categoría actual y actualiza la UI
-    /// - Parameter category: Nueva categoría a seleccionar ("latest", "cs", "math", "physics", "q-bio", "q-fin", "stat", "eess", "econ")
+    /// - Parameter category: Nueva categoría a seleccionar ("latest", "cs", "math", "physics", "q-bio", "q-fin", "stat", "eess", "econ", "favorites")
     func changeCategory(to category: String) {
         currentCategory = category
     }
@@ -210,6 +219,10 @@ final class ArXivController: ObservableObject {
                 fetchedPapers = try await fetchElectricalEngineeringPapersWithFallback()
             case "econ":
                 fetchedPapers = try await fetchEconomicsPapersWithFallback()
+            case "favorites":
+                // Para favoritos, no necesitamos hacer fetch, solo cargar desde memoria
+                await loadFavoritePapers()
+                return
             default: // "latest"
                 fetchedPapers = try await fetchLatestPapersWithFallback()
             }
@@ -326,6 +339,20 @@ final class ArXivController: ObservableObject {
         default: // "latest"
             latestPapers = papers
         }
+        
+        // Guardar papers en SwiftData si está disponible
+        if let modelContext = modelContext {
+            for paper in papers {
+                modelContext.insert(paper)
+            }
+            
+            do {
+                try modelContext.save()
+                print("✅ Controller: Saved \(papers.count) papers to SwiftData for category: \(category)")
+            } catch {
+                print("❌ Controller: Error saving papers to SwiftData: \(error)")
+            }
+        }
     }
     
     /// Asegura que la carga dure al menos 1 segundo para una mejor UX
@@ -344,7 +371,9 @@ final class ArXivController: ObservableObject {
     /// Inicializador del controlador que configura el estado inicial
     /// Establece la categoría por defecto, configura la actualización automática
     /// y registra observers para cambios en configuración del usuario
-    init() {
+    init(modelContext: ModelContext? = nil) {
+        self.modelContext = modelContext
+        
         // Configurar categoría inicial basada en configuración del usuario
         currentCategory = defaultCategory
         
@@ -511,9 +540,136 @@ final class ArXivController: ObservableObject {
             await loadElectricalEngineeringPapers()
         case "econ":
             await loadEconomicsPapers()
+        case "favorites":
+            await loadFavoritePapers()
         default:
             await loadLatestPapers()
         }
+    }
+    
+    // MARK: - Favorites Management
+    
+    /// Carga todos los papers favoritos desde la base de datos
+    func loadFavoritePapers() async {
+        print("🚀 Controller: Starting to load favorite papers...")
+        currentCategory = "favorites"
+        isLoading = true
+        
+        do {
+            if let modelContext = modelContext {
+                // Cargar desde SwiftData
+                let descriptor = FetchDescriptor<ArXivPaper>(predicate: #Predicate<ArXivPaper> { $0.isFavorite == true })
+                let favoriteResults = try modelContext.fetch(descriptor)
+                favoritePapers = favoriteResults.sorted { $0.favoritedDate ?? Date.distantPast > $1.favoritedDate ?? Date.distantPast }
+                print("✅ Controller: Loaded \(favoritePapers.count) favorite papers from SwiftData")
+            } else {
+                // Fallback: cargar desde memoria
+                favoritePapers = getAllPapers().filter { $0.isFavorite }
+                    .sorted { $0.favoritedDate ?? Date.distantPast > $1.favoritedDate ?? Date.distantPast }
+                print("✅ Controller: Loaded \(favoritePapers.count) favorite papers from memory")
+            }
+        } catch {
+            print("❌ Controller: Error loading favorites: \(error)")
+            errorMessage = "Error cargando favoritos: \(error.localizedDescription)"
+        }
+        
+        isLoading = false
+    }
+    
+    /// Alterna el estado de favorito de un paper
+    /// - Parameter paper: El paper a marcar/desmarcar como favorito
+    func toggleFavorite(for paper: ArXivPaper) {
+        print("🚀 Controller: Toggling favorite for paper: \(paper.title)")
+        
+        // Actualizar el estado del paper
+        let newFavoriteState = !paper.isFavorite
+        paper.setFavorite(newFavoriteState)
+        
+        // Guardar en SwiftData si está disponible
+        if let modelContext = modelContext {
+            do {
+                try modelContext.save()
+                print("✅ Controller: Paper favorite status saved to SwiftData")
+            } catch {
+                print("❌ Controller: Error saving to SwiftData: \(error)")
+            }
+        }
+        
+        // Actualizar la lista de favoritos
+        if newFavoriteState {
+            // Añadir a favoritos si no está ya
+            if !favoritePapers.contains(where: { $0.id == paper.id }) {
+                favoritePapers.append(paper)
+                favoritePapers.sort { $0.favoritedDate ?? Date.distantPast > $1.favoritedDate ?? Date.distantPast }
+            }
+        } else {
+            // Remover de favoritos
+            favoritePapers.removeAll { $0.id == paper.id }
+        }
+        
+        // Actualizar también en las otras listas de categorías
+        updatePaperInAllCategories(paper)
+        
+        print("✅ Controller: Paper favorite status updated to: \(newFavoriteState)")
+    }
+    
+    /// Actualiza un paper en todas las categorías donde aparece
+    private func updatePaperInAllCategories(_ paper: ArXivPaper) {
+        // Actualizar en todas las listas de categorías
+        if let index = latestPapers.firstIndex(where: { $0.id == paper.id }) {
+            latestPapers[index] = paper
+        }
+        if let index = csPapers.firstIndex(where: { $0.id == paper.id }) {
+            csPapers[index] = paper
+        }
+        if let index = mathPapers.firstIndex(where: { $0.id == paper.id }) {
+            mathPapers[index] = paper
+        }
+        if let index = physicsPapers.firstIndex(where: { $0.id == paper.id }) {
+            physicsPapers[index] = paper
+        }
+        if let index = quantitativeBiologyPapers.firstIndex(where: { $0.id == paper.id }) {
+            quantitativeBiologyPapers[index] = paper
+        }
+        if let index = quantitativeFinancePapers.firstIndex(where: { $0.id == paper.id }) {
+            quantitativeFinancePapers[index] = paper
+        }
+        if let index = statisticsPapers.firstIndex(where: { $0.id == paper.id }) {
+            statisticsPapers[index] = paper
+        }
+        if let index = electricalEngineeringPapers.firstIndex(where: { $0.id == paper.id }) {
+            electricalEngineeringPapers[index] = paper
+        }
+        if let index = economicsPapers.firstIndex(where: { $0.id == paper.id }) {
+            economicsPapers[index] = paper
+        }
+    }
+    
+    /// Obtiene todos los papers de todas las categorías (helper method)
+    private func getAllPapers() -> [ArXivPaper] {
+        var allPapers: [ArXivPaper] = []
+        allPapers.append(contentsOf: latestPapers)
+        allPapers.append(contentsOf: csPapers)
+        allPapers.append(contentsOf: mathPapers)
+        allPapers.append(contentsOf: physicsPapers)
+        allPapers.append(contentsOf: quantitativeBiologyPapers)
+        allPapers.append(contentsOf: quantitativeFinancePapers)
+        allPapers.append(contentsOf: statisticsPapers)
+        allPapers.append(contentsOf: electricalEngineeringPapers)
+        allPapers.append(contentsOf: economicsPapers)
+        
+        // Remover duplicados basándose en el ID
+        var uniquePapers: [ArXivPaper] = []
+        var seenIDs: Set<String> = []
+        
+        for paper in allPapers {
+            if !seenIDs.contains(paper.id) {
+                uniquePapers.append(paper)
+                seenIDs.insert(paper.id)
+            }
+        }
+        
+        return uniquePapers
     }
 }
 

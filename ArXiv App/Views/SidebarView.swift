@@ -53,6 +53,9 @@ struct SidebarView: View {
     /// Callback para cargar papers de Economics
     let onEconomicsSelected: () async -> Void
     
+    /// Callback para cargar papers favoritos
+    let onFavoritesSelected: () async -> Void
+    
     var body: some View {
         VStack(spacing: 0) {
             // Header simplificado
@@ -156,11 +159,10 @@ struct SidebarView: View {
                 
                 sidebarButton(
                     title: "Favoritos",
-                    icon: "heart",
-                    isSelected: false,
-                    isEnabled: false
+                    icon: "heart.fill",
+                    isSelected: currentCategory == "favorites"
                 ) {
-                    // Funcionalidad pendiente
+                    Task { await onFavoritesSelected() }
                 }
                 
                 sidebarButton(
@@ -250,7 +252,8 @@ struct SidebarView: View {
         onQuantitativeFinanceSelected: { },
         onStatisticsSelected: { },
         onElectricalEngineeringSelected: { },
-        onEconomicsSelected: { }
+        onEconomicsSelected: { },
+        onFavoritesSelected: { }
     )
     .frame(width: 320, height: 500)
 }

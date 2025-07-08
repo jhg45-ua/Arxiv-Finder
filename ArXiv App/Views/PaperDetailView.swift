@@ -27,6 +27,9 @@ struct PaperDetailView: View {
     /// El artículo a mostrar en detalle
     let paper: ArXivPaper
     
+    /// Controller para manejar la lógica de favoritos
+    let controller: ArXivController?
+    
     /// Callback opcional para regresar a la lista (usado en algunos flujos de navegación)
     let onBackToList: (() -> Void)?
     @Environment(\.presentationMode) var presentationMode
@@ -150,18 +153,24 @@ struct PaperDetailView: View {
                 }
                 #endif
                 
+                // Botón de favorito para ambas plataformas
+                if let controller = controller {
+                    Button(action: {
+                        controller.toggleFavorite(for: paper)
+                    }) {
+                        Image(systemName: paper.isFavorite ? "heart.fill" : "heart")
+                            .foregroundColor(paper.isFavorite ? .red : .primary)
+                    }
+                    .help(paper.isFavorite ? "Quitar de favoritos" : "Añadir a favoritos")
+                }
+                
                 #if os(macOS)
                 Button("Compartir") {
                     // Funcionalidad de compartir para macOS
                 }
-                
-                Button("Favorito") {
-                    // Funcionalidad de favoritos
-                }
                 #else
                 Menu("Opciones") {
                     Button("Compartir", action: {})
-                    Button("Añadir a favoritos", action: {})
                     Button("Copiar enlace", action: {})
                 } primaryAction: {
                     //Image(systemName: "ellipsis.circle")
@@ -195,6 +204,7 @@ struct PaperDetailView: View {
                 linkURL: "https://arxiv.org/abs/2025.0001",
                 categories: "cs.AI cs.LG stat.ML"
             ),
+            controller: nil,
             onBackToList: nil
         )
     }

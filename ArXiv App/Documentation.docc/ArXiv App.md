@@ -20,7 +20,9 @@ Esta aplicación demuestra las mejores prácticas de desarrollo en SwiftUI, incl
 
 - **🔍 Búsqueda Inteligente**: Busca artículos por título, autor, palabras clave o categorías específicas
 - **📚 Exploración por Categorías**: Navega por 8 disciplinas académicas principales de ArXiv
+- **⭐ Gestión de Favoritos**: Marca artículos como favoritos para acceso rápido y lectura posterior
 - **📄 Vista Detallada**: Visualiza información completa incluyendo resúmenes, autores, fechas y enlaces
+- **💾 Persistencia de Datos**: Los favoritos se guardan usando SwiftData y persisten entre sesiones
 - **💻 Interfaz Nativa**: Diseño SwiftUI optimizado para macOS con soporte completo para modo oscuro
 - **⚡ Rendimiento Optimizado**: Carga asíncrona de datos y gestión eficiente de memoria
 
@@ -98,6 +100,14 @@ Para comenzar con la aplicación ArXiv, explora los siguientes componentes funda
 - ``MainView`` - Vista principal de la aplicación
 - ``PapersListView`` - Lista de artículos con funcionalidad de búsqueda
 - ``PaperDetailView`` - Vista detallada de un artículo específico
+- ``SidebarView`` - Navegación lateral con categorías y favoritos
+- ``ArXivPaperRow`` - Componente individual de artículo con botón de favoritos
+
+### ⭐ Gestión de Favoritos
+- [Funcionalidad de Favoritos](Funcionalidad-de-Favoritos.md) - Documentación completa de la funcionalidad de favoritos
+- **Integración con SwiftData** - Persistencia de favoritos usando SwiftData
+- **Integración de UI** - Botones de corazón en lista y vista detallada
+- **Navegación** - Sección dedicada "Favoritos" en la navegación
 - ``ArXivPaperRow`` - Celda individual para mostrar información resumida
 - ``SidebarView`` - Barra lateral para navegación y filtros
 - ``SettingsView`` - Configuración de la aplicación
