@@ -24,8 +24,12 @@ build_app:
     - BUILD_NUMBER=$(xcodebuild -project "$PROJECT_PATH" -target "$APP_NAME" -showBuildSettings | grep CURRENT_PROJECT_VERSION | awk '{print $3}' | head -1)
     - echo "App Version:" "$APP_VERSION"
     - echo "Build Number:" "$BUILD_NUMBER"
+    - echo "Capturing commit message..."
+    - COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")
+    - echo "Commit Message:" "$COMMIT_MESSAGE"
     - echo "APP_VERSION=$APP_VERSION" > version.env
     - echo "BUILD_NUMBER=$BUILD_NUMBER" >> version.env
+    - echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> version.env
     - xcodebuild -project "$PROJECT_PATH" -scheme "$SCHEME" -configuration Release -derivedDataPath "$BUILD_PATH"
     - cp -R "$BUILD_PATH/Build/Products/Release/$APP_NAME.app" "./$APP_NAME.app"
   artifacts:
@@ -46,11 +50,26 @@ release_app:
     - macos
   script:
     - echo "Creating release for version $APP_VERSION (build $BUILD_NUMBER)..."
+    - echo "Commit message: $COMMIT_MESSAGE"
     - RELEASE_NAME="ArXiv-App-v$APP_VERSION-build$BUILD_NUMBER"
     - zip -r "$RELEASE_NAME.zip" "$APP_NAME.app"
+    - |
+      RELEASE_NOTES="## ArXiv App v$APP_VERSION (Build $BUILD_NUMBER)
+      
+      ### Cambios en esta versión:
+      **$COMMIT_MESSAGE**
+      
+      ### Información de la release:
+      - **Versión**: $APP_VERSION  
+      - **Build**: $BUILD_NUMBER
+      - **Commit**: $CI_COMMIT_SHA
+      - **Fecha**: $(date '+%Y-%m-%d %H:%M:%S')
+      
+      ---
+      *Release automatizada generada por GitLab CI/CD*"
     - >
       glab release create "v$APP_VERSION-build$BUILD_NUMBER" "$RELEASE_NAME.zip"
       --name "ArXiv App v$APP_VERSION (Build $BUILD_NUMBER)"
-      --notes "Automated release for ArXiv App v$APP_VERSION (Build $BUILD_NUMBER)"
+      --notes "$RELEASE_NOTES"
   only:
     - main
