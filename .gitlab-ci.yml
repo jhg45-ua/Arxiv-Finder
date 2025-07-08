@@ -1,0 +1,79 @@
+# GitLab CI/CD Pipeline for ArXiv App (macOS)
+# Simple pipeline to build and create releases
+
+stages:
+  - build
+  - release
+
+variables:
+  PROJECT_NAME: "ArXiv App"
+  SCHEME_NAME: "ArXiv App"
+  WORKSPACE_PATH: "ArXiv App.xcodeproj"
+  BUILD_CONFIGURATION: "Release"
+  MACOS_SDK: "macosx"
+
+# Build job - Compiles the project
+build:
+  stage: build
+  tags:
+    - macos
+  script:
+    - echo "Building ArXiv App for macOS..."
+    - xcodebuild clean build
+        -project "$WORKSPACE_PATH"
+        -scheme "$SCHEME_NAME"
+        -configuration "$BUILD_CONFIGURATION"
+        -sdk "$MACOS_SDK"
+        CODE_SIGNING_ALLOWED=NO
+        CODE_SIGNING_REQUIRED=NO
+  only:
+    - main
+    - develop
+    - merge_requests
+
+# Release job - Creates archive and exports app
+release:
+  stage: release
+  tags:
+    - macos
+  before_script:
+    - mkdir -p build
+  script:
+    - echo "Creating release for ArXiv App..."
+    # Create archive
+    - xcodebuild archive
+        -project "$WORKSPACE_PATH"
+        -scheme "$SCHEME_NAME"
+        -configuration "$BUILD_CONFIGURATION"
+        -archivePath "build/ArXiv App.xcarchive"
+        -sdk "$MACOS_SDK"
+        CODE_SIGNING_ALLOWED=NO
+        CODE_SIGNING_REQUIRED=NO
+    
+    # Export app
+    - xcodebuild -exportArchive
+        -archivePath "build/ArXiv App.xcarchive"
+        -exportPath "build/app"
+        -exportOptionsPlist ExportOptions.plist
+    
+    # Create export options
+    - |
+      cat > ExportOptions.plist << EOF
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+      <dict>
+          <key>method</key>
+          <string>developer-id</string>
+          <key>compileBitcode</key>
+          <false/>
+      </dict>
+      </plist>
+      EOF
+  artifacts:
+    paths:
+      - build/app/
+    expire_in: 1 month
+  only:
+    - main
+    - tags
