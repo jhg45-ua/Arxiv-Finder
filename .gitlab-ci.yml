@@ -50,22 +50,9 @@ release_app:
     - macos
   script:
     - echo "Creating release for version $APP_VERSION (build $BUILD_NUMBER)..."
-    - echo "Commit message: $COMMIT_MESSAGE"
+    #- echo "Commit message: $COMMIT_MESSAGE"
     - RELEASE_NAME="ArXiv-App-v$APP_VERSION-build$BUILD_NUMBER"
     - zip -r "$RELEASE_NAME.zip" "$APP_NAME.app"
-    - echo "## ArXiv App v$APP_VERSION (Build $BUILD_NUMBER)" > release_notes.md
-    - echo "" >> release_notes.md
-    - echo "### Cambios en esta versión:" >> release_notes.md
-    - echo "**$COMMIT_MESSAGE**" >> release_notes.md
-    - echo "" >> release_notes.md
-    - echo "### Información de la release:" >> release_notes.md
-    - echo "- **Versión**: $APP_VERSION" >> release_notes.md
-    - echo "- **Build**: $BUILD_NUMBER" >> release_notes.md
-    - echo "- **Commit**: $CI_COMMIT_SHA" >> release_notes.md
-    - echo "- **Fecha**: $(date '+%Y-%m-%d %H:%M:%S')" >> release_notes.md
-    - echo "" >> release_notes.md
-    - echo "---" >> release_notes.md
-    - echo "*Release automatizada generada por GitLab CI/CD*" >> release_notes.md
-    - glab release create "v$APP_VERSION-build$BUILD_NUMBER" "$RELEASE_NAME.zip" --name "ArXiv App v$APP_VERSION (Build $BUILD_NUMBER)" --notes-file release_notes.md
+    - glab release create "v$APP_VERSION-build$BUILD_NUMBER" "$RELEASE_NAME.zip" --name "ArXiv App v$APP_VERSION (Build $BUILD_NUMBER)" --notes "ArXiv App v$APP_VERSION - $COMMIT_MESSAGE"
   only:
     - main
