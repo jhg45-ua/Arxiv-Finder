@@ -19,11 +19,11 @@ build_app:
   script:
     - echo "Building app..."
     - mkdir -p "$BUILD_PATH"
-    # Extract app version for later use
+    - echo "Extracting app version for later use"
     - APP_VERSION=$(xcodebuild -project "$PROJECT_PATH" -target "$APP_NAME" -showBuildSettings | grep MARKETING_VERSION | awk '{print $3}' | head -1)
     - BUILD_NUMBER=$(xcodebuild -project "$PROJECT_PATH" -target "$APP_NAME" -showBuildSettings | grep CURRENT_PROJECT_VERSION | awk '{print $3}' | head -1)
-    - echo "App Version: $APP_VERSION"
-    - echo "Build Number: $BUILD_NUMBER"
+    - echo "App Version:" "$APP_VERSION"
+    - echo "Build Number:" "$BUILD_NUMBER"
     - echo "APP_VERSION=$APP_VERSION" > version.env
     - echo "BUILD_NUMBER=$BUILD_NUMBER" >> version.env
     - xcodebuild -project "$PROJECT_PATH" -scheme "$SCHEME" -configuration Release -derivedDataPath "$BUILD_PATH"
