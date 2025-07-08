@@ -77,3 +77,8 @@ fastlane/test_output
 # https://github.com/johnno1962/injectionforxcode
 
 iOSInjectionProject/
+
+# CI/CD Generated Files
+*.zip
+*.app
+ArXiv-App.zip

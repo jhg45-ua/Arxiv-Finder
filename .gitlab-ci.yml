@@ -10,6 +10,7 @@ variables:
   SCHEME: "ArXiv App"
   PROJECT_PATH: "ArXiv App.xcodeproj"
   BUILD_PATH: "build"
+  ZIP_NAME: "ArXiv-App"
 
 build_app:
   stage: build
@@ -35,9 +36,9 @@ release_app:
     - macos
   script:
     - echo "Creating release..."
-    - zip -r "$APP_NAME.zip" "$APP_NAME.app"
+    - zip -r "$ZIP_NAME.zip" "$APP_NAME.app"
     - >
-      glab release create "v-$CI_COMMIT_SHORT_SHA" "$APP_NAME.zip"
+      glab release create "v-$CI_COMMIT_SHORT_SHA" "$ZIP_NAME.zip"
       --notes "Automated release for commit $CI_COMMIT_SHORT_SHA"
   only:
     - main
