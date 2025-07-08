@@ -79,6 +79,31 @@ private var macOSInterface: some View {
 - **Optimización de ventana**: Aprovecha el espacio de pantalla grande
 - **Controles nativos**: Utiliza controles específicos de macOS
 
+### 📚 Categorías Soportadas
+
+La aplicación soporta las siguientes categorías académicas:
+
+```swift
+/// Categorías disponibles en la barra lateral
+private let availableCategories = [
+    "latest": "Últimos Papers",
+    "cs": "Computer Science",
+    "math": "Mathematics", 
+    "physics": "Physics",
+    "q-bio": "Quantitative Biology",
+    "q-fin": "Quantitative Finance",
+    "stat": "Statistics",
+    "eess": "Electrical Engineering",
+    "econ": "Economics"
+]
+```
+
+**Funcionalidades por categoría:**
+- **Navegación**: Cada categoría tiene su propio botón en la barra lateral
+- **Estado independiente**: Cada categoría mantiene su propio estado de carga
+- **Datos persistentes**: Los papers se mantienen en caché por categoría
+- **Configuración**: El usuario puede seleccionar una categoría por defecto
+
 ## Interfaz de iOS
 
 ### 📱 NavigationStack

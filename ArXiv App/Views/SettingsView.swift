@@ -95,9 +95,14 @@ struct SettingsView: View {
                             Text("Computer Science").tag("cs")
                             Text("Mathematics").tag("math")
                             Text("Physics").tag("physics")
+                            Text("Quantitative Biology").tag("q-bio")
+                            Text("Quantitative Finance").tag("q-fin")
+                            Text("Statistics").tag("stat")
+                            Text("Electrical Engineering").tag("eess")
+                            Text("Economics").tag("econ")
                         }
                         .pickerStyle(MenuPickerStyle())
-                        .frame(width: 150)
+                        .frame(width: 200)
                         .onChange(of: defaultCategory) { _, _ in
                             notifySettingsChanged()
                         }

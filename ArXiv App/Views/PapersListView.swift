@@ -40,6 +40,24 @@ struct PapersListView: View {
     /// Función opcional para cargar papers de Mathematics (solo iOS)
     let loadMathematicsPapers: (() async -> Void)?
     
+    /// Función opcional para cargar papers de Physics (solo iOS)
+    let loadPhysicsPapers: (() async -> Void)?
+    
+    /// Función opcional para cargar papers de Quantitative Biology (solo iOS)
+    let loadQuantitativeBiologyPapers: (() async -> Void)?
+    
+    /// Función opcional para cargar papers de Quantitative Finance (solo iOS)
+    let loadQuantitativeFinancePapers: (() async -> Void)?
+    
+    /// Función opcional para cargar papers de Statistics (solo iOS)
+    let loadStatisticsPapers: (() async -> Void)?
+    
+    /// Función opcional para cargar papers de Electrical Engineering (solo iOS)
+    let loadElectricalEngineeringPapers: (() async -> Void)?
+    
+    /// Función opcional para cargar papers de Economics (solo iOS)
+    let loadEconomicsPapers: (() async -> Void)?
+    
     /// Estado interno para controlar la recarga automática
     @State private var shouldRefreshOnAppear = false
     
@@ -58,13 +76,25 @@ struct PapersListView: View {
     ///   - loadLatestPapers: Función para cargar últimos papers
     ///   - loadComputerSciencePapers: Función opcional para CS papers
     ///   - loadMathematicsPapers: Función opcional para Math papers
-    init(papers: [ArXivPaper], isLoading: Bool, errorMessage: Binding<String?>, loadLatestPapers: @escaping () async -> Void, loadComputerSciencePapers: (() async -> Void)? = nil, loadMathematicsPapers: (() async -> Void)? = nil) {
+    ///   - loadPhysicsPapers: Función opcional para Physics papers
+    ///   - loadQuantitativeBiologyPapers: Función opcional para Quantitative Biology papers
+    ///   - loadQuantitativeFinancePapers: Función opcional para Quantitative Finance papers
+    ///   - loadStatisticsPapers: Función opcional para Statistics papers
+    ///   - loadElectricalEngineeringPapers: Función opcional para Electrical Engineering papers
+    ///   - loadEconomicsPapers: Función opcional para Economics papers
+    init(papers: [ArXivPaper], isLoading: Bool, errorMessage: Binding<String?>, loadLatestPapers: @escaping () async -> Void, loadComputerSciencePapers: (() async -> Void)? = nil, loadMathematicsPapers: (() async -> Void)? = nil, loadPhysicsPapers: (() async -> Void)? = nil, loadQuantitativeBiologyPapers: (() async -> Void)? = nil, loadQuantitativeFinancePapers: (() async -> Void)? = nil, loadStatisticsPapers: (() async -> Void)? = nil, loadElectricalEngineeringPapers: (() async -> Void)? = nil, loadEconomicsPapers: (() async -> Void)? = nil) {
         self.papers = papers
         self.isLoading = isLoading
         self._errorMessage = errorMessage
         self.loadLatestPapers = loadLatestPapers
         self.loadComputerSciencePapers = loadComputerSciencePapers
         self.loadMathematicsPapers = loadMathematicsPapers
+        self.loadPhysicsPapers = loadPhysicsPapers
+        self.loadQuantitativeBiologyPapers = loadQuantitativeBiologyPapers
+        self.loadQuantitativeFinancePapers = loadQuantitativeFinancePapers
+        self.loadStatisticsPapers = loadStatisticsPapers
+        self.loadElectricalEngineeringPapers = loadElectricalEngineeringPapers
+        self.loadEconomicsPapers = loadEconomicsPapers
         self._selectedPaper = .constant(nil)
     }
     
@@ -83,6 +113,12 @@ struct PapersListView: View {
         self.loadLatestPapers = loadLatestPapers
         self.loadComputerSciencePapers = nil
         self.loadMathematicsPapers = nil
+        self.loadPhysicsPapers = nil
+        self.loadQuantitativeBiologyPapers = nil
+        self.loadQuantitativeFinancePapers = nil
+        self.loadStatisticsPapers = nil
+        self.loadElectricalEngineeringPapers = nil
+        self.loadEconomicsPapers = nil
         self._selectedPaper = selectedPaper
     }
     
@@ -173,38 +209,125 @@ struct PapersListView: View {
         .toolbar {
             ToolbarItemGroup(placement: toolbarPlacement) {
                 #if os(iOS)
-                if let loadCS = loadComputerSciencePapers {
-                    Button(action: {
+                Menu("Categorías") {
+                    Button("Últimos Papers") {
                         Task {
-                            currentCategory = "cs"
-                            await loadCS()
+                            currentCategory = "latest"
+                            await loadLatestPapers()
                         }
-                    }) {
-                        Label("Computer Science", systemImage: "laptopcomputer")
                     }
-                    .disabled(isLoading)
-                }
-                
-                if let loadMath = loadMathematicsPapers {
-                    Button(action: {
-                        Task {
-                            currentCategory = "math"
-                            await loadMath()
+                    
+                    if let loadCS = loadComputerSciencePapers {
+                        Button("Computer Science") {
+                            Task {
+                                currentCategory = "cs"
+                                await loadCS()
+                            }
                         }
-                    }) {
-                        Label("Mathematics", systemImage: "x.squareroot")
                     }
-                    .disabled(isLoading)
+                    
+                    if let loadMath = loadMathematicsPapers {
+                        Button("Mathematics") {
+                            Task {
+                                currentCategory = "math"
+                                await loadMath()
+                            }
+                        }
+                    }
+                    
+                    if let loadPhysics = loadPhysicsPapers {
+                        Button("Physics") {
+                            Task {
+                                currentCategory = "physics"
+                                await loadPhysics()
+                            }
+                        }
+                    }
+                    
+                    if let loadBio = loadQuantitativeBiologyPapers {
+                        Button("Quantitative Biology") {
+                            Task {
+                                currentCategory = "q-bio"
+                                await loadBio()
+                            }
+                        }
+                    }
+                    
+                    if let loadFin = loadQuantitativeFinancePapers {
+                        Button("Quantitative Finance") {
+                            Task {
+                                currentCategory = "q-fin"
+                                await loadFin()
+                            }
+                        }
+                    }
+                    
+                    if let loadStats = loadStatisticsPapers {
+                        Button("Statistics") {
+                            Task {
+                                currentCategory = "stat"
+                                await loadStats()
+                            }
+                        }
+                    }
+                    
+                    if let loadEE = loadElectricalEngineeringPapers {
+                        Button("Electrical Engineering") {
+                            Task {
+                                currentCategory = "eess"
+                                await loadEE()
+                            }
+                        }
+                    }
+                    
+                    if let loadEcon = loadEconomicsPapers {
+                        Button("Economics") {
+                            Task {
+                                currentCategory = "econ"
+                                await loadEcon()
+                            }
+                        }
+                    }
                 }
+                .disabled(isLoading)
                 #endif
                 
                 Button(action: {
                     Task {
-                        if currentCategory == "cs", let loadCS = loadComputerSciencePapers {
-                            await loadCS()
-                        } else if currentCategory == "math", let loadMath = loadMathematicsPapers {
-                            await loadMath()
-                        } else {
+                        switch currentCategory {
+                        case "cs":
+                            if let loadCS = loadComputerSciencePapers {
+                                await loadCS()
+                            }
+                        case "math":
+                            if let loadMath = loadMathematicsPapers {
+                                await loadMath()
+                            }
+                        case "physics":
+                            if let loadPhysics = loadPhysicsPapers {
+                                await loadPhysics()
+                            }
+                        case "q-bio":
+                            if let loadBio = loadQuantitativeBiologyPapers {
+                                await loadBio()
+                            }
+                        case "q-fin":
+                            if let loadFin = loadQuantitativeFinancePapers {
+                                await loadFin()
+                            }
+                        case "stat":
+                            if let loadStats = loadStatisticsPapers {
+                                await loadStats()
+                            }
+                        case "eess":
+                            if let loadEE = loadElectricalEngineeringPapers {
+                                await loadEE()
+                            }
+                        case "econ":
+                            if let loadEcon = loadEconomicsPapers {
+                                await loadEcon()
+                            }
+                        default:
                             await loadLatestPapers()
                         }
                     }
@@ -253,6 +376,12 @@ struct PapersListView: View {
         errorMessage: .constant(nil),
         loadLatestPapers: { },
         loadComputerSciencePapers: { },
-        loadMathematicsPapers: { }
+        loadMathematicsPapers: { },
+        loadPhysicsPapers: { },
+        loadQuantitativeBiologyPapers: { },
+        loadQuantitativeFinancePapers: { },
+        loadStatisticsPapers: { },
+        loadElectricalEngineeringPapers: { },
+        loadEconomicsPapers: { }
     )
 }

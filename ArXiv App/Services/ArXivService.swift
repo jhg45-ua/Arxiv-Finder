@@ -142,6 +142,246 @@ final class ArXivService: @unchecked Sendable {
         }
     }
     
+    /// Obtiene artículos de Physics de ArXiv
+    /// - Parameter count: Número de artículos a obtener (por defecto 10)
+    /// - Returns: Array de artículos de Physics
+    /// - Throws: Error si falla la petición o el parsing
+    nonisolated func fetchPhysicsPapers(count: Int = 10) async throws -> [ArXivPaper] {
+        // Construye la URL para obtener artículos de Physics (categoría physics)
+        // Usa lastUpdatedDate para obtener los más recientes
+        guard let url = URL(string: "\(baseURL)?search_query=cat:physics*&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending") else {
+            throw ArXivError.invalidURL
+        }
+        
+        print("🌐 Fetching Physics papers from URL: \(url.absoluteString)")
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw ArXivError.networkError("Respuesta inválida del servidor")
+            }
+            
+            print("📡 HTTP Status: \(httpResponse.statusCode)")
+            
+            guard httpResponse.statusCode == 200 else {
+                throw ArXivError.networkError("Error HTTP: \(httpResponse.statusCode)")
+            }
+            
+            print("📄 Data received: \(data.count) bytes")
+            
+            let papers = try parseArXivXML(data)
+            print("✅ Successfully parsed \(papers.count) Physics papers")
+            return papers
+            
+        } catch let error as ArXivError {
+            throw error
+        } catch {
+            print("❌ Network error: \(error.localizedDescription)")
+            throw ArXivError.networkError(error.localizedDescription)
+        }
+    }
+    
+    /// Obtiene artículos de Quantitative Biology de ArXiv
+    /// - Parameter count: Número de artículos a obtener (por defecto 10)
+    /// - Returns: Array de artículos de Quantitative Biology
+    /// - Throws: Error si falla la petición o el parsing
+    nonisolated func fetchQuantitativeBiologyPapers(count: Int = 10) async throws -> [ArXivPaper] {
+        // Construye la URL para obtener artículos de Quantitative Biology (categoría q-bio)
+        // Usa lastUpdatedDate para obtener los más recientes
+        guard let url = URL(string: "\(baseURL)?search_query=cat:q-bio*&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending") else {
+            throw ArXivError.invalidURL
+        }
+        
+        print("🌐 Fetching Quantitative Biology papers from URL: \(url.absoluteString)")
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw ArXivError.networkError("Respuesta inválida del servidor")
+            }
+            
+            print("📡 HTTP Status: \(httpResponse.statusCode)")
+            
+            guard httpResponse.statusCode == 200 else {
+                throw ArXivError.networkError("Error HTTP: \(httpResponse.statusCode)")
+            }
+            
+            print("📄 Data received: \(data.count) bytes")
+            
+            let papers = try parseArXivXML(data)
+            print("✅ Successfully parsed \(papers.count) Quantitative Biology papers")
+            return papers
+            
+        } catch let error as ArXivError {
+            throw error
+        } catch {
+            print("❌ Network error: \(error.localizedDescription)")
+            throw ArXivError.networkError(error.localizedDescription)
+        }
+    }
+    
+    /// Obtiene artículos de Quantitative Finance de ArXiv
+    /// - Parameter count: Número de artículos a obtener (por defecto 10)
+    /// - Returns: Array de artículos de Quantitative Finance
+    /// - Throws: Error si falla la petición o el parsing
+    nonisolated func fetchQuantitativeFinancePapers(count: Int = 10) async throws -> [ArXivPaper] {
+        // Construye la URL para obtener artículos de Quantitative Finance (categoría q-fin)
+        // Usa lastUpdatedDate para obtener los más recientes
+        guard let url = URL(string: "\(baseURL)?search_query=cat:q-fin*&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending") else {
+            throw ArXivError.invalidURL
+        }
+        
+        print("🌐 Fetching Quantitative Finance papers from URL: \(url.absoluteString)")
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw ArXivError.networkError("Respuesta inválida del servidor")
+            }
+            
+            print("📡 HTTP Status: \(httpResponse.statusCode)")
+            
+            guard httpResponse.statusCode == 200 else {
+                throw ArXivError.networkError("Error HTTP: \(httpResponse.statusCode)")
+            }
+            
+            print("📄 Data received: \(data.count) bytes")
+            
+            let papers = try parseArXivXML(data)
+            print("✅ Successfully parsed \(papers.count) Quantitative Finance papers")
+            return papers
+            
+        } catch let error as ArXivError {
+            throw error
+        } catch {
+            print("❌ Network error: \(error.localizedDescription)")
+            throw ArXivError.networkError(error.localizedDescription)
+        }
+    }
+    
+    /// Obtiene artículos de Statistics de ArXiv
+    /// - Parameter count: Número de artículos a obtener (por defecto 10)
+    /// - Returns: Array de artículos de Statistics
+    /// - Throws: Error si falla la petición o el parsing
+    nonisolated func fetchStatisticsPapers(count: Int = 10) async throws -> [ArXivPaper] {
+        // Construye la URL para obtener artículos de Statistics (categoría stat)
+        // Usa lastUpdatedDate para obtener los más recientes
+        guard let url = URL(string: "\(baseURL)?search_query=cat:stat*&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending") else {
+            throw ArXivError.invalidURL
+        }
+        
+        print("🌐 Fetching Statistics papers from URL: \(url.absoluteString)")
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw ArXivError.networkError("Respuesta inválida del servidor")
+            }
+            
+            print("📡 HTTP Status: \(httpResponse.statusCode)")
+            
+            guard httpResponse.statusCode == 200 else {
+                throw ArXivError.networkError("Error HTTP: \(httpResponse.statusCode)")
+            }
+            
+            print("📄 Data received: \(data.count) bytes")
+            
+            let papers = try parseArXivXML(data)
+            print("✅ Successfully parsed \(papers.count) Statistics papers")
+            return papers
+            
+        } catch let error as ArXivError {
+            throw error
+        } catch {
+            print("❌ Network error: \(error.localizedDescription)")
+            throw ArXivError.networkError(error.localizedDescription)
+        }
+    }
+    
+    /// Obtiene artículos de Electrical Engineering and Systems Science de ArXiv
+    /// - Parameter count: Número de artículos a obtener (por defecto 10)
+    /// - Returns: Array de artículos de Electrical Engineering and Systems Science
+    /// - Throws: Error si falla la petición o el parsing
+    nonisolated func fetchElectricalEngineeringPapers(count: Int = 10) async throws -> [ArXivPaper] {
+        // Construye la URL para obtener artículos de Electrical Engineering and Systems Science (categoría eess)
+        // Usa lastUpdatedDate para obtener los más recientes
+        guard let url = URL(string: "\(baseURL)?search_query=cat:eess*&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending") else {
+            throw ArXivError.invalidURL
+        }
+        
+        print("🌐 Fetching Electrical Engineering and Systems Science papers from URL: \(url.absoluteString)")
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw ArXivError.networkError("Respuesta inválida del servidor")
+            }
+            
+            print("📡 HTTP Status: \(httpResponse.statusCode)")
+            
+            guard httpResponse.statusCode == 200 else {
+                throw ArXivError.networkError("Error HTTP: \(httpResponse.statusCode)")
+            }
+            
+            print("📄 Data received: \(data.count) bytes")
+            
+            let papers = try parseArXivXML(data)
+            print("✅ Successfully parsed \(papers.count) Electrical Engineering and Systems Science papers")
+            return papers
+            
+        } catch let error as ArXivError {
+            throw error
+        } catch {
+            print("❌ Network error: \(error.localizedDescription)")
+            throw ArXivError.networkError(error.localizedDescription)
+        }
+    }
+    
+    /// Obtiene artículos de Economics de ArXiv
+    /// - Parameter count: Número de artículos a obtener (por defecto 10)
+    /// - Returns: Array de artículos de Economics
+    /// - Throws: Error si falla la petición o el parsing
+    nonisolated func fetchEconomicsPapers(count: Int = 10) async throws -> [ArXivPaper] {
+        // Construye la URL para obtener artículos de Economics (categoría econ)
+        // Usa lastUpdatedDate para obtener los más recientes
+        guard let url = URL(string: "\(baseURL)?search_query=cat:econ*&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending") else {
+            throw ArXivError.invalidURL
+        }
+        
+        print("🌐 Fetching Economics papers from URL: \(url.absoluteString)")
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw ArXivError.networkError("Respuesta inválida del servidor")
+            }
+            
+            print("📡 HTTP Status: \(httpResponse.statusCode)")
+            
+            guard httpResponse.statusCode == 200 else {
+                throw ArXivError.networkError("Error HTTP: \(httpResponse.statusCode)")
+            }
+            
+            print("📄 Data received: \(data.count) bytes")
+            
+            let papers = try parseArXivXML(data)
+            print("✅ Successfully parsed \(papers.count) Economics papers")
+            return papers
+            
+        } catch let error as ArXivError {
+            throw error
+        } catch {
+            print("❌ Network error: \(error.localizedDescription)")
+            throw ArXivError.networkError(error.localizedDescription)
+        }
+    }
+    
     /// Función alternativa para obtener los últimos artículos usando una consulta simple
     /// Útil cuando la consulta principal no funciona
     nonisolated func fetchRecentPapers(count: Int = 10) async throws -> [ArXivPaper] {

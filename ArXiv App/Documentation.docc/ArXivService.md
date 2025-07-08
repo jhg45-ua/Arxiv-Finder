@@ -88,6 +88,62 @@ func fetchPapersByCategory(_ category: String) async throws -> [ArXivPaper] {
 }
 ```
 
+### 🔬 Métodos Específicos por Categoría
+
+La aplicación incluye métodos especializados para cada categoría principal:
+
+```swift
+/// Obtiene artículos de Computer Science
+func fetchComputerSciencePapers() async throws -> [ArXivPaper] {
+    return try await fetchPapersByCategory("cs.*")
+}
+
+/// Obtiene artículos de Mathematics
+func fetchMathematicsPapers() async throws -> [ArXivPaper] {
+    return try await fetchPapersByCategory("math.*")
+}
+
+/// Obtiene artículos de Physics
+func fetchPhysicsPapers() async throws -> [ArXivPaper] {
+    return try await fetchPapersByCategory("physics.*")
+}
+
+/// Obtiene artículos de Quantitative Biology
+func fetchQuantitativeBiologyPapers() async throws -> [ArXivPaper] {
+    return try await fetchPapersByCategory("q-bio.*")
+}
+
+/// Obtiene artículos de Quantitative Finance
+func fetchQuantitativeFinancePapers() async throws -> [ArXivPaper] {
+    return try await fetchPapersByCategory("q-fin.*")
+}
+
+/// Obtiene artículos de Statistics
+func fetchStatisticsPapers() async throws -> [ArXivPaper] {
+    return try await fetchPapersByCategory("stat.*")
+}
+
+/// Obtiene artículos de Electrical Engineering and Systems Science
+func fetchElectricalEngineeringPapers() async throws -> [ArXivPaper] {
+    return try await fetchPapersByCategory("eess.*")
+}
+
+/// Obtiene artículos de Economics
+func fetchEconomicsPapers() async throws -> [ArXivPaper] {
+    return try await fetchPapersByCategory("econ.*")
+}
+```
+
+**Categorías Soportadas:**
+- **Computer Science** (`cs.*`) - Ciencias de la Computación
+- **Mathematics** (`math.*`) - Matemáticas
+- **Physics** (`physics.*`) - Física
+- **Quantitative Biology** (`q-bio.*`) - Biología Cuantitativa
+- **Quantitative Finance** (`q-fin.*`) - Finanzas Cuantitativas
+- **Statistics** (`stat.*`) - Estadística
+- **Electrical Engineering** (`eess.*`) - Ingeniería Eléctrica y Sistemas
+- **Economics** (`econ.*`) - Economía
+
 ### 🔍 Búsqueda Avanzada
 
 ```swift

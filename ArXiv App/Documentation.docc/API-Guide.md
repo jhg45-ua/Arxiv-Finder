@@ -165,6 +165,50 @@ func getLatestPapers(
 - `physics.atom-ph` - Física Atómica
 - `physics.bio-ph` - Biofísica
 - `physics.comp-ph` - Física Computacional
+- `physics.chem-ph` - Física Química
+- `physics.class-ph` - Física Clásica
+- `physics.data-an` - Análisis de Datos
+
+#### 🧬 Quantitative Biology (q-bio)
+- `q-bio.BM` - Biomoléculas
+- `q-bio.CB` - Biología Celular
+- `q-bio.GN` - Genómica
+- `q-bio.MN` - Redes Moleculares
+- `q-bio.NC` - Neurociencia Computacional
+- `q-bio.PE` - Evolución Poblacional
+- `q-bio.QM` - Métodos Cuantitativos
+- `q-bio.SC` - Células Subceleulares
+- `q-bio.TO` - Tejidos y Órganos
+
+#### 💰 Quantitative Finance (q-fin)
+- `q-fin.CP` - Precios Computacionales
+- `q-fin.EC` - Economía
+- `q-fin.GN` - Finanzas Generales
+- `q-fin.MF` - Finanzas Matemáticas
+- `q-fin.PM` - Gestión de Portafolios
+- `q-fin.PR` - Gestión de Riesgos
+- `q-fin.RM` - Gestión de Riesgos
+- `q-fin.ST` - Trading Estadístico
+- `q-fin.TR` - Trading y Microestructura
+
+#### 📊 Statistics (stat)
+- `stat.AP` - Aplicaciones
+- `stat.CO` - Computación
+- `stat.ME` - Metodología
+- `stat.ML` - Machine Learning
+- `stat.OT` - Otros Temas
+- `stat.TH` - Teoría
+
+#### ⚡ Electrical Engineering and Systems Science (eess)
+- `eess.AS` - Procesamiento de Audio y Voz
+- `eess.IV` - Procesamiento de Imágenes y Video
+- `eess.SP` - Procesamiento de Señales
+- `eess.SY` - Sistemas y Control
+
+#### 💼 Economics (econ)
+- `econ.EM` - Econometría
+- `econ.GN` - Economía General
+- `econ.TH` - Teoría Económica
 
 ### Enumeración de Categorías
 
@@ -174,16 +218,22 @@ enum ArXivCategory: String, CaseIterable {
     case computerScience = "cs"
     case mathematics = "math"
     case physics = "physics"
-    case quantumPhysics = "quant-ph"
+    case quantitativeBiology = "q-bio"
+    case quantitativeFinance = "q-fin"
     case statistics = "stat"
+    case electricalEngineering = "eess"
+    case economics = "econ"
     
     var displayName: String {
         switch self {
         case .computerScience: return "Computer Science"
         case .mathematics: return "Mathematics"
         case .physics: return "Physics"
-        case .quantumPhysics: return "Quantum Physics"
+        case .quantitativeBiology: return "Quantitative Biology"
+        case .quantitativeFinance: return "Quantitative Finance"
         case .statistics: return "Statistics"
+        case .electricalEngineering: return "Electrical Engineering"
+        case .economics: return "Economics"
         }
     }
     
@@ -195,9 +245,20 @@ enum ArXivCategory: String, CaseIterable {
             return ["math.AG", "math.AP", "math.AT", "math.CA", "math.CO", "math.NT", "math.ST"]
         case .physics:
             return ["physics.ao-ph", "physics.atom-ph", "physics.bio-ph", "physics.comp-ph"]
-        case .quantumPhysics:
-            return ["quant-ph"]
+        case .quantitativeBiology:
+            return ["q-bio.BM", "q-bio.CB", "q-bio.GN", "q-bio.MN", "q-bio.NC", "q-bio.PE", "q-bio.QM", "q-bio.SC", "q-bio.TO"]
+        case .quantitativeFinance:
+            return ["q-fin.CP", "q-fin.EC", "q-fin.GN", "q-fin.MF", "q-fin.PM", "q-fin.PR", "q-fin.RM", "q-fin.ST", "q-fin.TR"]
         case .statistics:
+            return ["stat.AP", "stat.CO", "stat.ME", "stat.ML", "stat.OT", "stat.TH"]
+        case .electricalEngineering:
+            return ["eess.AS", "eess.IV", "eess.SP", "eess.SY"]
+        case .economics:
+            return ["econ.EM", "econ.GN", "econ.TH"]
+        }
+    }
+}
+```
             return ["stat.AP", "stat.CO", "stat.ME", "stat.ML", "stat.TH"]
         }
     }

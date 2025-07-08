@@ -25,6 +25,24 @@ final class ArXivController: ObservableObject {
     /// Papers de Mathematics
     @Published var mathPapers: [ArXivPaper] = []
     
+    /// Papers de Physics
+    @Published var physicsPapers: [ArXivPaper] = []
+    
+    /// Papers de Quantitative Biology
+    @Published var quantitativeBiologyPapers: [ArXivPaper] = []
+    
+    /// Papers de Quantitative Finance
+    @Published var quantitativeFinancePapers: [ArXivPaper] = []
+    
+    /// Papers de Statistics
+    @Published var statisticsPapers: [ArXivPaper] = []
+    
+    /// Papers de Electrical Engineering and Systems Science
+    @Published var electricalEngineeringPapers: [ArXivPaper] = []
+    
+    /// Papers de Economics
+    @Published var economicsPapers: [ArXivPaper] = []
+    
     /// Estado de carga
     @Published var isLoading = false
     
@@ -70,6 +88,18 @@ final class ArXivController: ObservableObject {
             return csPapers
         case "math":
             return mathPapers
+        case "physics":
+            return physicsPapers
+        case "q-bio":
+            return quantitativeBiologyPapers
+        case "q-fin":
+            return quantitativeFinancePapers
+        case "stat":
+            return statisticsPapers
+        case "eess":
+            return electricalEngineeringPapers
+        case "econ":
+            return economicsPapers
         default:
             return latestPapers
         }
@@ -98,8 +128,50 @@ final class ArXivController: ObservableObject {
         await loadPapers(category: "math")
     }
     
+    /// Carga papers de la categoría Physics
+    /// Actualiza la propiedad `physicsPapers` con los resultados
+    func loadPhysicsPapers() async {
+        print("🚀 Controller: Starting to load Physics papers...")
+        await loadPapers(category: "physics")
+    }
+    
+    /// Carga papers de la categoría Quantitative Biology
+    /// Actualiza la propiedad `quantitativeBiologyPapers` con los resultados
+    func loadQuantitativeBiologyPapers() async {
+        print("🚀 Controller: Starting to load Quantitative Biology papers...")
+        await loadPapers(category: "q-bio")
+    }
+    
+    /// Carga papers de la categoría Quantitative Finance
+    /// Actualiza la propiedad `quantitativeFinancePapers` con los resultados
+    func loadQuantitativeFinancePapers() async {
+        print("🚀 Controller: Starting to load Quantitative Finance papers...")
+        await loadPapers(category: "q-fin")
+    }
+    
+    /// Carga papers de la categoría Statistics
+    /// Actualiza la propiedad `statisticsPapers` con los resultados
+    func loadStatisticsPapers() async {
+        print("🚀 Controller: Starting to load Statistics papers...")
+        await loadPapers(category: "stat")
+    }
+    
+    /// Carga papers de la categoría Electrical Engineering and Systems Science
+    /// Actualiza la propiedad `electricalEngineeringPapers` con los resultados
+    func loadElectricalEngineeringPapers() async {
+        print("🚀 Controller: Starting to load Electrical Engineering papers...")
+        await loadPapers(category: "eess")
+    }
+    
+    /// Carga papers de la categoría Economics
+    /// Actualiza la propiedad `economicsPapers` con los resultados
+    func loadEconomicsPapers() async {
+        print("🚀 Controller: Starting to load Economics papers...")
+        await loadPapers(category: "econ")
+    }
+    
     /// Cambia la categoría actual y actualiza la UI
-    /// - Parameter category: Nueva categoría a seleccionar ("latest", "cs", "math")
+    /// - Parameter category: Nueva categoría a seleccionar ("latest", "cs", "math", "physics", "q-bio", "q-fin", "stat", "eess", "econ")
     func changeCategory(to category: String) {
         currentCategory = category
     }
@@ -108,7 +180,7 @@ final class ArXivController: ObservableObject {
     
     /// Método genérico para cargar papers según la categoría especificada
     /// Gestiona el estado de carga, errores y actualiza las propiedades correspondientes
-    /// - Parameter category: Categoría de papers a cargar ("latest", "cs", "math")
+    /// - Parameter category: Categoría de papers a cargar ("latest", "cs", "math", "physics", "q-bio", "q-fin", "stat", "eess", "econ")
     private func loadPapers(category: String) async {
         isLoading = true
         errorMessage = nil
@@ -126,6 +198,18 @@ final class ArXivController: ObservableObject {
                 fetchedPapers = try await fetchComputerSciencePapersWithFallback()
             case "math":
                 fetchedPapers = try await fetchMathematicsPapersWithFallback()
+            case "physics":
+                fetchedPapers = try await fetchPhysicsPapersWithFallback()
+            case "q-bio":
+                fetchedPapers = try await fetchQuantitativeBiologyPapersWithFallback()
+            case "q-fin":
+                fetchedPapers = try await fetchQuantitativeFinancePapersWithFallback()
+            case "stat":
+                fetchedPapers = try await fetchStatisticsPapersWithFallback()
+            case "eess":
+                fetchedPapers = try await fetchElectricalEngineeringPapersWithFallback()
+            case "econ":
+                fetchedPapers = try await fetchEconomicsPapersWithFallback()
             default: // "latest"
                 fetchedPapers = try await fetchLatestPapersWithFallback()
             }
@@ -184,6 +268,42 @@ final class ArXivController: ObservableObject {
         return papers
     }
     
+    /// Obtiene papers de Physics con fallback
+    private func fetchPhysicsPapersWithFallback() async throws -> [ArXivPaper] {
+        let papers = try await arxivService.fetchPhysicsPapers(count: maxPapers)
+        return papers
+    }
+    
+    /// Obtiene papers de Quantitative Biology con fallback
+    private func fetchQuantitativeBiologyPapersWithFallback() async throws -> [ArXivPaper] {
+        let papers = try await arxivService.fetchQuantitativeBiologyPapers(count: maxPapers)
+        return papers
+    }
+    
+    /// Obtiene papers de Quantitative Finance con fallback
+    private func fetchQuantitativeFinancePapersWithFallback() async throws -> [ArXivPaper] {
+        let papers = try await arxivService.fetchQuantitativeFinancePapers(count: maxPapers)
+        return papers
+    }
+    
+    /// Obtiene papers de Statistics con fallback
+    private func fetchStatisticsPapersWithFallback() async throws -> [ArXivPaper] {
+        let papers = try await arxivService.fetchStatisticsPapers(count: maxPapers)
+        return papers
+    }
+    
+    /// Obtiene papers de Electrical Engineering and Systems Science con fallback
+    private func fetchElectricalEngineeringPapersWithFallback() async throws -> [ArXivPaper] {
+        let papers = try await arxivService.fetchElectricalEngineeringPapers(count: maxPapers)
+        return papers
+    }
+    
+    /// Obtiene papers de Economics con fallback
+    private func fetchEconomicsPapersWithFallback() async throws -> [ArXivPaper] {
+        let papers = try await arxivService.fetchEconomicsPapers(count: maxPapers)
+        return papers
+    }
+    
     /// Actualiza los papers según la categoría
     private func updatePapers(_ papers: [ArXivPaper], for category: String) {
         switch category {
@@ -191,6 +311,18 @@ final class ArXivController: ObservableObject {
             csPapers = papers
         case "math":
             mathPapers = papers
+        case "physics":
+            physicsPapers = papers
+        case "q-bio":
+            quantitativeBiologyPapers = papers
+        case "q-fin":
+            quantitativeFinancePapers = papers
+        case "stat":
+            statisticsPapers = papers
+        case "eess":
+            electricalEngineeringPapers = papers
+        case "econ":
+            economicsPapers = papers
         default: // "latest"
             latestPapers = papers
         }
@@ -367,6 +499,18 @@ final class ArXivController: ObservableObject {
             await loadComputerSciencePapers()
         case "math":
             await loadMathematicsPapers()
+        case "physics":
+            await loadPhysicsPapers()
+        case "q-bio":
+            await loadQuantitativeBiologyPapers()
+        case "q-fin":
+            await loadQuantitativeFinancePapers()
+        case "stat":
+            await loadStatisticsPapers()
+        case "eess":
+            await loadElectricalEngineeringPapers()
+        case "econ":
+            await loadEconomicsPapers()
         default:
             await loadLatestPapers()
         }

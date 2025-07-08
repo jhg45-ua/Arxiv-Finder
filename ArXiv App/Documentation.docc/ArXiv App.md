@@ -19,10 +19,23 @@ Esta aplicación demuestra las mejores prácticas de desarrollo en SwiftUI, incl
 ## Características Principales
 
 - **🔍 Búsqueda Inteligente**: Busca artículos por título, autor, palabras clave o categorías específicas
-- **📚 Exploración por Categorías**: Navega por las diferentes disciplinas académicas de ArXiv
+- **📚 Exploración por Categorías**: Navega por 8 disciplinas académicas principales de ArXiv
 - **📄 Vista Detallada**: Visualiza información completa incluyendo resúmenes, autores, fechas y enlaces
 - **💻 Interfaz Nativa**: Diseño SwiftUI optimizado para macOS con soporte completo para modo oscuro
 - **⚡ Rendimiento Optimizado**: Carga asíncrona de datos y gestión eficiente de memoria
+
+### 🏷️ Categorías Académicas Soportadas
+
+La aplicación proporciona acceso a las siguientes categorías de ArXiv:
+
+- **💻 Computer Science** (`cs`) - Ciencias de la Computación
+- **🔢 Mathematics** (`math`) - Matemáticas
+- **⚛️ Physics** (`physics`) - Física
+- **🧬 Quantitative Biology** (`q-bio`) - Biología Cuantitativa
+- **💰 Quantitative Finance** (`q-fin`) - Finanzas Cuantitativas
+- **📊 Statistics** (`stat`) - Estadística
+- **⚡ Electrical Engineering** (`eess`) - Ingeniería Eléctrica
+- **💼 Economics** (`econ`) - Economía
 
 ## Arquitectura de la Aplicación
 

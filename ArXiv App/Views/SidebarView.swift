@@ -35,6 +35,24 @@ struct SidebarView: View {
     /// Callback para cargar papers de Mathematics
     let onMathematicsSelected: () async -> Void
     
+    /// Callback para cargar papers de Physics
+    let onPhysicsSelected: () async -> Void
+    
+    /// Callback para cargar papers de Quantitative Biology
+    let onQuantitativeBiologySelected: () async -> Void
+    
+    /// Callback para cargar papers de Quantitative Finance
+    let onQuantitativeFinanceSelected: () async -> Void
+    
+    /// Callback para cargar papers de Statistics
+    let onStatisticsSelected: () async -> Void
+    
+    /// Callback para cargar papers de Electrical Engineering
+    let onElectricalEngineeringSelected: () async -> Void
+    
+    /// Callback para cargar papers de Economics
+    let onEconomicsSelected: () async -> Void
+    
     var body: some View {
         VStack(spacing: 0) {
             // Header simplificado
@@ -82,6 +100,54 @@ struct SidebarView: View {
                     isSelected: currentCategory == "math"
                 ) {
                     Task { await onMathematicsSelected() }
+                }
+                
+                sidebarButton(
+                    title: "Physics",
+                    icon: "atom",
+                    isSelected: currentCategory == "physics"
+                ) {
+                    Task { await onPhysicsSelected() }
+                }
+                
+                sidebarButton(
+                    title: "Quantitative Biology",
+                    icon: "leaf",
+                    isSelected: currentCategory == "q-bio"
+                ) {
+                    Task { await onQuantitativeBiologySelected() }
+                }
+                
+                sidebarButton(
+                    title: "Quantitative Finance",
+                    icon: "chart.line.uptrend.xyaxis",
+                    isSelected: currentCategory == "q-fin"
+                ) {
+                    Task { await onQuantitativeFinanceSelected() }
+                }
+                
+                sidebarButton(
+                    title: "Statistics",
+                    icon: "chart.bar",
+                    isSelected: currentCategory == "stat"
+                ) {
+                    Task { await onStatisticsSelected() }
+                }
+                
+                sidebarButton(
+                    title: "Electrical Engineering",
+                    icon: "bolt",
+                    isSelected: currentCategory == "eess"
+                ) {
+                    Task { await onElectricalEngineeringSelected() }
+                }
+                
+                sidebarButton(
+                    title: "Economics",
+                    icon: "dollarsign.circle",
+                    isSelected: currentCategory == "econ"
+                ) {
+                    Task { await onEconomicsSelected() }
                 }
                 
                 Divider()
@@ -178,7 +244,13 @@ struct SidebarView: View {
         currentCategory: .constant("latest"),
         onLatestPapersSelected: { },
         onComputerScienceSelected: { },
-        onMathematicsSelected: { }
+        onMathematicsSelected: { },
+        onPhysicsSelected: { },
+        onQuantitativeBiologySelected: { },
+        onQuantitativeFinanceSelected: { },
+        onStatisticsSelected: { },
+        onElectricalEngineeringSelected: { },
+        onEconomicsSelected: { }
     )
     .frame(width: 320, height: 500)
 }

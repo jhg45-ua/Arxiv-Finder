@@ -44,6 +44,30 @@ struct MainView: View {
                 onMathematicsSelected: {
                     await controller.loadMathematicsPapers()
                     selectedPaper = nil // Volver a la vista principal
+                },
+                onPhysicsSelected: {
+                    await controller.loadPhysicsPapers()
+                    selectedPaper = nil // Volver a la vista principal
+                },
+                onQuantitativeBiologySelected: {
+                    await controller.loadQuantitativeBiologyPapers()
+                    selectedPaper = nil // Volver a la vista principal
+                },
+                onQuantitativeFinanceSelected: {
+                    await controller.loadQuantitativeFinancePapers()
+                    selectedPaper = nil // Volver a la vista principal
+                },
+                onStatisticsSelected: {
+                    await controller.loadStatisticsPapers()
+                    selectedPaper = nil // Volver a la vista principal
+                },
+                onElectricalEngineeringSelected: {
+                    await controller.loadElectricalEngineeringPapers()
+                    selectedPaper = nil // Volver a la vista principal
+                },
+                onEconomicsSelected: {
+                    await controller.loadEconomicsPapers()
+                    selectedPaper = nil // Volver a la vista principal
                 }
             )
         } content: {
@@ -96,7 +120,13 @@ struct MainView: View {
                 errorMessage: .constant(controller.errorMessage),
                 loadLatestPapers: { await controller.loadLatestPapers() },
                 loadComputerSciencePapers: { await controller.loadComputerSciencePapers() },
-                loadMathematicsPapers: { await controller.loadMathematicsPapers() }
+                loadMathematicsPapers: { await controller.loadMathematicsPapers() },
+                loadPhysicsPapers: { await controller.loadPhysicsPapers() },
+                loadQuantitativeBiologyPapers: { await controller.loadQuantitativeBiologyPapers() },
+                loadQuantitativeFinancePapers: { await controller.loadQuantitativeFinancePapers() },
+                loadStatisticsPapers: { await controller.loadStatisticsPapers() },
+                loadElectricalEngineeringPapers: { await controller.loadElectricalEngineeringPapers() },
+                loadEconomicsPapers: { await controller.loadEconomicsPapers() }
             )
             .navigationTitle("ArXiv Papers")
             .task {

@@ -88,11 +88,40 @@ private var searchBar: some View {
 ```swift
 /// Filtros de categoría disponibles
 private let availableCategories = [
+    // Computer Science
     "cs.AI": "Inteligencia Artificial",
     "cs.LG": "Machine Learning",
+    "cs.CV": "Visión por Computadora",
+    "cs.DS": "Estructuras de Datos",
+    
+    // Mathematics
     "math.CO": "Combinatoria",
-    "stat.ML": "Estadística ML",
-    "physics.gen-ph": "Física General"
+    "math.NT": "Teoría de Números",
+    "math.ST": "Estadística",
+    
+    // Physics
+    "physics.gen-ph": "Física General",
+    "physics.comp-ph": "Física Computacional",
+    
+    // Quantitative Biology
+    "q-bio.BM": "Biomoléculas",
+    "q-bio.NC": "Neurociencia Computacional",
+    
+    // Quantitative Finance
+    "q-fin.CP": "Precios Computacionales",
+    "q-fin.MF": "Finanzas Matemáticas",
+    
+    // Statistics
+    "stat.ML": "Machine Learning",
+    "stat.AP": "Aplicaciones",
+    
+    // Electrical Engineering
+    "eess.SP": "Procesamiento de Señales",
+    "eess.IV": "Procesamiento de Imágenes",
+    
+    // Economics
+    "econ.EM": "Econometría",
+    "econ.TH": "Teoría Económica"
 ]
 
 /// Vista de filtros

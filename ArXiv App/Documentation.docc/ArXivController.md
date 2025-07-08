@@ -35,6 +35,24 @@ El ``ArXivController`` maneja:
 /// Papers de Mathematics
 @Published var mathPapers: [ArXivPaper] = []
 
+/// Papers de Physics
+@Published var physicsPapers: [ArXivPaper] = []
+
+/// Papers de Quantitative Biology
+@Published var quantitativeBiologyPapers: [ArXivPaper] = []
+
+/// Papers de Quantitative Finance
+@Published var quantitativeFinancePapers: [ArXivPaper] = []
+
+/// Papers de Statistics
+@Published var statisticsPapers: [ArXivPaper] = []
+
+/// Papers de Electrical Engineering and Systems Science
+@Published var electricalEngineeringPapers: [ArXivPaper] = []
+
+/// Papers de Economics
+@Published var economicsPapers: [ArXivPaper] = []
+
 /// Estado de carga
 @Published var isLoading = false
 ```
@@ -70,14 +88,50 @@ Organiza los artículos por categorías académicas:
 ```swift
 /// Carga artículos específicos de Computer Science
 func loadComputerSciencePapers() async {
-    let papers = try await arXivService.fetchPapersByCategory("cs.*")
+    let papers = try await arXivService.fetchComputerSciencePapers()
     csPapers = papers
 }
 
 /// Carga artículos específicos de Mathematics
 func loadMathematicsPapers() async {
-    let papers = try await arXivService.fetchPapersByCategory("math.*")
+    let papers = try await arXivService.fetchMathematicsPapers()
     mathPapers = papers
+}
+
+/// Carga artículos específicos de Physics
+func loadPhysicsPapers() async {
+    let papers = try await arXivService.fetchPhysicsPapers()
+    physicsPapers = papers
+}
+
+/// Carga artículos específicos de Quantitative Biology
+func loadQuantitativeBiologyPapers() async {
+    let papers = try await arXivService.fetchQuantitativeBiologyPapers()
+    quantitativeBiologyPapers = papers
+}
+
+/// Carga artículos específicos de Quantitative Finance
+func loadQuantitativeFinancePapers() async {
+    let papers = try await arXivService.fetchQuantitativeFinancePapers()
+    quantitativeFinancePapers = papers
+}
+
+/// Carga artículos específicos de Statistics
+func loadStatisticsPapers() async {
+    let papers = try await arXivService.fetchStatisticsPapers()
+    statisticsPapers = papers
+}
+
+/// Carga artículos específicos de Electrical Engineering
+func loadElectricalEngineeringPapers() async {
+    let papers = try await arXivService.fetchElectricalEngineeringPapers()
+    electricalEngineeringPapers = papers
+}
+
+/// Carga artículos específicos de Economics
+func loadEconomicsPapers() async {
+    let papers = try await arXivService.fetchEconomicsPapers()
+    economicsPapers = papers
 }
 ```
 
