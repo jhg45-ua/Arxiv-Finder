@@ -8,55 +8,55 @@
 import Foundation
 import SwiftData
 
-/// Modelo de datos que representa un artículo científico de ArXiv
-/// Almacena la información principal de cada paper para acceso offline
+/// Data model representing a scientific paper from ArXiv
+/// Stores the main information of each paper for offline access
 @Model
 final class ArXivPaper: @unchecked Sendable {
-    /// Identificador único del artículo en ArXiv (ej: "2023.12345v1")
+    /// Unique identifier of the paper in ArXiv (e.g.: "2023.12345v1")
     var id: String
     
-    /// Título completo del artículo científico
+    /// Complete title of the scientific paper
     var title: String
     
-    /// Resumen o abstract del artículo
+    /// Abstract or summary of the paper
     var summary: String
     
-    /// Lista de autores del artículo, separados por comas
+    /// List of paper authors, comma-separated
     var authors: String
     
-    /// Fecha de publicación del artículo
+    /// Publication date of the paper
     var publishedDate: Date
     
-    /// Fecha de última actualización del artículo (si está disponible)
+    /// Last update date of the paper (if available)
     var updatedDate: Date?
     
-    /// URL del PDF del artículo en ArXiv
+    /// PDF URL of the paper on ArXiv
     var pdfURL: String
     
-    /// URL de la página web del artículo en ArXiv
+    /// Web page URL of the paper on ArXiv
     var linkURL: String
     
-    /// Categorías científicas del artículo (ej: "cs.AI", "math.CO")
+    /// Scientific categories of the paper (e.g.: "cs.AI", "math.CO")
     var categories: String
     
-    /// Indica si el artículo está marcado como favorito
+    /// Indicates if the paper is marked as favorite
     var isFavorite: Bool = false
     
-    /// Fecha cuando se marcó como favorito (solo relevante si isFavorite es true)
+    /// Date when marked as favorite (only relevant if isFavorite is true)
     var favoritedDate: Date?
     
-    /// Inicializador principal para crear un nuevo artículo de ArXiv
+    /// Main initializer for creating a new ArXiv paper
     /// - Parameters:
-    ///   - id: Identificador único del artículo
-    ///   - title: Título del artículo
-    ///   - summary: Resumen del artículo
-    ///   - authors: Autores del artículo
-    ///   - publishedDate: Fecha de publicación
-    ///   - updatedDate: Fecha de última actualización (opcional)
-    ///   - pdfURL: URL del PDF
-    ///   - linkURL: URL de la página del artículo
-    ///   - categories: Categorías científicas
-    ///   - isFavorite: Si está marcado como favorito (por defecto false)
+    ///   - id: Unique identifier of the paper
+    ///   - title: Title of the paper
+    ///   - summary: Summary of the paper
+    ///   - authors: Authors of the paper
+    ///   - publishedDate: Publication date
+    ///   - updatedDate: Last update date (optional)
+    ///   - pdfURL: PDF URL
+    ///   - linkURL: Paper page URL
+    ///   - categories: Scientific categories
+    ///   - isFavorite: If marked as favorite (default false)
     init(id: String, title: String, summary: String, authors: String, 
          publishedDate: Date, updatedDate: Date? = nil, pdfURL: String, linkURL: String, categories: String, isFavorite: Bool = false) {
         self.id = id
@@ -72,8 +72,8 @@ final class ArXivPaper: @unchecked Sendable {
         self.favoritedDate = isFavorite ? Date() : nil
     }
     
-    /// Marca o desmarca el paper como favorito
-    /// - Parameter favorite: true para marcar como favorito, false para desmarcar
+    /// Marks or unmarks the paper as favorite
+    /// - Parameter favorite: true to mark as favorite, false to unmark
     func setFavorite(_ favorite: Bool) {
         self.isFavorite = favorite
         self.favoritedDate = favorite ? Date() : nil

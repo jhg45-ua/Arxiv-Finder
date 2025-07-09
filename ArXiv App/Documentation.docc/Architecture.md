@@ -1,73 +1,73 @@
-# Arquitectura MVC
+# MVC Architecture
 
-La arquitectura Model-View-Controller implementada en ArXiv App.
+The Model-View-Controller architecture implemented in ArXiv App.
 
-## 🏗️ Visión General de la Arquitectura
+## 🏗️ Architecture Overview
 
-ArXiv App implementa una arquitectura **Model-View-Controller (MVC)** moderna adaptada para SwiftUI, combinando los beneficios de la separación de responsabilidades tradicional con la reactividad nativa de SwiftUI.
+ArXiv App implements a modern **Model-View-Controller (MVC)** architecture adapted for SwiftUI, combining the benefits of traditional separation of responsibilities with SwiftUI's native reactivity.
 
-Esta arquitectura proporciona:
-- **Separación clara de responsabilidades**
-- **Código mantenible y escalable**
-- **Testabilidad mejorada**
-- **Reutilización de componentes**
-- **Adaptación multiplataforma**
+This architecture provides:
+- **Clear separation of responsibilities**
+- **Maintainable and scalable code**
+- **Improved testability**
+- **Component reusability**
+- **Multiplatform adaptation**
 
-## 📐 Principios Arquitectónicos
+## 📐 Architectural Principles
 
-### 1. 🎯 Separación de Responsabilidades
+### 1. 🎯 Separation of Responsibilities
 
-Cada capa tiene responsabilidades específicas y bien definidas:
+Each layer has specific and well-defined responsibilities:
 
-- **📊 Models**: Gestión de datos y lógica de dominio
-- **🖥️ Views**: Presentación y interacción del usuario
-- **🎛️ Controllers**: Coordinación y lógica de negocio
-- **🔌 Services**: Comunicación externa y utilidades
+- **📊 Models**: Data management and domain logic
+- **🖥️ Views**: Presentation and user interaction
+- **🎛️ Controllers**: Coordination and business logic
+- **🔌 Services**: External communication and utilities
 
-### 2. 🔄 Programación Reactiva
+### 2. 🔄 Reactive Programming
 
-- Uso de `@Published` para notificaciones automáticas
-- `@ObservedObject` y `@StateObject` para binding reactivo
-- Flujo de datos unidireccional
-- Actualización automática de UI
+- Use of `@Published` for automatic notifications
+- `@ObservedObject` and `@StateObject` for reactive binding
+- Unidirectional data flow
+- Automatic UI updates
 
-### 3. 💉 Inyección de Dependencias
+### 3. 💉 Dependency Injection
 
-- Inyección a través del entorno SwiftUI
-- Contenedores de modelo compartidos
-- Servicios como singletons cuando es apropiado
+- Injection through SwiftUI environment
+- Shared model containers
+- Services as singletons when appropriate
 
-## 📁 Estructura del Proyecto
+## 📁 Project Structure
 
 ```
 ArXiv App/
-├── Models/                    # 📊 Modelos de datos (M en MVC)
-│   └── ArXivPaper.swift      # Modelo principal de papers
-├── Views/                     # 🖥️ Vistas de interfaz (V en MVC)
-│   ├── MainView.swift        # Vista principal de la aplicación
-│   ├── ArXivPaperRow.swift   # Vista de fila individual
-│   ├── SidebarView.swift     # Vista de barra lateral (macOS)
-│   ├── PapersListView.swift  # Vista de lista de papers
-│   ├── PaperDetailView.swift # Vista detallada de paper
-│   └── SettingsView.swift    # Vista de configuración
-├── Controllers/               # 🎛️ Controladores (C en MVC)
-│   └── ArXivController.swift # Controlador principal
-├── Services/                  # 🔌 Servicios auxiliares
-│   ├── ArXivService.swift    # Servicio de API
-│   └── ArXivSimpleParser.swift # Parser XML
-└── ArXiv_AppApp.swift        # Punto de entrada
+├── Models/                    # 📊 Data models (M in MVC)
+│   └── ArXivPaper.swift      # Main paper model
+├── Views/                     # 🖥️ Interface views (V in MVC)
+│   ├── MainView.swift        # Main application view
+│   ├── ArXivPaperRow.swift   # Individual row view
+│   ├── SidebarView.swift     # Sidebar view (macOS)
+│   ├── PapersListView.swift  # Paper list view
+│   ├── PaperDetailView.swift # Detailed paper view
+│   └── SettingsView.swift    # Settings view
+├── Controllers/               # 🎛️ Controllers (C in MVC)
+│   └── ArXivController.swift # Main controller
+├── Services/                  # 🔌 Auxiliary services
+│   ├── ArXivService.swift    # API service
+│   └── ArXivSimpleParser.swift # XML parser
+└── ArXiv_AppApp.swift        # Entry point
 ```
 
-## 🏗️ Componentes de la Arquitectura
+## 🏗️ Architecture Components
 
-### 📊 Model (Modelos)
+### 📊 Model (Models)
 
-**Ubicación:** `Models/`
+**Location:** `Models/`
 
-Los modelos encapsulan los datos y la lógica de dominio:
+Models encapsulate data and domain logic:
 
 ```swift
-/// Modelo principal que representa un artículo de ArXiv
+/// Main model representing an ArXiv paper
 @Model
 final class ArXivPaper: @unchecked Sendable {
     var id: String
@@ -78,27 +78,27 @@ final class ArXivPaper: @unchecked Sendable {
     var category: String
     var link: String
     
-    // Lógica de dominio
+    // Domain logic
     func isRecentlyPublished() -> Bool {
         Date().timeIntervalSince(publishedDate) < 7 * 24 * 3600
     }
 }
 ```
 
-**Responsabilidades:**
-- ✅ Estructura de datos
-- ✅ Validación de datos
-- ✅ Persistencia con SwiftData
-- ✅ Lógica de dominio específica
+**Responsibilities:**
+- ✅ Data structure
+- ✅ Data validation
+- ✅ SwiftData persistence
+- ✅ Specific domain logic
 
-### 🖥️ View (Vistas)
+### 🖥️ View (Views)
 
-**Ubicación:** `Views/`
+**Location:** `Views/`
 
-Las vistas se encargan exclusivamente de la presentación:
+Views are exclusively responsible for presentation:
 
 ```swift
-/// Vista principal que coordina la interfaz
+/// Main view that coordinates the interface
 struct MainView: View {
     @StateObject private var controller = ArXivController()
     
@@ -114,20 +114,20 @@ struct MainView: View {
 }
 ```
 
-**Responsabilidades:**
-- ✅ Presentación de datos
-- ✅ Interacción del usuario
-- ✅ Adaptación multiplataforma
-- ✅ Binding reactivo con controladores
+**Responsibilities:**
+- ✅ Data presentation
+- ✅ User interaction
+- ✅ Multiplatform adaptation
+- ✅ Reactive binding with controllers
 
-### 🎛️ Controller (Controladores)
+### 🎛️ Controller (Controllers)
 
-**Ubicación:** `Controllers/`
+**Location:** `Controllers/`
 
-Los controladores coordinan la lógica de negocio:
+Controllers coordinate business logic:
 
 ```swift
-/// Controlador principal que gestiona el estado y lógica
+/// Main controller managing state and logic
 @MainActor
 final class ArXivController: ObservableObject {
     @Published var latestPapers: [ArXivPaper] = []
@@ -148,81 +148,81 @@ final class ArXivController: ObservableObject {
 }
 ```
 
-**Responsabilidades:**
-- ✅ Gestión del estado de la aplicación
-- ✅ Coordinación entre modelos y vistas
-- ✅ Lógica de negocio
-- ✅ Manejo de errores
-- ✅ Comunicación con servicios
+**Responsibilities:**
+- ✅ Application state management
+- ✅ Coordination between models and views
+- ✅ Business logic
+- ✅ Error handling
+- ✅ Service communication
 
-### 🔌 Services (Servicios)
+### 🔌 Services (Services)
 
-**Ubicación:** `Services/`
+**Location:** `Services/`
 
-Los servicios manejan operaciones externas y utilidades:
+Services handle external operations and utilities:
 
 ```swift
-/// Servicio para comunicación con la API de ArXiv
+/// Service for communication with the ArXiv API
 final class ArXivService: @unchecked Sendable {
     private let baseURL = "https://export.arxiv.org/api/query"
     
     func fetchLatestPapers() async throws -> [ArXivPaper] {
-        // Lógica de comunicación con API
+        // API communication logic
         let data = try await performRequest()
         return try ArXivSimpleParser().parse(data)
     }
 }
 ```
 
-**Responsabilidades:**
-- ✅ Comunicación con APIs externas
-- ✅ Procesamiento de datos
-- ✅ Utilidades compartidas
-- ✅ Manejo de errores de red
+**Responsibilities:**
+- ✅ Communication with external APIs
+- ✅ Data processing
+- ✅ Shared utilities
+- ✅ Network error handling
 
-## 🔄 Flujo de Datos en MVC
+## 🔄 Data Flow in MVC
 
 ```mermaid
 graph TB
-    A[👤 Usuario] -->|Interacción| B[🖥️ Vista]
-    B -->|Notifica acción| C[🎛️ Controlador]
-    C -->|Solicita datos| D[🔌 Servicio]
-    D -->|Petición HTTP| E[🌐 API ArXiv]
-    E -->|Respuesta XML| F[🔄 Parser]
-    F -->|Datos procesados| G[📊 Modelo]
-    G -->|@Published| H[🎛️ Controlador]
-    H -->|Estado actualizado| I[🖥️ Vista]
-    I -->|UI actualizada| A
+    A[👤 User] -->|Interaction| B[🖥️ View]
+    B -->|Notifies action| C[🎛️ Controller]
+    C -->|Requests data| D[🔌 Service]
+    D -->|HTTP Request| E[🌐 ArXiv API]
+    E -->|XML Response| F[🔄 Parser]
+    F -->|Processed data| G[📊 Model]
+    G -->|@Published| H[🎛️ Controller]
+    H -->|Updated state| I[🖥️ View]
+    I -->|UI updated| A
 ```
 
-### Pasos del Flujo:
+### Flow Steps:
 
-1. **👤 Usuario interactúa** con la Vista (tap, búsqueda, etc.)
-2. **🖥️ Vista notifica** al Controlador sobre la acción
-3. **🎛️ Controlador procesa** la lógica de negocio
-4. **🔌 Controlador utiliza** Servicios para obtener datos
-5. **🌐 Servicios realizan** peticiones a APIs externas
-6. **📊 Modelos se actualizan** con los nuevos datos
-7. **🔄 Controlador publica** cambios via `@Published`
-8. **🖥️ Vista se actualiza** automáticamente
+1. **👤 User interacts** with the View (tap, search, etc.)
+2. **🖥️ View notifies** the Controller about the action
+3. **🎛️ Controller processes** the business logic
+4. **🔌 Controller uses** Services to obtain data
+5. **🌐 Services make** requests to external APIs
+6. **📊 Models are updated** with new data
+7. **🔄 Controller publishes** changes via `@Published`
+8. **🖥️ View updates** automatically
 
-## 🎯 Ventajas de esta Arquitectura
+## 🎯 Advantages of this Architecture
 
-### ✅ Mantenibilidad
+### ✅ Maintainability
 
 ```swift
-// Fácil modificar cada componente independientemente
-// Cambiar la UI sin afectar la lógica de negocio
+// Easy to modify each component independently
+// Change UI without affecting business logic
 struct NewPaperView: View {
     @ObservedObject var controller: ArXivController
-    // Nueva interfaz usando el mismo controlador
+    // New interface using the same controller
 }
 ```
 
-### ✅ Testabilidad
+### ✅ Testability
 
 ```swift
-// Controladores pueden ser testeados independientemente
+// Controllers can be tested independently
 class ArXivControllerTests: XCTestCase {
     func testLoadLatestPapers() async {
         let mockService = MockArXivService()
@@ -236,26 +236,26 @@ class ArXivControllerTests: XCTestCase {
 }
 ```
 
-### ✅ Escalabilidad
+### ✅ Scalability
 
 ```swift
-// Agregar nuevas funcionalidades sin modificar código existente
+// Add new functionalities without modifying existing code
 extension ArXivController {
     func loadFavoritePapers() async {
-        // Nueva funcionalidad
+        // New functionality
     }
 }
 ```
 
-### ✅ Reutilización
+### ✅ Reusability
 
 ```swift
-// Componentes reutilizables en diferentes contextos
+// Reusable components in different contexts
 struct SearchView: View {
     @ObservedObject var controller: ArXivController
     
     var body: some View {
-        PapersListView(controller: controller) // Reutiliza vista existente
+        PapersListView(controller: controller) // Reuses existing view
     }
 }
 ```

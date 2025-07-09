@@ -1,34 +1,34 @@
 # ArXiv App
 
-Una aplicación SwiftUI para explorar y buscar artículos académicos del repositorio ArXiv.
+A SwiftUI application for exploring and searching academic papers from the ArXiv repository.
 
 @Metadata {
     @PageColor(blue)
 }
 
-## Descripción General
+## Overview
 
-La aplicación ArXiv proporciona una interfaz intuitiva para que investigadores y estudiantes descubran, exploren y lean artículos académicos del repositorio de preprints ArXiv. Construida con SwiftUI y siguiendo el patrón de arquitectura MVC, ofrece una experiencia de usuario limpia y responsiva optimizada para macOS.
+The ArXiv application provides an intuitive interface for researchers and students to discover, explore, and read academic papers from the ArXiv preprint repository. Built with SwiftUI and following the MVC architectural pattern, it offers a clean and responsive user experience optimized for macOS.
 
-Esta aplicación demuestra las mejores prácticas de desarrollo en SwiftUI, incluyendo:
-- Arquitectura MVC bien estructurada
-- Comunicación asíncrona con APIs externas
-- Gestión eficiente del estado de la aplicación
-- Interfaz de usuario adaptativa y accesible
+This application demonstrates SwiftUI development best practices, including:
+- Well-structured MVC architecture
+- Asynchronous communication with external APIs
+- Efficient application state management
+- Adaptive and accessible user interface
 
-## Características Principales
+## Key Features
 
-- **🔍 Búsqueda Inteligente**: Busca artículos por título, autor, palabras clave o categorías específicas
-- **📚 Exploración por Categorías**: Navega por 8 disciplinas académicas principales de ArXiv
-- **⭐ Gestión de Favoritos**: Marca artículos como favoritos para acceso rápido y lectura posterior
-- **📄 Vista Detallada**: Visualiza información completa incluyendo resúmenes, autores, fechas y enlaces
-- **💾 Persistencia de Datos**: Los favoritos se guardan usando SwiftData y persisten entre sesiones
-- **💻 Interfaz Nativa**: Diseño SwiftUI optimizado para macOS con soporte completo para modo oscuro
-- **⚡ Rendimiento Optimizado**: Carga asíncrona de datos y gestión eficiente de memoria
+- **🔍 Smart Search**: Search papers by title, author, keywords, or specific categories
+- **📚 Category Exploration**: Browse through 8 main academic disciplines from ArXiv
+- **⭐ Favorites Management**: Mark papers as favorites for quick access and later reading
+- **📄 Detailed View**: View complete information including abstracts, authors, dates, and links
+- **💾 Data Persistence**: Favorites are saved using SwiftData and persist between sessions
+- **💻 Native Interface**: SwiftUI design optimized for macOS with full dark mode support
+- **⚡ Optimized Performance**: Asynchronous data loading and efficient memory management
 
-### 🏷️ Categorías Académicas Soportadas
+### 🏷️ Supported Academic Categories
 
-La aplicación proporciona acceso a las siguientes categorías de ArXiv:
+The application provides access to the following ArXiv categories:
 
 - **💻 Computer Science** (`cs`) - Ciencias de la Computación
 - **🔢 Mathematics** (`math`) - Matemáticas
@@ -39,136 +39,136 @@ La aplicación proporciona acceso a las siguientes categorías de ArXiv:
 - **⚡ Electrical Engineering** (`eess`) - Ingeniería Eléctrica
 - **💼 Economics** (`econ`) - Economía
 
-## Arquitectura de la Aplicación
+## Application Architecture
 
-La aplicación sigue el patrón **Modelo-Vista-Controlador (MVC)** para mantener una separación clara de responsabilidades:
+The application follows the **Model-View-Controller (MVC)** pattern to maintain clear separation of responsibilities:
 
-### 🏗️ Componentes Principales
+### 🏗️ Main Components
 
-- **📊 Modelos**: Estructuras de datos que representan artículos de ArXiv y sus metadatos
-- **🖥️ Vistas**: Componentes SwiftUI reutilizables para la interfaz de usuario
-- **🎛️ Controladores**: Lógica de negocio y gestión del flujo de datos entre modelos y vistas
-- **🔌 Servicios**: Comunicación con la API de ArXiv y análisis de datos XML
+- **📊 Models**: Data structures representing ArXiv papers and their metadata
+- **🖥️ Views**: Reusable SwiftUI components for the user interface
+- **🎛️ Controllers**: Business logic and data flow management between models and views
+- **🔌 Services**: Communication with the ArXiv API and XML data parsing
 
-### 🔄 Flujo de Datos
+### 🔄 Data Flow
 
-1. **Usuario** interactúa con las **Vistas** SwiftUI
-2. **Controlador** procesa las acciones del usuario
-3. **Servicios** realizan peticiones a la API de ArXiv
-4. **Modelos** se actualizan con los datos recibidos
-5. **Vistas** se refrescan automáticamente mediante binding
+1. **User** interacts with SwiftUI **Views**
+2. **Controller** processes user actions
+3. **Services** make requests to the ArXiv API
+4. **Models** are updated with received data
+5. **Views** automatically refresh through binding
 
-## Requisitos del Sistema
+## System Requirements
 
-- **macOS**: 12.0 o superior
-- **Xcode**: 14.0 o superior
-- **Swift**: 5.7 o superior
-- **SwiftUI**: 4.0 o superior
+- **macOS**: 12.0 or later
+- **Xcode**: 14.0 or later
+- **Swift**: 5.7 or later
+- **SwiftUI**: 4.0 or later
 
-## Primeros Pasos
+## Getting Started
 
-Para comenzar con la aplicación ArXiv, explora los siguientes componentes fundamentales:
+To get started with the ArXiv application, explore the following fundamental components:
 
-### 🎯 Componentes Clave
+### 🎯 Key Components
 
-- ``ArXivPaper`` - El modelo de datos principal que representa un artículo académico con todos sus metadatos
-- ``ArXivController`` - Controlador principal que gestiona el estado de la aplicación y coordina el flujo de datos
-- ``ArXivService`` - Servicio especializado para comunicarse con la API REST de ArXiv
-- ``MainView`` - El componente raíz de la interfaz de usuario que orquesta toda la experiencia
+- ``ArXivPaper`` - The main data model representing an academic paper with all its metadata
+- ``ArXivController`` - Main controller managing application state and coordinating data flow
+- ``ArXivService`` - Specialized service for communicating with the ArXiv REST API
+- ``MainView`` - The root UI component that orchestrates the entire experience
 
-### 📚 Guía de Desarrollo
+### 📚 Development Guide
 
-1. **Configura el Proyecto**: Clona el repositorio y abre el archivo `.xcodeproj`
-2. **Explora los Modelos**: Comienza revisando ``ArXivPaper`` para entender la estructura de datos
-3. **Revisa los Servicios**: Analiza ``ArXivService`` para comprender la comunicación con la API
-4. **Examina las Vistas**: Estudia ``MainView`` y sus componentes relacionados
-5. **Prueba la Aplicación**: Ejecuta el proyecto y experimenta con las diferentes funcionalidades
+1. **Set up the Project**: Clone the repository and open the `.xcodeproj` file
+2. **Explore Models**: Start by reviewing ``ArXivPaper`` to understand the data structure
+3. **Review Services**: Analyze ``ArXivService`` to understand API communication
+4. **Examine Views**: Study ``MainView`` and its related components
+5. **Test the Application**: Run the project and experiment with different functionalities
 
-## Temas
+## Topics
 
-### 📊 Modelos de Datos
-- ``ArXivPaper`` - Representa un artículo académico con metadatos completos
+### 📊 Data Models
+- ``ArXivPaper`` - Represents an academic paper with complete metadata
 
-### 🎛️ Controladores
-- ``ArXivController`` - Controlador principal de la aplicación
+### 🎛️ Controllers
+- ``ArXivController`` - Main application controller
 
-### 🔌 Servicios y APIs
-- ``ArXivService`` - Comunicación con la API de ArXiv
-- ``ArXivSimpleParser`` - Análisis de respuestas XML de ArXiv
+### 🔌 Services and APIs
+- ``ArXivService`` - Communication with the ArXiv API
+- ``ArXivSimpleParser`` - Parsing of ArXiv XML responses
 
-### 🖥️ Interfaz de Usuario
-- ``MainView`` - Vista principal de la aplicación
-- ``PapersListView`` - Lista de artículos con funcionalidad de búsqueda
-- ``PaperDetailView`` - Vista detallada de un artículo específico
-- ``SidebarView`` - Navegación lateral con categorías y favoritos
-- ``ArXivPaperRow`` - Componente individual de artículo con botón de favoritos
+### 🖥️ User Interface
+- ``MainView`` - Main application view
+- ``PapersListView`` - Paper list with search functionality
+- ``PaperDetailView`` - Detailed view of a specific paper
+- ``SidebarView`` - Side navigation with categories and favorites
+- ``ArXivPaperRow`` - Individual paper component with favorites button
 
-### ⭐ Gestión de Favoritos
-- [Funcionalidad de Favoritos](Funcionalidad-de-Favoritos.md) - Documentación completa de la funcionalidad de favoritos
-- **Integración con SwiftData** - Persistencia de favoritos usando SwiftData
-- **Integración de UI** - Botones de corazón en lista y vista detallada
-- **Navegación** - Sección dedicada "Favoritos" en la navegación
-- ``ArXivPaperRow`` - Celda individual para mostrar información resumida
-- ``SidebarView`` - Barra lateral para navegación y filtros
-- ``SettingsView`` - Configuración de la aplicación
+### ⭐ Favorites Management
+- [Favorites Functionality](Funcionalidad-de-Favoritos.md) - Complete documentation of favorites functionality
+- **SwiftData Integration** - Favorites persistence using SwiftData
+- **UI Integration** - Heart buttons in list and detail views
+- **Navigation** - Dedicated "Favorites" section in navigation
+- ``ArXivPaperRow`` - Individual cell for displaying summary information
+- ``SidebarView`` - Sidebar for navigation and filters
+- **SettingsView** - Application settings
 
-## Guías Detalladas
+## Detailed Guides
 
-### 📋 Componentes Principales
+### 📋 Main Components
 
-Explora las guías detalladas de cada componente:
+Explore the detailed guides for each component:
 
-- <doc:ArXivPaper> - Modelo de datos fundamental con persistencia SwiftData
-- <doc:ArXivController> - Controlador MVC con gestión de estado reactiva
-- <doc:ArXivService> - Servicio de red con manejo robusto de errores
-- <doc:ArXivSimpleParser> - Parser XML especializado para formato Atom
-- <doc:MainView> - Vista principal con adaptación multiplataforma
-- <doc:PapersListView> - Lista optimizada con búsqueda y filtros
+- <doc:ArXivPaper> - Fundamental data model with SwiftData persistence
+- <doc:ArXivController> - MVC controller with reactive state management
+- <doc:ArXivService> - Network service with robust error handling
+- <doc:ArXivSimpleParser> - XML parser specialized for Atom format
+- <doc:MainView> - Main view with multiplatform adaptation
+- <doc:PapersListView> - Optimized list with search and filters
 
-### 🏗️ Arquitectura y APIs
+### 🏗️ Architecture and APIs
 
-Documentación técnica completa:
+Complete technical documentation:
 
-- <doc:Architecture> - Arquitectura MVC detallada con patrones de diseño
-- <doc:API-Guide> - Guía completa de integración con la API de ArXiv
+- <doc:Architecture> - Detailed MVC architecture with design patterns
+- <doc:API-Guide> - Complete ArXiv API integration guide
 
-### 🎯 Características Avanzadas
+### 🎯 Advanced Features
 
-Cada componente está documentado con:
-- **Patrones de diseño** utilizados
-- **Mejores prácticas** implementadas
-- **Ejemplos de código** completos
-- **Consideraciones de rendimiento**
-- **Características de accesibilidad**
+Each component is documented with:
+- **Design patterns** used
+- **Best practices** implemented
+- **Complete code examples**
+- **Performance considerations**
+- **Accessibility features**
 
-## Ejemplo de Uso
+## Usage Example
 
 ```swift
-// Crear una instancia del servicio ArXiv
+// Create an ArXiv service instance
 let service = ArXivService()
 
-// Buscar artículos relacionados con machine learning
+// Search for machine learning related papers
 service.searchPapers(query: "machine learning", maxResults: 10) { papers in
-    // Procesar los artículos encontrados
+    // Process found papers
     for paper in papers {
-        print("Título: \(paper.title)")
-        print("Autores: \(paper.authors.joined(separator: ", "))")
+        print("Title: \(paper.title)")
+        print("Authors: \(paper.authors.joined(separator: ", "))")
     }
 }
 ```
 
-## Contribuciones
+## Contributing
 
-Para contribuir al proyecto:
+To contribute to the project:
 
-1. **Fork** el repositorio
-2. **Crea** una rama para tu feature (`git checkout -b feature/nueva-funcionalidad`)
-3. **Commit** tus cambios (`git commit -am 'Añadir nueva funcionalidad'`)
-4. **Push** a la rama (`git push origin feature/nueva-funcionalidad`)
-5. **Crea** un Pull Request
+1. **Fork** the repository
+2. **Create** a feature branch (`git checkout -b feature/new-feature`)
+3. **Commit** your changes (`git commit -am 'Add new feature'`)
+4. **Push** to the branch (`git push origin feature/new-feature`)
+5. **Create** a Pull Request
 
-## Recursos Adicionales
+## Additional Resources
 
-- [Documentación oficial de ArXiv API](https://arxiv.org/help/api)
-- [Guía de SwiftUI](https://developer.apple.com/swiftui/)
-- [Mejores prácticas de arquitectura MVC](https://developer.apple.com/documentation/swiftui/model-data)
+- [Official ArXiv API Documentation](https://arxiv.org/help/api)
+- [SwiftUI Guide](https://developer.apple.com/swiftui/)
+- [MVC Architecture Best Practices](https://developer.apple.com/documentation/swiftui/model-data)

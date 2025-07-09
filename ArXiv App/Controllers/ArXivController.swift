@@ -10,85 +10,85 @@ import SwiftUI
 import SwiftData
 import UserNotifications
 
-/// Controller que maneja la lógica de negocio de la aplicación ArXiv
-/// Actúa como intermediario entre los modelos (datos) y las vistas (UI)
+/// Controller that handles the business logic of the ArXiv application
+/// Acts as intermediary between models (data) and views (UI)
 @MainActor
 final class ArXivController: ObservableObject {
     
     // MARK: - Properties
-    /// Contexto de modelo para SwiftData
+    /// Model context for SwiftData
     var modelContext: ModelContext?
     
     // MARK: - Published Properties
-    /// Papers de la categoría "Últimos"
+    /// Papers from the "Latest" category
     @Published var latestPapers: [ArXivPaper] = []
     
-    /// Papers de Computer Science
+    /// Computer Science papers
     @Published var csPapers: [ArXivPaper] = []
     
-    /// Papers de Mathematics
+    /// Mathematics papers
     @Published var mathPapers: [ArXivPaper] = []
     
-    /// Papers de Physics
+    /// Physics papers
     @Published var physicsPapers: [ArXivPaper] = []
     
-    /// Papers de Quantitative Biology
+    /// Quantitative Biology papers
     @Published var quantitativeBiologyPapers: [ArXivPaper] = []
     
-    /// Papers de Quantitative Finance
+    /// Quantitative Finance papers
     @Published var quantitativeFinancePapers: [ArXivPaper] = []
     
-    /// Papers de Statistics
+    /// Statistics papers
     @Published var statisticsPapers: [ArXivPaper] = []
     
-    /// Papers de Electrical Engineering and Systems Science
+    /// Electrical Engineering and Systems Science papers
     @Published var electricalEngineeringPapers: [ArXivPaper] = []
     
-    /// Papers de Economics
+    /// Economics papers
     @Published var economicsPapers: [ArXivPaper] = []
     
-    /// Papers favoritos del usuario
+    /// User's favorite papers
     @Published var favoritePapers: [ArXivPaper] = []
     
-    /// Estado de carga
+    /// Loading state
     @Published var isLoading = false
     
-    /// Mensaje de error
+    /// Error message
     @Published var errorMessage: String?
     
-    /// Categoría actual seleccionada
+    /// Currently selected category
     @Published var currentCategory: String = "latest"
     
     // MARK: - Private Properties
-    /// Servicio para obtener datos de ArXiv
+    /// Service for obtaining ArXiv data
     private let arxivService = ArXivService()
     
-    /// Timer para actualización automática
+    /// Timer for automatic refresh
     private var autoRefreshTimer: Timer?
     
     // MARK: - Settings Properties
-    /// Número máximo de papers a obtener (configurado en Settings)
+    /// Maximum number of papers to fetch (configured in Settings)
     private var maxPapers: Int {
         UserDefaults.standard.integer(forKey: "maxPapers") == 0 ? 10 : UserDefaults.standard.integer(forKey: "maxPapers")
     }
     
-    /// Intervalo de actualización automática en minutos
+    /// Automatic refresh interval in minutes
     private var refreshInterval: Int {
         UserDefaults.standard.integer(forKey: "refreshInterval") == 0 ? 30 : UserDefaults.standard.integer(forKey: "refreshInterval")
     }
     
-    /// Si la actualización automática está habilitada
+    /// If automatic refresh is enabled
     private var autoRefresh: Bool {
         UserDefaults.standard.bool(forKey: "autoRefresh")
     }
     
-    /// Categoría por defecto
+    /// Default category
     private var defaultCategory: String {
         UserDefaults.standard.string(forKey: "defaultCategory") ?? "latest"
     }
     
     // MARK: - Computed Properties
-    /// Papers filtrados según la categoría actual
+    /// Papers filtered by current category
     var filteredPapers: [ArXivPaper] {
         switch currentCategory {
         case "cs":

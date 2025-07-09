@@ -1,54 +1,54 @@
 # PapersListView
 
-Vista especializada para mostrar listas de artículos de ArXiv con funcionalidades de búsqueda y filtrado.
+Specialized view for displaying ArXiv paper lists with search and filtering functionalities.
 
-## Descripción General
+## Overview
 
-``PapersListView`` es una vista SwiftUI especializada que muestra listas de artículos de ArXiv con funcionalidades avanzadas de búsqueda, filtrado y navegación. Forma parte del patrón MVC como una vista que se comunica exclusivamente con ``ArXivController`` para obtener datos y notificar acciones del usuario.
+``PapersListView`` is a specialized SwiftUI view that displays ArXiv paper lists with advanced search, filtering, and navigation functionalities. It forms part of the MVC pattern as a view that communicates exclusively with ``ArXivController`` to obtain data and notify user actions.
 
-Esta vista está diseñada siguiendo principios de:
-- **Reutilización** en múltiples contextos de la aplicación
-- **Rendimiento optimizado** para listas grandes
-- **Experiencia de usuario** intuitiva y responsive
-- **Accesibilidad** completa para todos los usuarios
+This view is designed following principles of:
+- **Reusability** in multiple application contexts
+- **Optimized performance** for large lists
+- **Intuitive and responsive** user experience
+- **Complete accessibility** for all users
 
-## Arquitectura de la Vista
+## View Architecture
 
-### 🏗️ Estructura Modular
+### 🏗️ Modular Structure
 
-La vista se compone de múltiples componentes especializados:
+The view is composed of multiple specialized components:
 
 ```swift
-/// Vista principal de lista de artículos
+/// Main paper list view
 struct PapersListView: View {
-    /// Controlador que proporciona los datos
+    /// Controller that provides the data
     @ObservedObject var controller: ArXivController
     
-    /// Artículo seleccionado para navegación
+    /// Selected paper for navigation
     @Binding var selectedPaper: ArXivPaper?
     
-    /// Texto de búsqueda
+    /// Search text
     @State private var searchText = ""
     
-    /// Filtros activos
+    /// Active filters
     @State private var activeFilters: Set<String> = []
 }
 ```
 
-### 🎯 Responsabilidades Principales
+### 🎯 Main Responsibilities
 
-1. **Visualización de listas**: Muestra artículos en formato lista optimizado
-2. **Búsqueda en tiempo real**: Filtrado instantáneo mientras el usuario escribe
-3. **Selección de artículos**: Gestiona la selección para navegación
-4. **Carga dinámica**: Implementa infinite scroll para listas grandes
-5. **Estados de UI**: Maneja loading, error y empty states
+1. **List visualization**: Displays papers in optimized list format
+2. **Real-time search**: Instant filtering while user types
+3. **Paper selection**: Manages selection for navigation
+4. **Dynamic loading**: Implements infinite scroll for large lists
+5. **UI states**: Handles loading, error and empty states
 
-## Funcionalidades de Búsqueda
+## Search Functionalities
 
-### 🔍 Búsqueda en Tiempo Real
+### 🔍 Real-time Search
 
 ```swift
-/// Computed property para artículos filtrados
+/// Computed property for filtered papers
 private var filteredPapers: [ArXivPaper] {
     guard !searchText.isEmpty else { 
         return controller.currentPapers 
@@ -61,20 +61,20 @@ private var filteredPapers: [ArXivPaper] {
     }
 }
 
-/// Barra de búsqueda integrada
+/// Integrated search bar
 private var searchBar: some View {
     HStack {
         Image(systemName: "magnifyingglass")
             .foregroundColor(.secondary)
         
-        TextField("Buscar artículos, autores o palabras clave...", text: $searchText)
+        TextField("Search papers, authors or keywords...", text: $searchText)
             .textFieldStyle(RoundedBorderTextFieldStyle())
             .onSubmit {
                 performSearch()
             }
         
         if !searchText.isEmpty {
-            Button("Limpiar") {
+            Button("Clear") {
                 searchText = ""
             }
         }
@@ -83,21 +83,21 @@ private var searchBar: some View {
 }
 ```
 
-### 🏷️ Filtros por Categoría
+### 🏷️ Category Filters
 
 ```swift
-/// Filtros de categoría disponibles
+/// Available category filters
 private let availableCategories = [
     // Computer Science
-    "cs.AI": "Inteligencia Artificial",
+    "cs.AI": "Artificial Intelligence",
     "cs.LG": "Machine Learning",
-    "cs.CV": "Visión por Computadora",
-    "cs.DS": "Estructuras de Datos",
+    "cs.CV": "Computer Vision",
+    "cs.DS": "Data Structures",
     
     // Mathematics
-    "math.CO": "Combinatoria",
-    "math.NT": "Teoría de Números",
-    "math.ST": "Estadística",
+    "math.CO": "Combinatorics",
+    "math.NT": "Number Theory",
+    "math.ST": "Statistics",
     
     // Physics
     "physics.gen-ph": "Física General",

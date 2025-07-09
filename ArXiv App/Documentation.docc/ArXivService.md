@@ -1,35 +1,35 @@
 # ArXivService
 
-El servicio especializado para la comunicación con la API de ArXiv.
+The specialized service for communication with the ArXiv API.
 
-## Descripción General
+## Overview
 
-``ArXivService`` es el componente responsable de toda la comunicación con la API externa de ArXiv. Maneja las peticiones HTTP, el procesamiento de respuestas XML y la conversión de datos en objetos ``ArXivPaper``. Este servicio encapsula toda la complejidad de la comunicación con el repositorio ArXiv.
+``ArXivService`` is the component responsible for all communication with the external ArXiv API. It handles HTTP requests, XML response processing, and data conversion into ``ArXivPaper`` objects. This service encapsulates all the complexity of communication with the ArXiv repository.
 
-La clase está diseñada siguiendo principios de:
-- **Separación de responsabilidades** en la capa de servicios
-- **Concurrencia moderna** con async/await
-- **Manejo robusto de errores** con tipos específicos
-- **Thread-safety** mediante `@unchecked Sendable`
+The class is designed following principles of:
+- **Separation of responsibilities** in the service layer
+- **Modern concurrency** with async/await
+- **Robust error handling** with specific types
+- **Thread-safety** through `@unchecked Sendable`
 
-## Arquitectura del Servicio
+## Service Architecture
 
-### 🌐 Comunicación con API
+### 🌐 API Communication
 
-El servicio gestiona todas las interacciones con la API de ArXiv:
+The service manages all interactions with the ArXiv API:
 
 ```swift
-/// URL base de la API de ArXiv (usando HTTPS para cumplir con ATS)
+/// Base URL of the ArXiv API (using HTTPS to comply with ATS)
 private let baseURL = "https://export.arxiv.org/api/query"
 
-/// Sesión HTTP configurada para peticiones optimizadas
+/// HTTP session configured for optimized requests
 private let session: URLSession
 ```
 
-### 🔧 Configuración de Red
+### 🔧 Network Configuration
 
 ```swift
-/// Configuración personalizada para peticiones HTTP
+/// Custom configuration for HTTP requests
 private func configureSession() -> URLSession {
     let config = URLSessionConfiguration.default
     config.timeoutIntervalForRequest = 30.0
@@ -38,23 +38,23 @@ private func configureSession() -> URLSession {
 }
 ```
 
-## Funcionalidades Principales
+## Main Functionalities
 
-### 📚 Obtención de Artículos Recientes
+### 📚 Fetching Recent Papers
 
 ```swift
-/// Obtiene los últimos artículos publicados en ArXiv
-/// - Parameter count: Número de artículos a obtener (por defecto 10)
-/// - Returns: Array de artículos de ArXiv
-/// - Throws: Error si falla la petición o el parsing
+/// Gets the latest papers published on ArXiv
+/// - Parameter count: Number of papers to fetch (default 10)
+/// - Returns: Array of ArXiv papers
+/// - Throws: Error if request or parsing fails
 nonisolated func fetchLatestPapers(count: Int = 10) async throws -> [ArXivPaper]
 ```
 
-**Implementación detallada:**
+**Detailed implementation:**
 
 ```swift
 func fetchLatestPapers(count: Int = 10) async throws -> [ArXivPaper] {
-    // Construye URL con parámetros optimizados
+    // Build URL with optimized parameters
     let query = "cat:cs.*+OR+cat:stat.*+OR+cat:math.*"
     let urlString = "\(baseURL)?search_query=\(query)&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending"
     
@@ -62,38 +62,38 @@ func fetchLatestPapers(count: Int = 10) async throws -> [ArXivPaper] {
         throw ArXivError.invalidURL
     }
     
-    // Ejecuta petición HTTP
+    // Execute HTTP request
     let (data, response) = try await session.data(from: url)
     
-    // Valida respuesta
+    // Validate response
     guard let httpResponse = response as? HTTPURLResponse,
           httpResponse.statusCode == 200 else {
         throw ArXivError.networkError
     }
     
-    // Parsea XML y convierte a objetos ArXivPaper
+    // Parse XML and convert to ArXivPaper objects
     return try parseXMLResponse(data)
 }
 ```
 
-### 🏷️ Búsqueda por Categorías
+### 🏷️ Search by Categories
 
 ```swift
-/// Obtiene artículos de una categoría específica
-/// - Parameter category: Categoría de ArXiv (ej: "cs.AI", "math.CO")
-/// - Returns: Array de artículos de la categoría especificada
+/// Gets papers from a specific category
+/// - Parameter category: ArXiv category (e.g.: "cs.AI", "math.CO")
+/// - Returns: Array of papers from the specified category
 func fetchPapersByCategory(_ category: String) async throws -> [ArXivPaper] {
     let query = "cat:\(category)"
     return try await performSearch(query: query)
 }
 ```
 
-### 🔬 Métodos Específicos por Categoría
+### 🔬 Category-Specific Methods
 
-La aplicación incluye métodos especializados para cada categoría principal:
+The application includes specialized methods for each main category:
 
 ```swift
-/// Obtiene artículos de Computer Science
+/// Gets Computer Science papers
 func fetchComputerSciencePapers() async throws -> [ArXivPaper] {
     return try await fetchPapersByCategory("cs.*")
 }

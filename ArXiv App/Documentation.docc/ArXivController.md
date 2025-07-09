@@ -1,75 +1,75 @@
 # ArXivController
 
-El controlador principal que maneja la lógica de negocio de la aplicación ArXiv.
+The main controller that handles the business logic of the ArXiv application.
 
-## Descripción General
+## Overview
 
-``ArXivController`` es el componente central del patrón MVC que actúa como intermediario entre los modelos de datos (``ArXivPaper``) y las vistas SwiftUI. Gestiona el estado de la aplicación, coordina las operaciones asíncronas y proporciona una interfaz reactiva para la UI.
+``ArXivController`` is the central component of the MVC pattern that acts as an intermediary between the data models (``ArXivPaper``) and SwiftUI views. It manages application state, coordinates asynchronous operations, and provides a reactive interface for the UI.
 
-Esta clase está diseñada siguiendo los principios de:
-- **Separación de responsabilidades** en el patrón MVC
-- **Reactividad** con `@ObservableObject` y `@Published`
-- **Concurrencia moderna** con async/await y `@MainActor`
-- **Gestión de estado** centralizada y predecible
+This class is designed following the principles of:
+- **Separation of responsibilities** in the MVC pattern
+- **Reactivity** with `@ObservableObject` and `@Published`
+- **Modern concurrency** with async/await and `@MainActor`
+- **Centralized and predictable** state management
 
-## Arquitectura del Controlador
+## Controller Architecture
 
-### 🎛️ Responsabilidades Principales
+### 🎛️ Main Responsibilities
 
-El ``ArXivController`` maneja:
+The ``ArXivController`` handles:
 
-1. **Gestión de Estado**: Mantiene el estado de la aplicación de forma centralizada
-2. **Coordinación de Datos**: Orquesta las operaciones entre servicios y modelos
-3. **Lógica de Negocio**: Implementa las reglas de negocio específicas de ArXiv
-4. **Interfaz Reactiva**: Proporciona binding automático con las vistas SwiftUI
+1. **State Management**: Maintains application state centrally
+2. **Data Coordination**: Orchestrates operations between services and models
+3. **Business Logic**: Implements ArXiv-specific business rules
+4. **Reactive Interface**: Provides automatic binding with SwiftUI views
 
-### 📊 Propiedades del Estado
+### 📊 State Properties
 
 ```swift
-/// Papers de la categoría "Últimos"
+/// Papers from the "Latest" category
 @Published var latestPapers: [ArXivPaper] = []
 
-/// Papers de Computer Science
+/// Computer Science papers
 @Published var csPapers: [ArXivPaper] = []
 
-/// Papers de Mathematics
+/// Mathematics papers
 @Published var mathPapers: [ArXivPaper] = []
 
-/// Papers de Physics
+/// Physics papers
 @Published var physicsPapers: [ArXivPaper] = []
 
-/// Papers de Quantitative Biology
+/// Quantitative Biology papers
 @Published var quantitativeBiologyPapers: [ArXivPaper] = []
 
-/// Papers de Quantitative Finance
+/// Quantitative Finance papers
 @Published var quantitativeFinancePapers: [ArXivPaper] = []
 
-/// Papers de Statistics
+/// Statistics papers
 @Published var statisticsPapers: [ArXivPaper] = []
 
-/// Papers de Electrical Engineering and Systems Science
+/// Electrical Engineering and Systems Science papers
 @Published var electricalEngineeringPapers: [ArXivPaper] = []
 
-/// Papers de Economics
+/// Economics papers
 @Published var economicsPapers: [ArXivPaper] = []
 
-/// Papers favoritos del usuario
+/// User's favorite papers
 @Published var favoritePapers: [ArXivPaper] = []
 
-/// Estado de carga
+/// Loading state
 @Published var isLoading = false
 ```
 
-## Funcionalidades Clave
+## Key Functionalities
 
-### 🔄 Carga de Datos Asíncrona
+### 🔄 Asynchronous Data Loading
 
-El controlador gestiona la carga de datos de forma asíncrona:
+The controller manages data loading asynchronously:
 
 ```swift
-/// Carga los artículos más recientes de ArXiv
-/// - Actualiza automáticamente la propiedad `latestPapers`
-/// - Maneja errores de red de forma elegante
+/// Loads the latest papers from ArXiv
+/// - Automatically updates the `latestPapers` property
+/// - Handles network errors gracefully
 @MainActor
 func loadLatestPapers() async {
     isLoading = true
@@ -84,66 +84,66 @@ func loadLatestPapers() async {
 }
 ```
 
-### 🏷️ Gestión por Categorías
+### 🏷️ Category Management
 
-Organiza los artículos por categorías académicas:
+Organizes papers by academic categories:
 
 ```swift
-/// Carga artículos específicos de Computer Science
+/// Loads Computer Science specific papers
 func loadComputerSciencePapers() async {
     let papers = try await arXivService.fetchComputerSciencePapers()
     csPapers = papers
 }
 
-/// Carga artículos específicos de Mathematics
+/// Loads Mathematics specific papers
 func loadMathematicsPapers() async {
     let papers = try await arXivService.fetchMathematicsPapers()
     mathPapers = papers
 }
 
-/// Carga artículos específicos de Physics
+/// Loads Physics specific papers
 func loadPhysicsPapers() async {
     let papers = try await arXivService.fetchPhysicsPapers()
     physicsPapers = papers
 }
 
-/// Carga artículos específicos de Quantitative Biology
+/// Loads Quantitative Biology specific papers
 func loadQuantitativeBiologyPapers() async {
     let papers = try await arXivService.fetchQuantitativeBiologyPapers()
     quantitativeBiologyPapers = papers
 }
 
-/// Carga artículos específicos de Quantitative Finance
+/// Loads Quantitative Finance specific papers
 func loadQuantitativeFinancePapers() async {
     let papers = try await arXivService.fetchQuantitativeFinancePapers()
     quantitativeFinancePapers = papers
 }
 
-/// Carga artículos específicos de Statistics
+/// Loads Statistics specific papers
 func loadStatisticsPapers() async {
     let papers = try await arXivService.fetchStatisticsPapers()
     statisticsPapers = papers
 }
 
-/// Carga artículos específicos de Electrical Engineering
+/// Loads Electrical Engineering specific papers
 func loadElectricalEngineeringPapers() async {
     let papers = try await arXivService.fetchElectricalEngineeringPapers()
     electricalEngineeringPapers = papers
 }
 
-/// Carga artículos específicos de Economics
+/// Loads Economics specific papers
 func loadEconomicsPapers() async {
     let papers = try await arXivService.fetchEconomicsPapers()
     economicsPapers = papers
 }
 ```
 
-### ⭐ Gestión de Favoritos
+### ⭐ Favorites Management
 
-Maneja la funcionalidad de favoritos con persistencia:
+Handles favorites functionality with persistence:
 
 ```swift
-/// Carga todos los artículos favoritos desde SwiftData
+/// Loads all favorite papers from SwiftData
 func loadFavoritePapers() async {
     currentCategory = "favorites"
     isLoading = true

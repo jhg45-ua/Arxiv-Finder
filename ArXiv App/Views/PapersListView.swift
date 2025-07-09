@@ -76,6 +76,7 @@ struct PapersListView: View {
     ///   - papers: Lista de papers a mostrar
     ///   - isLoading: Estado de carga
     ///   - errorMessage: Binding para mensajes de error
+    ///   - controller: Controlador opcional para manejar operaciones de ArXiv
     ///   - loadLatestPapers: Función para cargar últimos papers
     ///   - loadComputerSciencePapers: Función opcional para CS papers
     ///   - loadMathematicsPapers: Función opcional para Math papers

@@ -1,52 +1,52 @@
 # ArXivSimpleParser
 
-Parser XML especializado para procesar respuestas de la API de ArXiv.
+Specialized XML parser for processing ArXiv API responses.
 
-## Descripción General
+## Overview
 
-``ArXivSimpleParser`` es un componente especializado que se encarga de procesar las respuestas XML de la API de ArXiv y convertirlas en objetos ``ArXivPaper`` utilizables en la aplicación. Implementa un parser XML robusto y eficiente que maneja las peculiaridades específicas del formato Atom utilizado por ArXiv.
+``ArXivSimpleParser`` is a specialized component responsible for processing XML responses from the ArXiv API and converting them into usable ``ArXivPaper`` objects in the application. It implements a robust and efficient XML parser that handles the specific peculiarities of the Atom format used by ArXiv.
 
-Esta clase está diseñada siguiendo principios de:
-- **Responsabilidad única** en el procesamiento de XML
-- **Robustez** en el manejo de datos malformados
-- **Eficiencia** en el procesamiento de grandes volúmenes de datos
-- **Extensibilidad** para nuevos campos de ArXiv
+This class is designed following principles of:
+- **Single responsibility** in XML processing
+- **Robustness** in handling malformed data
+- **Efficiency** in processing large volumes of data
+- **Extensibility** for new ArXiv fields
 
-## Arquitectura del Parser
+## Parser Architecture
 
-### 🔧 Tecnología Utilizada
+### 🔧 Technology Used
 
-El parser utiliza `XMLParser` de Foundation para un procesamiento eficiente:
+The parser uses Foundation's `XMLParser` for efficient processing:
 
 ```swift
-/// Parser XML especializado para el formato Atom de ArXiv
+/// XML parser specialized for ArXiv's Atom format
 final class ArXivSimpleParser: NSObject, XMLParserDelegate {
-    /// Artículos parseados durante el procesamiento
+    /// Papers parsed during processing
     private var papers: [ArXivPaper] = []
     
-    /// Artículo actual siendo procesado
+    /// Current paper being processed
     private var currentPaper: ArXivPaper?
     
-    /// Elemento XML actual
+    /// Current XML element
     private var currentElement: String = ""
     
-    /// Contenido del elemento actual
+    /// Content of current element
     private var currentValue: String = ""
 }
 ```
 
-### 🏗️ Estructura de Datos XML
+### 🏗️ XML Data Structure
 
-ArXiv utiliza formato Atom con estructura específica:
+ArXiv uses Atom format with specific structure:
 
 ```xml
 <feed xmlns="http://www.w3.org/2005/Atom">
     <entry>
         <id>http://arxiv.org/abs/2023.12345v1</id>
-        <title>Título del artículo</title>
-        <summary>Resumen del artículo...</summary>
+        <title>Paper title</title>
+        <summary>Paper summary...</summary>
         <author>
-            <name>Nombre del autor</name>
+            <name>Author name</name>
         </author>
         <published>2023-12-01T00:00:00Z</published>
         <updated>2023-12-01T00:00:00Z</updated>
@@ -56,27 +56,27 @@ ArXiv utiliza formato Atom con estructura específica:
 </feed>
 ```
 
-## Funcionalidades Principales
+## Main Functionalities
 
-### 📜 Parsing Principal
+### 📜 Main Parsing
 
 ```swift
-/// Parsea datos XML de ArXiv y devuelve array de artículos
-/// - Parameter data: Datos XML de la respuesta de ArXiv
-/// - Returns: Array de artículos parseados
-/// - Throws: Error si el XML es inválido o malformado
+/// Parses ArXiv XML data and returns array of papers
+/// - Parameter data: XML data from ArXiv response
+/// - Returns: Array of parsed papers
+/// - Throws: Error if XML is invalid or malformed
 func parse(_ data: Data) throws -> [ArXivPaper] {
-    // Reinicia el estado del parser
+    // Reset parser state
     papers.removeAll()
     currentPaper = nil
     currentElement = ""
     currentValue = ""
     
-    // Crea y configura el parser XML
+    // Create and configure XML parser
     let parser = XMLParser(data: data)
     parser.delegate = self
     
-    // Ejecuta el parsing
+    // Execute parsing
     guard parser.parse() else {
         if let error = parser.parserError {
             throw ArXivParserError.xmlParsingFailed(error)
@@ -88,10 +88,10 @@ func parse(_ data: Data) throws -> [ArXivPaper] {
 }
 ```
 
-### 🔍 Procesamiento de Elementos
+### 🔍 Element Processing
 
 ```swift
-/// Inicia el procesamiento de un elemento XML
+/// Starts processing an XML element
 func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName: String?, attributes: [String: String] = [:]) {
     currentElement = elementName
     currentValue = ""

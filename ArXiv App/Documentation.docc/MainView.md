@@ -1,40 +1,40 @@
 # MainView
 
-La vista principal de la aplicación ArXiv que implementa el patrón MVC.
+The main view of the ArXiv application implementing the MVC pattern.
 
-## Descripción General
+## Overview
 
-``MainView`` es el componente central de la interfaz de usuario que actúa como la vista principal en el patrón MVC. Proporciona una experiencia adaptativa que funciona tanto en iOS como macOS, utilizando las mejores prácticas de diseño nativo para cada plataforma.
+``MainView`` is the central user interface component that acts as the main view in the MVC pattern. It provides an adaptive experience that works on both iOS and macOS, using native design best practices for each platform.
 
-Esta vista está diseñada siguiendo principios de:
-- **Separación de responsabilidades** en el patrón MVC
-- **Adaptabilidad multiplataforma** con código condicional
-- **Reactividad** mediante binding con ``ArXivController``
-- **Accesibilidad** con soporte completo para tecnologías asistivas
+This view is designed following principles of:
+- **Separation of responsibilities** in the MVC pattern
+- **Multiplatform adaptability** with conditional code
+- **Reactivity** through binding with ``ArXivController``
+- **Accessibility** with full support for assistive technologies
 
-## Arquitectura de la Vista
+## View Architecture
 
-### 🎭 Implementación del Patrón MVC
+### 🎭 MVC Pattern Implementation
 
-La vista implementa estrictamente el patrón MVC:
+The view strictly implements the MVC pattern:
 
 ```swift
-/// Arquitectura MVC:
-/// - View: Esta vista maneja solo la presentación
-/// - Controller: ArXivController gestiona toda la lógica de negocio
-/// - Model: ArXivPaper representa los datos de artículos
+/// MVC Architecture:
+/// - View: This view handles only presentation
+/// - Controller: ArXivController manages all business logic
+/// - Model: ArXivPaper represents paper data
 struct MainView: View {
-    /// Controller que maneja la lógica de negocio
+    /// Controller that handles business logic
     @StateObject private var controller = ArXivController()
     
-    /// Paper seleccionado en macOS para NavigationSplitView
+    /// Selected paper in macOS for NavigationSplitView
     @State private var selectedPaper: ArXivPaper?
 }
 ```
 
-### 📱 Adaptación Multiplataforma
+### 📱 Multiplatform Adaptation
 
-La vista se adapta automáticamente a cada plataforma:
+The view automatically adapts to each platform:
 
 ```swift
 var body: some View {
@@ -46,23 +46,23 @@ var body: some View {
 }
 ```
 
-## Interfaz de macOS
+## macOS Interface
 
 ### 🖥️ NavigationSplitView
 
-Para macOS, utiliza un diseño de tres columnas:
+For macOS, it uses a three-column design:
 
 ```swift
-/// Interfaz optimizada para macOS con NavigationSplitView
+/// Interface optimized for macOS with NavigationSplitView
 private var macOSInterface: some View {
     NavigationSplitView {
-        // Barra lateral con categorías
+        // Sidebar with categories
         SidebarView(controller: controller)
     } content: {
-        // Lista de artículos
+        // Paper list
         PapersListView(controller: controller, selectedPaper: $selectedPaper)
     } detail: {
-        // Vista detallada del artículo seleccionado
+        // Detailed view of selected paper
         if let paper = selectedPaper {
             PaperDetailView(paper: paper)
         } else {
@@ -72,21 +72,21 @@ private var macOSInterface: some View {
 }
 ```
 
-### 🎨 Características de macOS
+### 🎨 macOS Features
 
-- **Navegación en tres columnas**: Sidebar, Lista, Detalle
-- **Selección persistente**: Mantiene el artículo seleccionado
-- **Optimización de ventana**: Aprovecha el espacio de pantalla grande
-- **Controles nativos**: Utiliza controles específicos de macOS
+- **Three-column navigation**: Sidebar, List, Detail
+- **Persistent selection**: Maintains selected paper
+- **Window optimization**: Takes advantage of large screen space
+- **Native controls**: Uses macOS-specific controls
 
-### 📚 Categorías Soportadas
+### 📚 Supported Categories
 
-La aplicación soporta las siguientes categorías académicas:
+The application supports the following academic categories:
 
 ```swift
-/// Categorías disponibles en la barra lateral
+/// Categories available in the sidebar
 private let availableCategories = [
-    "latest": "Últimos Papers",
+    "latest": "Latest Papers",
     "cs": "Computer Science",
     "math": "Mathematics", 
     "physics": "Physics",

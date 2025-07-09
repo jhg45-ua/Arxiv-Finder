@@ -1,103 +1,103 @@
 # ArXiv App
 
-Una aplicación multiplataforma (iOS y macOS) para explorar y gestionar artículos científicos de ArXiv.
+A multiplatform application (iOS and macOS) for exploring and managing scientific papers from ArXiv.
 
-## 📋 Descripción
+## 📋 Description
 
-ArXiv App permite a los usuarios buscar, explorar y guardar artículos científicos de ArXiv con una interfaz nativa y moderna. La aplicación ofrece funcionalidades de búsqueda, organización por categorías, y almacenamiento local para acceso offline.
+ArXiv App allows users to search, explore, and save scientific papers from ArXiv with a modern and native interface. The application offers search functionalities, organization by categories, and local storage for offline access.
 
-## ✨ Características
+## ✨ Features
 
-- **Multiplataforma**: Funciona en iOS y macOS con UI adaptativa
-- **Búsqueda avanzada**: Busca artículos por título, autor, palabras clave o ID
-- **Categorías**: Organiza artículos por Computer Science, Mathematics, y más
-- **Almacenamiento local**: Guarda artículos para acceso offline con SwiftData
-- **Interface nativa**: Diseño optimizado para cada plataforma
-- **Notificaciones**: Alertas para nuevos artículos (macOS)
+- **Multiplatform**: Works on iOS and macOS with adaptive UI
+- **Advanced search**: Search papers by title, author, keywords, or ID
+- **Categories**: Organize papers by Computer Science, Mathematics, and more
+- **Local storage**: Save papers for offline access with SwiftData
+- **Native interface**: Design optimized for each platform
+- **Notifications**: Alerts for new papers (macOS)
 
-## 🛠 Tecnologías Utilizadas
+## 🛠 Technologies Used
 
-- **SwiftUI**: Framework de UI moderno y declarativo
-- **SwiftData**: Persistencia de datos moderna
-- **URLSession**: Comunicación con la API de ArXiv
-- **XML Parser**: Parser personalizado para respuestas de ArXiv
-- **Async/Await**: Concurrencia moderna de Swift
+- **SwiftUI**: Modern and declarative UI framework
+- **SwiftData**: Modern data persistence
+- **URLSession**: Communication with the ArXiv API
+- **XML Parser**: Custom parser for ArXiv responses
+- **Async/Await**: Modern Swift concurrency
 
-## 📱 Arquitectura
+## 📱 Architecture
 
-El proyecto sigue el patrón **Model-View-Controller (MVC)**:
+The project follows the **Model-View-Controller (MVC)** pattern:
 
 ### Models
-- `ArXivPaper`: Modelo de datos para artículos científicos
+- `ArXivPaper`: Data model for scientific papers
 
 ### Views
-- `MainView`: Vista principal con navegación
-- `SidebarView`: Barra lateral para macOS
-- `PapersListView`: Lista de artículos adaptativa
-- `PaperDetailView`: Vista detallada de artículos
-- `SettingsView`: Configuración de la aplicación
+- `MainView`: Main view with navigation
+- `SidebarView`: Sidebar for macOS
+- `PapersListView`: Adaptive paper list
+- `PaperDetailView`: Detailed view of papers
+- `SettingsView`: Application settings
 
 ### Controllers
-- `ArXivController`: Lógica de negocio y gestión de estado
+- `ArXivController`: Business logic and state management
 
 ### Services
-- `ArXivService`: Comunicación con la API de ArXiv
-- `ArXivSimpleParser`: Parser XML personalizado
+- `ArXivService`: Communication with the ArXiv API
+- `ArXivSimpleParser`: Custom XML parser
 
-## 📚 Documentación
+## 📚 Documentation
 
-Para información detallada consulta la documentación integrada de Xcode:
+For detailed information consult the integrated Xcode documentation:
 
-- **Arquitectura MVC**: Consulta la documentación de DocC en Xcode para detalles sobre el diseño y patrones
-- **API de ArXiv**: Documentación completa de la integración con la API disponible en DocC
-- **Componentes**: Documentación detallada de cada componente disponible en Quick Help de Xcode
+- **MVC Architecture**: Check DocC documentation in Xcode for design and pattern details
+- **ArXiv API**: Complete integration documentation available in DocC
+- **Components**: Detailed documentation of each component available in Xcode Quick Help
 
-Para acceder a la documentación:
-1. Abre el proyecto en Xcode
-2. Ve a `Product > Build Documentation` o presiona `Cmd + Shift + Control + D`
-3. Explora la documentación generada automáticamente
+To access documentation:
+1. Open the project in Xcode
+2. Go to `Product > Build Documentation` or press `Cmd + Shift + Control + D`
+3. Explore the automatically generated documentation
 
-## 🚀 Instalación
+## 🚀 Installation
 
-### Requisitos
+### Requirements
 
-- macOS 14.0+ o iOS 17.0+
+- macOS 14.0+ or iOS 17.0+
 - Xcode 15.0+
 - Swift 5.9+
 
-### Pasos de instalación
+### Installation Steps
 
-1. **Clonar el repositorio**:
+1. **Clone the repository**:
    ```bash
-   git clone <URL_DEL_REPOSITORIO>
+   git clone <REPOSITORY_URL>
    cd "ArXiv App"
    ```
 
-2. **Abrir el proyecto**:
+2. **Open the project**:
    ```bash
    open "ArXiv App.xcodeproj"
    ```
 
-3. **Configurar el proyecto**:
-   - Selecciona tu equipo de desarrollo en la configuración del proyecto
-   - Ajusta el Bundle Identifier si es necesario
+3. **Configure the project**:
+   - Select your development team in project settings
+   - Adjust Bundle Identifier if necessary
 
-4. **Ejecutar la aplicación**:
-   - Selecciona el simulador o dispositivo deseado
-   - Presiona `Cmd + R` para compilar y ejecutar
+4. **Run the application**:
+   - Select the desired simulator or device
+   - Press `Cmd + R` to build and run
 
-## 📖 Uso
+## 📖 Usage
 
-### Navegación Principal
+### Main Navigation
 
-- **iOS**: Navegación con stack para una experiencia móvil fluida
-- **macOS**: Split view con sidebar para una experiencia de escritorio completa
+- **iOS**: Stack navigation for a fluid mobile experience
+- **macOS**: Split view with sidebar for a complete desktop experience
 
-### Búsqueda de Artículos
+### Paper Search
 
-1. Usa la barra de búsqueda para encontrar artículos por:
-   - Título
-   - Autor
+1. Use the search bar to find papers by:
+   - Title
+   - Author
    - Palabras clave
    - ID de ArXiv
 

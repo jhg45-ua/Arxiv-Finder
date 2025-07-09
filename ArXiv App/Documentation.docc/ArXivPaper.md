@@ -1,85 +1,85 @@
 # ArXivPaper
 
-El modelo de datos fundamental que representa un artículo académico de ArXiv.
+The fundamental data model representing an ArXiv academic paper.
 
-## Descripción General
+## Overview
 
-``ArXivPaper`` es la clase principal del modelo de datos que representa un artículo científico del repositorio ArXiv. Utiliza SwiftData para persistencia local y proporciona una estructura completa para almacenar todos los metadatos relevantes de un artículo académico.
+``ArXivPaper`` is the main data model class that represents a scientific paper from the ArXiv repository. It uses SwiftData for local persistence and provides a complete structure for storing all relevant metadata of an academic paper.
 
-Esta clase está diseñada para ser:
-- **Thread-safe** mediante `@unchecked Sendable`
-- **Persistente** usando SwiftData con `@Model`
-- **Eficiente** con propiedades optimizadas para búsqueda y visualización
+This class is designed to be:
+- **Thread-safe** through `@unchecked Sendable`
+- **Persistent** using SwiftData with `@Model`
+- **Efficient** with properties optimized for search and display
 
-## Estructura de Datos
+## Data Structure
 
-### 🔑 Propiedades Principales
+### 🔑 Main Properties
 
-El modelo ``ArXivPaper`` incluye las siguientes propiedades esenciales:
+The ``ArXivPaper`` model includes the following essential properties:
 
 ```swift
-/// Identificador único del artículo en ArXiv (ej: "2023.12345v1")
+/// Unique identifier of the paper in ArXiv (e.g.: "2023.12345v1")
 var id: String
 
-/// Título completo del artículo científico
+/// Complete title of the scientific paper
 var title: String
 
-/// Resumen o abstract del artículo
+/// Abstract or summary of the paper
 var summary: String
 
-/// Lista de autores del artículo, separados por comas
+/// List of paper authors, comma-separated
 var authors: String
 ```
 
-### 📅 Metadatos Temporales
+### 📅 Temporal Metadata
 
 ```swift
-/// Fecha de publicación del artículo
+/// Publication date of the paper
 var publishedDate: Date
 
-/// Fecha de última actualización del artículo (si está disponible)
+/// Last update date of the paper (if available)
 var updatedDate: Date?
 ```
 
-### 🏷️ Categorización y Enlaces
+### 🏷️ Categorization and Links
 
 ```swift
-/// Categoría principal del artículo (ej: "cs.AI", "math.CO")
+/// Main category of the paper (e.g.: "cs.AI", "math.CO")
 var category: String
 
-/// URL directa al artículo en ArXiv
+/// Direct URL to the paper on ArXiv
 var link: String
 ```
 
-## Funcionalidades Clave
+## Key Functionalities
 
-### 🔍 Búsqueda y Filtrado
+### 🔍 Search and Filtering
 
-El modelo está optimizado para búsquedas eficientes:
+The model is optimized for efficient searches:
 
-- **Búsqueda por título**: Utilizando índices optimizados en SwiftData
-- **Filtrado por categoría**: Agrupación automática por disciplinas académicas
-- **Ordenamiento temporal**: Soporte para ordenar por fecha de publicación o actualización
+- **Title search**: Using optimized indexes in SwiftData
+- **Category filtering**: Automatic grouping by academic disciplines
+- **Temporal sorting**: Support for sorting by publication or update date
 
-### 💾 Persistencia Local
+### 💾 Local Persistence
 
-``ArXivPaper`` utiliza SwiftData para:
+``ArXivPaper`` uses SwiftData for:
 
-- **Almacenamiento offline**: Los artículos se guardan localmente para acceso sin conexión
-- **Sincronización**: Actualización automática con los datos más recientes de ArXiv
-- **Optimización de rendimiento**: Carga lazy de artículos para listas grandes
+- **Offline storage**: Papers are saved locally for offline access
+- **Synchronization**: Automatic updates with the latest ArXiv data
+- **Performance optimization**: Lazy loading of papers for large lists
 
-### 🔄 Integración con MVC
+### 🔄 MVC Integration
 
-El modelo se integra perfectamente con el patrón MVC:
+The model integrates seamlessly with the MVC pattern:
 
-- **Modelo**: ``ArXivPaper`` encapsula todos los datos del artículo
-- **Vista**: Las vistas SwiftUI se actualizan automáticamente cuando cambian los datos
-- **Controlador**: ``ArXivController`` maneja las operaciones CRUD y la lógica de negocio
+- **Model**: ``ArXivPaper`` encapsulates all paper data
+- **View**: SwiftUI views automatically update when data changes
+- **Controller**: ``ArXivController`` handles CRUD operations and business logic
 
-## Ejemplo de Uso
+## Usage Example
 
-### Creación de un Artículo
+### Creating a Paper
 
 ```swift
 let paper = ArXivPaper(
@@ -94,56 +94,56 @@ let paper = ArXivPaper(
 )
 ```
 
-### Búsqueda y Filtrado
+### Search and Filtering
 
 ```swift
-// Filtrar artículos por categoría
+// Filter papers by category
 let aiPapers = papers.filter { $0.category.hasPrefix("cs.AI") }
 
-// Buscar por título
+// Search by title
 let searchResults = papers.filter { 
     $0.title.localizedCaseInsensitiveContains("machine learning") 
 }
 
-// Ordenar por fecha de publicación
+// Sort by publication date
 let sortedPapers = papers.sorted { $0.publishedDate > $1.publishedDate }
 ```
 
-## Mejores Prácticas
+## Best Practices
 
-### 🛡️ Validación de Datos
+### 🛡️ Data Validation
 
 ```swift
-// Validar ID de ArXiv
+// Validate ArXiv ID
 func isValidArXivID(_ id: String) -> Bool {
     let pattern = #"^\d{4}\.\d{4,5}v\d+$"#
     return id.range(of: pattern, options: .regularExpression) != nil
 }
 ```
 
-### 🎯 Optimización de Rendimiento
+### 🎯 Performance Optimization
 
-- **Lazy Loading**: Carga solo los datos necesarios para la vista actual
-- **Índices**: Utiliza índices en SwiftData para búsquedas rápidas
-- **Caché**: Implementa caché en memoria para artículos frecuentemente accedidos
+- **Lazy Loading**: Only loads data necessary for the current view
+- **Indexes**: Uses SwiftData indexes for fast searches
+- **Cache**: Implements in-memory cache for frequently accessed papers
 
-## Relación con Otros Componentes
+## Relationship with Other Components
 
-### 🔗 Interacción con ArXivService
+### 🔗 Interaction with ArXivService
 
-``ArXivService`` crea instancias de ``ArXivPaper`` a partir de datos XML:
+``ArXivService`` creates ``ArXivPaper`` instances from XML data:
 
 ```swift
-// El servicio parsea XML y crea objetos ArXivPaper
+// Service parses XML and creates ArXivPaper objects
 let papers = try await ArXivService().fetchLatestPapers(count: 20)
 ```
 
-### 🎛️ Gestión por ArXivController
+### 🎛️ Management by ArXivController
 
-``ArXivController`` maneja colecciones de ``ArXivPaper``:
+``ArXivController`` handles ``ArXivPaper`` collections:
 
 ```swift
-// El controlador organiza los papers por categorías
+// Controller organizes papers by categories
 @Published var latestPapers: [ArXivPaper] = []
 @Published var csPapers: [ArXivPaper] = []
 @Published var mathPapers: [ArXivPaper] = []

@@ -1,101 +1,101 @@
-# Funcionalidad de Favoritos
+# Favorites Functionality
 
-Documentación completa de la funcionalidad de favoritos en ArXiv App.
+Complete documentation of the favorites functionality in ArXiv App.
 
-## 🌟 Descripción General
+## 🌟 Overview
 
-La funcionalidad de favoritos permite a los usuarios marcar artículos de interés para lectura posterior. Esta característica proporciona:
+The favorites functionality allows users to mark papers of interest for later reading. This feature provides:
 
-- **Almacenamiento Persistente**: Los favoritos se guardan usando SwiftData y persisten entre sesiones de la app
-- **Acceso Rápido**: Sección dedicada "Favoritos" en la navegación
-- **Gestión Sencilla**: Alternancia de favoritos con un toque desde las vistas de lista y detalle
-- **Retroalimentación Visual**: Iconos de corazón indican el estado de favorito
+- **Persistent Storage**: Favorites are saved using SwiftData and persist between app sessions
+- **Quick Access**: Dedicated "Favorites" section in navigation
+- **Simple Management**: Toggle favorites with a tap from list and detail views
+- **Visual Feedback**: Heart icons indicate favorite status
 
-## 📱 Interfaz de Usuario
+## 📱 User Interface
 
-### Navegación
+### Navigation
 
 #### macOS
-- **Barra Lateral**: Botón "Favoritos" en la barra lateral izquierda
-- **Lista de Artículos**: Icono de corazón en cada fila de artículo
-- **Vista de Detalle**: Icono de corazón en la barra de herramientas
+- **Sidebar**: "Favorites" button in the left sidebar
+- **Paper List**: Heart icon in each paper row
+- **Detail View**: Heart icon in the toolbar
 
 #### iOS
-- **Navegación por Pestañas**: "Favoritos" en el menú de navegación inferior
-- **Lista de Artículos**: Icono de corazón en cada fila de artículo
-- **Vista de Detalle**: Icono de corazón en la barra de navegación
+- **Tab Navigation**: "Favorites" in the bottom navigation menu
+- **Paper List**: Heart icon in each paper row
+- **Detail View**: Heart icon in the navigation bar
 
-### Estados Visuales
+### Visual States
 
-#### Estados del Botón de Favoritos
-- **Corazón Vacío (♡)**: El artículo no está marcado como favorito
-- **Corazón Lleno (♥)**: El artículo está marcado como favorito
-- **Color**: Color de acento del sistema cuando está marcado como favorito
+#### Favorites Button States
+- **Empty Heart (♡)**: The paper is not marked as favorite
+- **Filled Heart (♥)**: The paper is marked as favorite
+- **Color**: System accent color when marked as favorite
 
-## 🏗️ Arquitectura
+## 🏗️ Architecture
 
-### Capa de Modelo
+### Model Layer
 
-#### Propiedades de ArXivPaper
+#### ArXivPaper Properties
 ```swift
-/// Indica si el artículo está marcado como favorito
+/// Indicates if the paper is marked as favorite
 var isFavorite: Bool = false
 
-/// Fecha cuando se marcó como favorito (solo relevante si isFavorite es true)
+/// Date when marked as favorite (only relevant if isFavorite is true)
 var favoritedDate: Date?
 
-/// Marca o desmarca el artículo como favorito
+/// Marks or unmarks the paper as favorite
 func setFavorite(_ favorite: Bool) {
     self.isFavorite = favorite
     self.favoritedDate = favorite ? Date() : nil
 }
 ```
 
-### Capa de Controlador
+### Controller Layer
 
-#### Métodos de ArXivController
+#### ArXivController Methods
 ```swift
-/// Carga todos los artículos favoritos desde la base de datos
+/// Loads all favorite papers from the database
 func loadFavoritePapers() async
 
-/// Alterna el estado de favorito de un artículo
+/// Toggles the favorite status of a paper
 func toggleFavorite(for paper: ArXivPaper)
 
-/// Actualiza un artículo en todas las listas de categorías
+/// Updates a paper in all category lists
 func updatePaperInAllCategories(_ paper: ArXivPaper)
 ```
 
-### Capa de Vista
+### View Layer
 
 #### PaperDetailView
-- Muestra el botón de favoritos en la barra de herramientas/navegación
-- Llama a `controller.toggleFavorite(for: paper)` cuando se toca
+- Shows the favorites button in the toolbar/navigation
+- Calls `controller.toggleFavorite(for: paper)` when tapped
 
 #### PapersListView
-- Muestra el botón de favoritos en cada fila de artículo
-- Incluye "Favoritos" en el menú de navegación (iOS)
+- Shows the favorites button in each paper row
+- Includes "Favorites" in the navigation menu (iOS)
 
 #### ArXivPaperRow
-- Muestra icono de corazón que refleja el estado de favorito
-- Maneja el cambio rápido de favoritos
+- Shows heart icon reflecting favorite status
+- Handles quick favorite changes
 
 #### SidebarView (macOS)
-- Muestra el botón "Favoritos" en la barra lateral
-- Llama a `onFavoritesSelected` cuando se toca
+- Shows the "Favorites" button in the sidebar
+- Calls `onFavoritesSelected` when tapped
 
-## 💾 Persistencia de Datos
+## 💾 Data Persistence
 
-### Integración con SwiftData
+### SwiftData Integration
 
-La funcionalidad de favoritos utiliza SwiftData para almacenamiento persistente:
+The favorites functionality uses SwiftData for persistent storage:
 
 ```swift
-/// Modelo ArXivPaper con anotación SwiftData
+/// ArXivPaper model with SwiftData annotation
 @Model
 final class ArXivPaper: @unchecked Sendable {
-    // ... otras propiedades
+    // ... other properties
     
-    /// Indica si el artículo está marcado como favorito
+    /// Indicates if the paper is marked as favorite
     var isFavorite: Bool = false
     
     /// Fecha cuando se marcó como favorito

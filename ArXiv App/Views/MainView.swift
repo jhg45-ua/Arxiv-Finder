@@ -8,77 +8,77 @@
 import SwiftUI
 import SwiftData
 
-/// Vista principal de la aplicación ArXiv App siguiendo el patrón MVC
-/// Proporciona una interfaz adaptativa que funciona tanto en iOS como macOS
+/// Main view of the ArXiv App application following the MVC pattern
+/// Provides an adaptive interface that works on both iOS and macOS
 ///
-/// En iOS utiliza NavigationStack para navegación jerárquica
-/// En macOS utiliza NavigationSplitView para navegación en tres columnas
+/// On iOS uses NavigationStack for hierarchical navigation
+/// On macOS uses NavigationSplitView for three-column navigation
 ///
-/// Arquitectura MVC:
-/// - View: Esta vista maneja solo la presentación
-/// - Controller: ArXivController gestiona toda la lógica de negocio
-/// - Model: ArXivPaper representa los datos de artículos
+/// MVC Architecture:
+/// - View: This view handles only presentation
+/// - Controller: ArXivController manages all business logic
+/// - Model: ArXivPaper represents paper data
 struct MainView: View {
-    /// Contexto de modelo para SwiftData
+    /// Model context for SwiftData
     @Environment(\.modelContext) private var modelContext
     
-    /// Controller que maneja la lógica de negocio
+    /// Controller that handles business logic
     @StateObject private var controller = ArXivController()
     
-    /// Paper seleccionado en macOS para NavigationSplitView
+    /// Selected paper in macOS for NavigationSplitView
     @State private var selectedPaper: ArXivPaper?
 
-    /// Define la estructura visual de la vista principal
+    /// Defines the visual structure of the main view
     var body: some View {
         #if os(macOS)
-        // Diseño específico para macOS con NavigationSplitView
+        // macOS-specific design with NavigationSplitView
         NavigationSplitView {
-            // Barra lateral en macOS
+            // Sidebar in macOS
             SidebarView(
                 currentCategory: .constant(controller.currentCategory),
                 onLatestPapersSelected: {
                     await controller.loadLatestPapers()
-                    selectedPaper = nil // Volver a la vista principal
+                    selectedPaper = nil // Return to main view
                 },
                 onComputerScienceSelected: {
                     await controller.loadComputerSciencePapers()
-                    selectedPaper = nil // Volver a la vista principal
+                    selectedPaper = nil // Return to main view
                 },
                 onMathematicsSelected: {
                     await controller.loadMathematicsPapers()
-                    selectedPaper = nil // Volver a la vista principal
+                    selectedPaper = nil // Return to main view
                 },
                 onPhysicsSelected: {
                     await controller.loadPhysicsPapers()
-                    selectedPaper = nil // Volver a la vista principal
+                    selectedPaper = nil // Return to main view
                 },
                 onQuantitativeBiologySelected: {
                     await controller.loadQuantitativeBiologyPapers()
-                    selectedPaper = nil // Volver a la vista principal
+                    selectedPaper = nil // Return to main view
                 },
                 onQuantitativeFinanceSelected: {
                     await controller.loadQuantitativeFinancePapers()
-                    selectedPaper = nil // Volver a la vista principal
+                    selectedPaper = nil // Return to main view
                 },
                 onStatisticsSelected: {
                     await controller.loadStatisticsPapers()
-                    selectedPaper = nil // Volver a la vista principal
+                    selectedPaper = nil // Return to main view
                 },
                 onElectricalEngineeringSelected: {
                     await controller.loadElectricalEngineeringPapers()
-                    selectedPaper = nil // Volver a la vista principal
+                    selectedPaper = nil // Return to main view
                 },
                 onEconomicsSelected: {
                     await controller.loadEconomicsPapers()
-                    selectedPaper = nil // Volver a la vista principal
+                    selectedPaper = nil // Return to main view
                 },
                 onFavoritesSelected: {
                     await controller.loadFavoritePapers()
-                    selectedPaper = nil // Volver a la vista principal
+                    selectedPaper = nil // Return to main view
                 }
             )
         } content: {
-            // Vista principal de artículos
+            // Main papers view
             PapersListView(
                 papers: controller.filteredPapers,
                 isLoading: controller.isLoading,
@@ -87,16 +87,16 @@ struct MainView: View {
                 selectedPaper: $selectedPaper
             )
         } detail: {
-            // Vista de detalle o placeholder
+            // Detail view or placeholder
             if let paper = selectedPaper {
                 PaperDetailView(paper: paper, controller: controller, onBackToList: {
                     selectedPaper = nil
                 })
             } else {
                 ContentUnavailableView(
-                    "Selecciona un artículo",
+                    "Select a paper",
                     systemImage: "doc.text",
-                    description: Text("Elige un paper de la lista para ver los detalles")
+                    description: Text("Choose a paper from the list to view details")
                 )
             }
         }

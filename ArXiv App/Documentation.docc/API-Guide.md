@@ -1,87 +1,87 @@
-# Guía de la API de ArXiv
+# ArXiv API Guide
 
-Documentación completa de la integración con la API de ArXiv.
+Complete documentation of ArXiv API integration.
 
-## 🌐 Visión General de la API
+## 🌐 API Overview
 
-ArXiv proporciona una API pública RESTful para acceder a metadatos de artículos científicos. Esta guía documenta cómo ArXiv App interactúa con esta API para obtener, buscar y procesar artículos académicos.
+ArXiv provides a public RESTful API for accessing scientific paper metadata. This guide documents how ArXiv App interacts with this API to retrieve, search, and process academic papers.
 
-La API utiliza:
-- **Protocolo**: HTTPS para seguridad
-- **Formato**: XML (Atom feed)
-- **Autenticación**: No requerida
-- **Rate Limiting**: 3 requests por segundo
+The API uses:
+- **Protocol**: HTTPS for security
+- **Format**: XML (Atom feed)
+- **Authentication**: Not required
+- **Rate Limiting**: 3 requests per second
 
-## 📡 Configuración de la API
+## 📡 API Configuration
 
 ### Base URL
 ```
 https://export.arxiv.org/api/query
 ```
 
-### Endpoints Principales
+### Main Endpoints
 
-#### 1. 🔍 Búsqueda de Artículos
+#### 1. 🔍 Paper Search
 ```http
 GET /api/query?search_query={query}&start={start}&max_results={max_results}
 ```
 
-**Parámetros:**
-- `search_query`: Consulta de búsqueda
-- `start`: Índice de inicio (paginación)
-- `max_results`: Número máximo de resultados
+**Parameters:**
+- `search_query`: Search query
+- `start`: Start index (pagination)
+- `max_results`: Maximum number of results
 
-#### 2. 📄 Obtener Artículo por ID
+#### 2. 📄 Get Paper by ID
 ```http
 GET /api/query?id_list={paper_id}
 ```
 
-**Parámetros:**
-- `id_list`: Lista de IDs de artículos separados por comas
+**Parameters:**
+- `id_list`: Comma-separated list of paper IDs
 
-#### 3. 📚 Últimos Artículos por Categoría
+#### 3. 📚 Latest Papers by Category
 ```http
 GET /api/query?search_query=cat:{category}&sortBy=submittedDate&sortOrder=descending
 ```
 
-**Parámetros:**
-- `category`: Categoría de ArXiv (ej: cs.AI, math.CO)
-- `sortBy`: Campo de ordenamiento
-- `sortOrder`: Orden ascendente/descendente
+**Parameters:**
+- `category`: ArXiv category (e.g.: cs.AI, math.CO)
+- `sortBy`: Sort field
+- `sortOrder`: Ascending/descending order
 
-## 🔧 Implementación en ArXivService
+## 🔧 Implementation in ArXivService
 
-### Estructura del Servicio
+### Service Structure
 
-El servicio ``ArXivService`` encapsula toda la comunicación con la API:
+The ``ArXivService`` service encapsulates all API communication:
 
 ```swift
-/// Servicio principal para comunicación con ArXiv
+/// Main service for ArXiv communication
 final class ArXivService {
-    /// URL base de la API
+    /// API base URL
     private let baseURL = "https://export.arxiv.org/api/query"
     
-    /// Sesión HTTP configurada
+    /// Configured HTTP session
     private let session: URLSession
     
-    /// Inicialización con configuración personalizada
+    /// Initialization with custom configuration
     init(configuration: URLSessionConfiguration = .default) {
         self.session = URLSession(configuration: configuration)
     }
 }
 ```
 
-### Métodos de Búsqueda
+### Search Methods
 
-#### 🔍 Búsqueda General
+#### 🔍 General Search
 ```swift
-/// Busca artículos por consulta general
+/// Searches papers by general query
 /// - Parameters:
-///   - query: Términos de búsqueda
-///   - start: Índice inicial para paginación
-///   - maxResults: Número máximo de resultados
-///   - category: Categoría opcional para filtrar
-/// - Returns: Array de artículos encontrados
+///   - query: Search terms
+///   - start: Starting index for pagination
+///   - maxResults: Maximum number of results
+///   - category: Optional category filter
+/// - Returns: Array of found papers
 func searchPapers(
     query: String,
     start: Int = 0,
@@ -90,7 +90,7 @@ func searchPapers(
 ) async throws -> [ArXivPaper] {
     var components = URLComponents(string: baseURL)!
     
-    // Construir query con filtros
+    // Build query with filters
     var searchQuery = query
     if let category = category {
         searchQuery = "cat:\(category) AND (\(query))"
@@ -108,13 +108,13 @@ func searchPapers(
 }
 ```
 
-#### 📈 Últimos Artículos
+#### 📈 Latest Papers
 ```swift
-/// Obtiene los artículos más recientes
+/// Gets the most recent papers
 /// - Parameters:
-///   - category: Categoría opcional para filtrar
-///   - maxResults: Número máximo de resultados
-/// - Returns: Array de artículos recientes
+///   - category: Optional category filter
+///   - maxResults: Maximum number of results
+/// - Returns: Array of recent papers
 func getLatestPapers(
     category: String? = nil,
     maxResults: Int = 50
@@ -138,16 +138,16 @@ func getLatestPapers(
 }
 ```
 
-## 📊 Categorías de ArXiv
+## 📊 ArXiv Categories
 
-### Categorías Principales
+### Main Categories
 
 #### 💻 Computer Science (cs)
-- `cs.AI` - Inteligencia Artificial
-- `cs.CL` - Computación y Lenguaje
-- `cs.CV` - Visión por Computadora
-- `cs.DB` - Bases de Datos
-- `cs.DS` - Estructuras de Datos y Algoritmos
+- `cs.AI` - Artificial Intelligence
+- `cs.CL` - Computation and Language
+- `cs.CV` - Computer Vision
+- `cs.DB` - Databases
+- `cs.DS` - Data Structures and Algorithms
 - `cs.LG` - Machine Learning
 - `cs.SE` - Ingeniería de Software
 
@@ -353,7 +353,7 @@ enum ArXivError: Error, LocalizedError {
 
 ```swift
 /// Manejo de errores en ArXivController
-@MainActor
+/// @MainActor
 func loadLatestPapers() async {
     isLoading = true
     errorMessage = nil
@@ -547,7 +547,7 @@ func performAdvancedSearch() async throws -> [ArXivPaper] {
 
 ```swift
 /// Integración completa en el controlador
-@MainActor
+/// @MainActor
 class ArXivController: ObservableObject {
     @Published var papers: [ArXivPaper] = []
     @Published var isLoading = false

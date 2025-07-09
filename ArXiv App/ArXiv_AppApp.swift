@@ -9,71 +9,71 @@ import SwiftUI
 import SwiftData
 
 /**
- * ARQUITECTURA DE LA APLICACIÓN ARXIV APP
+ * ARXIV APP APPLICATION ARCHITECTURE
  * =====================================
  * 
- * Esta aplicación sigue el patrón Model-View-Controller (MVC):
+ * This application follows the Model-View-Controller (MVC) pattern:
  * 
- * MODELS (Modelos):
- * - ArXivPaper: Modelo de datos para artículos científicos con SwiftData
+ * MODELS (Models):
+ * - ArXivPaper: Data model for scientific papers with SwiftData
  * 
- * VIEWS (Vistas):
- * - MainView: Vista principal que coordina la navegación
- * - SidebarView: Barra lateral para macOS
- * - PapersListView: Lista de artículos con adaptaciones multiplataforma
- * - ArXivPaperRow: Fila individual de artículo
- * - PaperDetailView: Detalle completo de un artículo
+ * VIEWS (Views):
+ * - MainView: Main view that coordinates navigation
+ * - SidebarView: Sidebar for macOS
+ * - PapersListView: Paper list with multiplatform adaptations
+ * - ArXivPaperRow: Individual paper row
+ * - PaperDetailView: Complete detail of a paper
  * 
- * CONTROLLERS (Controladores):
- * - ArXivController: Lógica de negocio y gestión de estado
+ * CONTROLLERS (Controllers):
+ * - ArXivController: Business logic and state management
  * 
- * SERVICES (Servicios):
- * - ArXivService: Comunicación con la API de ArXiv
- * - ArXivSimpleParser: Parser XML personalizado
+ * SERVICES (Services):
+ * - ArXivService: Communication with the ArXiv API
+ * - ArXivSimpleParser: Custom XML parser
  * 
- * CARACTERÍSTICAS TÉCNICAS:
- * - Multiplataforma: iOS y macOS con UI adaptativa
- * - Persistencia: SwiftData para almacenamiento local
- * - Networking: URLSession con manejo de errores robusto
- * - UI: SwiftUI con NavigationStack (iOS) y NavigationSplitView (macOS)
- * - Concurrencia: async/await con @MainActor para actualizaciones UI
+ * TECHNICAL FEATURES:
+ * - Multiplatform: iOS and macOS with adaptive UI
+ * - Persistence: SwiftData for local storage
+ * - Networking: URLSession with robust error handling
+ * - UI: SwiftUI with NavigationStack (iOS) and NavigationSplitView (macOS)
+ * - Concurrency: async/await with @MainActor for UI updates
  */
 
-/// Punto de entrada principal de la aplicación ArXiv App
-/// Configura la aplicación, la persistencia de datos y la UI específica por plataforma
+/// Main entry point of the ArXiv App application
+/// Configures the application, data persistence and platform-specific UI
 /// 
-/// Responsabilidades:
-/// - Configuración del contenedor SwiftData para persistencia
-/// - Definición de la estructura de ventanas por plataforma
-/// - Inyección del modelo de datos en el entorno SwiftUI
-/// - Configuración de ventanas específicas (macOS: tamaño, estilo; iOS: grupo básico)
+/// Responsibilities:
+/// - SwiftData container configuration for persistence
+/// - Platform-specific window structure definition
+/// - Data model injection into SwiftUI environment
+/// - Specific window configuration (macOS: size, style; iOS: basic group)
 @main
 struct ArXiv_AppApp: App {
-    /// Contenedor compartido de modelo de datos que gestiona la persistencia de la aplicación
-    /// Se configura con SwiftData para manejar el almacenamiento local de artículos de ArXiv
+    /// Shared model container that manages application persistence
+    /// Configured with SwiftData to handle local storage of ArXiv papers
     var sharedModelContainer: ModelContainer = {
-        // Define el esquema de datos que incluye todos los modelos de la aplicación
+        // Define the data schema that includes all application models
         let schema = Schema([
-            ArXivPaper.self, // Modelo para artículos de ArXiv
+            ArXivPaper.self, // Model for ArXiv papers
         ])
         
-        // Configura el modelo para usar almacenamiento persistente (no en memoria)
+        // Configure the model to use persistent storage (not in memory)
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
         do {
-            // Intenta crear el contenedor de modelo con la configuración especificada
+            // Try to create the model container with the specified configuration
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
-            // Si falla la creación del contenedor, termina la aplicación con un error fatal
+            // If container creation fails, terminate the application with a fatal error
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
 
-    /// Define la estructura principal de la interfaz de usuario de la aplicación
-    /// Utiliza configuraciones específicas para cada plataforma (iOS/macOS)
+    /// Defines the main structure of the application user interface
+    /// Uses platform-specific configurations for each platform (iOS/macOS)
     var body: some Scene {
         #if os(macOS)
-        // Configuración específica para macOS con ventana redimensionable
+        // macOS-specific configuration with resizable window
         WindowGroup {
             MainView()
                 .frame(minWidth: 1500, minHeight: 700)
@@ -81,21 +81,21 @@ struct ArXiv_AppApp: App {
         .windowStyle(.titleBar)
         .windowToolbarStyle(.unified)
         .defaultSize(width: 1500, height: 700)
-        // Inyecta el contenedor de modelo compartido en el entorno de SwiftUI
-        // Esto permite que todas las vistas accedan a los datos persistentes
+        // Inject the shared model container into the SwiftUI environment
+        // This allows all views to access persistent data
         .modelContainer(sharedModelContainer)
         
-        // Configuración adicional para macOS
+        // Additional configuration for macOS
         Settings {
             SettingsView()
         }
         #else
-        // Configuración específica para iOS
+        // iOS-specific configuration
         WindowGroup {
             MainView()
         }
-        // Inyecta el contenedor de modelo compartido en el entorno de SwiftUI
-        // Esto permite que todas las vistas accedan a los datos persistentes
+        // Inject the shared model container into the SwiftUI environment
+        // This allows all views to access persistent data
         .modelContainer(sharedModelContainer)
         #endif
     }
