@@ -11,8 +11,8 @@ import UserNotifications
 import AppKit
 #endif
 
-/// Vista de configuraciones simplificada para la app de ArXiv
-/// Proporciona opciones esenciales con aplicación inmediata de cambios
+/// Simplified settings view for the ArXiv app
+/// Provides essential options with immediate application of changes
 #if os(macOS)
 struct SettingsView: View {
     
@@ -41,44 +41,44 @@ struct SettingsView: View {
             
             interfaceSettingsView
                 .tabItem {
-                    Label("Interfaz", systemImage: "paintbrush")
+                    Label("Interface", systemImage: "paintbrush")
                 }
             
             aboutSettingsView
                 .tabItem {
-                    Label("Acerca de", systemImage: "info.circle")
+                    Label("About", systemImage: "info.circle")
                 }
         }
         .frame(width: 600, height: 500)
-        .alert("Resultado de Conexión", isPresented: $showingConnectionAlert) {
+        .alert("Connection Result", isPresented: $showingConnectionAlert) {
             Button("OK") { }
         } message: {
             Text(connectionTestResult)
         }
-        .alert("Restablecer Configuración", isPresented: $showingResetAlert) {
-            Button("Restablecer", role: .destructive) {
+        .alert("Reset Settings", isPresented: $showingResetAlert) {
+            Button("Reset", role: .destructive) {
                 resetSettings()
             }
-            Button("Cancelar", role: .cancel) { }
+            Button("Cancel", role: .cancel) { }
         } message: {
-            Text("¿Estás seguro de que quieres restablecer todas las configuraciones?")
+            Text("Are you sure you want to reset all settings?")
         }
     }
     
     // MARK: - General Settings View
     private var generalSettingsView: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Configuración General")
+            Text("General Settings")
                 .font(.title2)
                 .fontWeight(.bold)
             
             Divider()
             
-            // Configuración de contenido
-            GroupBox("Contenido") {
+            // Content settings
+            GroupBox("Content") {
                 VStack(alignment: .leading, spacing: 10) {
                     HStack {
-                        Text("Máximo de papers:")
+                        Text("Maximum papers:")
                         Spacer()
                         Stepper(value: $maxPapers, in: 5...50, step: 5) {
                             Text("\(maxPapers)")
@@ -90,10 +90,10 @@ struct SettingsView: View {
                     }
                     
                     HStack {
-                        Text("Categoría por defecto:")
+                        Text("Default category:")
                         Spacer()
-                        Picker("Categoría", selection: $defaultCategory) {
-                            Text("Últimos").tag("latest")
+                        Picker("Category", selection: $defaultCategory) {
+                            Text("Latest").tag("latest")
                             Text("Computer Science").tag("cs")
                             Text("Mathematics").tag("math")
                             Text("Physics").tag("physics")
@@ -113,17 +113,17 @@ struct SettingsView: View {
                 .padding(.vertical, 6)
             }
             
-            // Configuración de actualización
-            GroupBox("Actualización") {
+            // Update settings
+            GroupBox("Update") {
                 VStack(alignment: .leading, spacing: 10) {
-                    Toggle("Actualización automática", isOn: $autoRefresh)
+                    Toggle("Automatic update", isOn: $autoRefresh)
                         .onChange(of: autoRefresh) { _, _ in
                             notifySettingsChanged()
                         }
                     
                     if autoRefresh {
                         HStack {
-                            Text("Intervalo:")
+                            Text("Interval:")
                             Spacer()
                             Stepper(value: $refreshInterval, in: 5...120, step: 5) {
                                 Text("\(refreshInterval) min")
@@ -138,10 +138,10 @@ struct SettingsView: View {
                 .padding(.vertical, 6)
             }
             
-            // Configuración de notificaciones
-            GroupBox("Notificaciones") {
+            // Notification settings
+            GroupBox("Notifications") {
                 VStack(alignment: .leading, spacing: 8) {
-                    Toggle("Mostrar notificaciones", isOn: $showNotifications)
+                    Toggle("Show notifications", isOn: $showNotifications)
                         .onChange(of: showNotifications) { _, newValue in
                             if newValue {
                                 requestNotificationPermission()
@@ -149,7 +149,7 @@ struct SettingsView: View {
                         }
                     
                     if showNotifications {
-                        Button("Probar Notificación") {
+                        Button("Test Notification") {
                             testNotification()
                         }
                         .buttonStyle(.bordered)
@@ -167,34 +167,34 @@ struct SettingsView: View {
     // MARK: - Interface Settings View
     private var interfaceSettingsView: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Configuración de Interfaz")
+            Text("Interface Settings")
                 .font(.title2)
                 .fontWeight(.bold)
             
             Divider()
             
-            // Configuración de vista
-            GroupBox("Visualización") {
+            // View settings
+            GroupBox("Visualization") {
                 VStack(alignment: .leading, spacing: 10) {
-                    Toggle("Modo compacto", isOn: $compactMode)
+                    Toggle("Compact mode", isOn: $compactMode)
                         .onChange(of: compactMode) { _, _ in
                             notifySettingsChanged()
                         }
                     
-                    Toggle("Mostrar vista previa", isOn: $showPreview)
+                    Toggle("Show preview", isOn: $showPreview)
                         .onChange(of: showPreview) { _, _ in
                             notifySettingsChanged()
                         }
                     
                     VStack(spacing: 12) {
                         HStack {
-                            Text("Tamaño de fuente:")
+                            Text("Font size:")
                                 .fontWeight(.medium)
                             Spacer()
                         }
                         
                         VStack(spacing: 10) {
-                            // Etiqueta del valor actual con vista previa
+                            // Current value label with preview
                             HStack {
                                 Text("Aa")
                                     .font(.system(size: fontSize))
@@ -210,20 +210,20 @@ struct SettingsView: View {
                             .background(Color.blue.opacity(0.1))
                             .cornerRadius(8)
                             
-                            // Slider con etiquetas y estilo mejorado - MÁS ANCHO
+                            // Slider with labels and improved style - MORE WIDE
                             VStack(spacing: 6) {
                                 HStack {
-                                    Text("Pequeña")
+                                    Text("Small")
                                         .font(.caption2)
                                         .foregroundColor(.secondary)
                                     Spacer()
-                                    Text("Grande")
+                                    Text("Large")
                                         .font(.caption2)
                                         .foregroundColor(.secondary)
                                 }
                                 
                                 Slider(value: $fontSize, in: 10...20, step: 1) {
-                                    Text("Tamaño de fuente")
+                                    Text("Font size")
                                 } minimumValueLabel: {
                                     Image(systemName: "textformat.size.smaller")
                                         .foregroundColor(.secondary)
@@ -247,8 +247,8 @@ struct SettingsView: View {
                 .padding(.vertical, 6)
             }
             
-            // Vista previa
-            GroupBox("Vista Previa") {
+            // Preview
+            GroupBox("Preview") {
                 VStack(alignment: .leading, spacing: compactMode ? 6 : 10) {
                     Text("Quantum Computing and Machine Learning")
                         .font(.system(size: fontSize, weight: .medium))
@@ -307,24 +307,24 @@ struct SettingsView: View {
      // MARK: - About Settings View
     private var aboutSettingsView: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Acerca de ArXiv App")
+            Text("About ArXiv App")
                 .font(.title2)
                 .fontWeight(.bold)
             
             Divider()
             
-            // Información de la aplicación
-            GroupBox("Información") {
+            // Application information
+            GroupBox("Information") {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
-                        Text("Versión:")
+                        Text("Version:")
                         Spacer()
                         Text("1.0.0")
                             .foregroundColor(.secondary)
                     }
                     
                     HStack {
-                        Text("Desarrollador:")
+                        Text("Developer:")
                         Spacer()
                         Text("Julián Hinojosa Gil")
                             .foregroundColor(.secondary)
@@ -333,17 +333,17 @@ struct SettingsView: View {
                 .padding(.vertical, 6)
             }
             
-            // Test de conexión
-            GroupBox("Conexión") {
+            // Connection test
+            GroupBox("Connection") {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
-                        Text("Estado:")
+                        Text("Status:")
                         Spacer()
-                        Text("Conectado")
+                        Text("Connected")
                             .foregroundColor(.green)
                     }
                     
-                    Button("Probar Conexión") {
+                    Button("Test Connection") {
                         testConnection()
                     }
                     .disabled(isTestingConnection)
@@ -352,15 +352,15 @@ struct SettingsView: View {
                 .padding(.vertical, 6)
             }
             
-            // Enlaces útiles
-            GroupBox("Enlaces") {
+            // Useful links
+            GroupBox("Links") {
                 VStack(alignment: .leading, spacing: 6) {
-                    Button("Sitio web de ArXiv") {
+                    Button("ArXiv website") {
                         openURL("https://arxiv.org")
                     }
                     .buttonStyle(.link)
                     
-                    Button("Documentación de API") {
+                    Button("API documentation") {
                         openURL("https://arxiv.org/help/api")
                     }
                     .buttonStyle(.link)
@@ -368,9 +368,9 @@ struct SettingsView: View {
                 .padding(.vertical, 6)
             }
             
-            // Acciones
-            GroupBox("Acciones") {
-                Button("Restablecer Configuración") {
+            // Actions
+            GroupBox("Actions") {
+                Button("Reset Settings") {
                     showingResetAlert = true
                 }
                 .buttonStyle(.bordered)
@@ -384,7 +384,7 @@ struct SettingsView: View {
     
     // MARK: - Helper Methods
     
-    /// Notifica cambios en la configuración al controlador
+    /// Notify changes in the configuration to the controller
     private func notifySettingsChanged() {
         NotificationCenter.default.post(
             name: .settingsChanged,
@@ -392,7 +392,7 @@ struct SettingsView: View {
         )
     }
     
-    /// Solicita permisos de notificación
+    /// Request notification permissions
     private func requestNotificationPermission() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
             DispatchQueue.main.async {
@@ -403,11 +403,11 @@ struct SettingsView: View {
         }
     }
     
-    /// Envía una notificación de prueba
+    /// Send a test notification
     private func testNotification() {
         let content = UNMutableNotificationContent()
         content.title = "ArXiv App - Prueba"
-        content.body = "Las notificaciones están funcionando correctamente."
+        content.body = "The notifications are working correctly."
         content.sound = .default
         
         let request = UNNotificationRequest(
@@ -418,12 +418,12 @@ struct SettingsView: View {
         
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
-                print("Error al enviar notificación: \(error)")
+                print("Error sending notification: \(error)")
             }
         }
     }
     
-    /// Prueba la conexión con ArXiv
+    /// Test the connection with ArXiv
     private func testConnection() {
         isTestingConnection = true
         
@@ -435,9 +435,9 @@ struct SettingsView: View {
                 DispatchQueue.main.async {
                     if let httpResponse = response as? HTTPURLResponse {
                         if httpResponse.statusCode == 200 {
-                            self.connectionTestResult = "✅ Conexión exitosa"
+                            self.connectionTestResult = "✅ Successful connection"
                         } else {
-                            self.connectionTestResult = "❌ Error HTTP: \(httpResponse.statusCode)"
+                            self.connectionTestResult = "❌ HTTP Error: \(httpResponse.statusCode)"
                         }
                     }
                     self.isTestingConnection = false
@@ -453,13 +453,13 @@ struct SettingsView: View {
         }
     }
     
-    /// Abre una URL en el navegador
+    /// Open a URL in the browser
     private func openURL(_ urlString: String) {
         guard let url = URL(string: urlString) else { return }
         NSWorkspace.shared.open(url)
     }
     
-    /// Restablece todas las configuraciones a sus valores por defecto
+    /// Reset all settings to their default values
     private func resetSettings() {
         refreshInterval = 30
         maxPapers = 10
@@ -470,7 +470,7 @@ struct SettingsView: View {
         showPreview = true
         fontSize = 14.0
         
-        // Notificar cambios
+        // Notify changes
         notifySettingsChanged()
     }
 }

@@ -7,58 +7,58 @@
 
 import SwiftUI
 
-/// Barra lateral de navegación diseñada específicamente para macOS
-/// Parte del NavigationSplitView que proporciona navegación principal
+/// Sidebar navigation designed specifically for macOS
+/// Part of the NavigationSplitView that provides main navigation
 ///
-/// Funcionalidades:
-/// - Navegación por categorías principales de ArXiv
-/// - Indicadores visuales de la categoría actualmente seleccionada
-/// - Header con branding de la aplicación
-/// - Secciones organizadas por tipo de contenido
-/// - Callbacks asíncronos para cargar datos de cada categoría
-/// - Placeholders para funcionalidades futuras (Favoritos, Búsqueda)
+/// Features:
+/// - Main navigation by ArXiv categories
+/// - Visual indicators of the currently selected category
+/// - Header with branding of the application
+/// - Sections organized by content type
+/// - Asynchronous callbacks to load data for each category
+/// - Placeholders for future features (Favorites, Search)
 ///
-/// Diseño:
-/// - Colores del sistema macOS para integración nativa
-/// - Iconos SF Symbols para consistencia visual
-/// - Espaciado y tipografía optimizados para escritorio
+/// Design:
+/// - System macOS colors for native integration
+/// - SF Symbols icons for visual consistency
+/// - Optimized spacing and typography for desktop
 struct SidebarView: View {
-    /// Categoría actualmente seleccionada
+    /// Currently selected category
     @Binding var currentCategory: String
     
-    /// Callback para cargar los últimos papers
+    /// Callback to load the latest papers
     let onLatestPapersSelected: () async -> Void
     
-    /// Callback para cargar papers de Computer Science
+    /// Callback to load Computer Science papers
     let onComputerScienceSelected: () async -> Void
     
-    /// Callback para cargar papers de Mathematics
+    /// Callback to load Mathematics papers
     let onMathematicsSelected: () async -> Void
     
-    /// Callback para cargar papers de Physics
+    /// Callback to load Physics papers
     let onPhysicsSelected: () async -> Void
     
-    /// Callback para cargar papers de Quantitative Biology
+    /// Callback to load Quantitative Biology papers
     let onQuantitativeBiologySelected: () async -> Void
     
-    /// Callback para cargar papers de Quantitative Finance
+    /// Callback to load Quantitative Finance papers
     let onQuantitativeFinanceSelected: () async -> Void
     
-    /// Callback para cargar papers de Statistics
+    /// Callback to load Statistics papers
     let onStatisticsSelected: () async -> Void
     
-    /// Callback para cargar papers de Electrical Engineering
+    /// Callback to load Electrical Engineering papers
     let onElectricalEngineeringSelected: () async -> Void
     
-    /// Callback para cargar papers de Economics
+    /// Callback to load Economics papers
     let onEconomicsSelected: () async -> Void
     
-    /// Callback para cargar papers favoritos
+    /// Callback to load favorite papers
     let onFavoritesSelected: () async -> Void
     
     var body: some View {
         VStack(spacing: 0) {
-            // Header simplificado
+            // Header simplified
             VStack(spacing: 8) {
                 HStack {
                     Image(systemName: "doc.richtext")
@@ -79,10 +79,10 @@ struct SidebarView: View {
             Divider()
                 .padding(.horizontal, 16)
             
-            // Lista de navegación simplificada
+            // Simplified navigation list
             VStack(spacing: 8) {
                 sidebarButton(
-                    title: "Últimos Papers",
+                    title: "Latest Papers",
                     icon: "doc.text",
                     isSelected: currentCategory == "latest"
                 ) {
@@ -158,7 +158,7 @@ struct SidebarView: View {
                     .padding(.vertical, 8)
                 
                 sidebarButton(
-                    title: "Favoritos",
+                    title: "Favorites",
                     icon: "heart.fill",
                     isSelected: currentCategory == "favorites"
                 ) {
@@ -166,12 +166,12 @@ struct SidebarView: View {
                 }
                 
                 sidebarButton(
-                    title: "Búsqueda",
+                    title: "Search",
                     icon: "magnifyingglass",
                     isSelected: false,
                     isEnabled: false
                 ) {
-                    // Funcionalidad pendiente
+                    // Pending functionality
                 }
             }
             .padding(.horizontal, 12)
@@ -187,16 +187,16 @@ struct SidebarView: View {
         #endif
     }
     
-    /// Crea un botón personalizado para la barra lateral
-    /// Maneja el estado visual (seleccionado/no seleccionado) y habilitado/deshabilitado
+    /// Create a custom button for the sidebar
+    /// Handles the visual state (selected/not selected) and enabled/disabled
     /// 
     /// - Parameters:
-    ///   - title: Texto del botón
-    ///   - icon: Nombre del símbolo SF Symbols
-    ///   - isSelected: Si el botón está actualmente seleccionado
-    ///   - isEnabled: Si el botón está habilitado (por defecto true)
-    ///   - action: Acción a ejecutar cuando se presiona el botón
-    /// - Returns: Vista del botón configurado
+    ///   - title: Text of the button
+    ///   - icon: Name of the SF Symbols icon
+    ///   - isSelected: If the button is currently selected
+    ///   - isEnabled: If the button is enabled (default true)
+    ///   - action: Action to execute when the button is pressed
+    /// - Returns: Configured button view
     @ViewBuilder
     private func sidebarButton(
         title: String,

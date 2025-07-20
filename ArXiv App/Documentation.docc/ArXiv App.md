@@ -30,14 +30,14 @@ This application demonstrates SwiftUI development best practices, including:
 
 The application provides access to the following ArXiv categories:
 
-- **💻 Computer Science** (`cs`) - Ciencias de la Computación
-- **🔢 Mathematics** (`math`) - Matemáticas
-- **⚛️ Physics** (`physics`) - Física
-- **🧬 Quantitative Biology** (`q-bio`) - Biología Cuantitativa
-- **💰 Quantitative Finance** (`q-fin`) - Finanzas Cuantitativas
-- **📊 Statistics** (`stat`) - Estadística
-- **⚡ Electrical Engineering** (`eess`) - Ingeniería Eléctrica
-- **💼 Economics** (`econ`) - Economía
+- **💻 Computer Science** (`cs`)
+- **🔢 Mathematics** (`math`)
+- **⚛️ Physics** (`physics`)
+- **🧬 Quantitative Biology** (`q-bio`)
+- **💰 Quantitative Finance** (`q-fin`)
+- **📊 Statistics** (`stat`)
+- **⚡ Electrical Engineering** (`eess`)
+- **💼 Economics** (`econ`)
 
 ## Application Architecture
 

@@ -7,30 +7,30 @@
 
 import SwiftUI
 
-/// Vista detallada que muestra toda la información de un artículo científico
-/// Pantalla de destino cuando el usuario selecciona un paper de la lista
+/// Detailed view that shows all the information of a scientific paper
+/// Destination screen when the user selects a paper from the list
 ///
-/// Información mostrada:
-/// - Título completo del artículo
-/// - Lista completa de autores
-/// - Fechas de publicación y actualización
-/// - Resumen/abstract completo del paper
-/// - Categorías científicas como badges
-/// - Enlaces para abrir el PDF y la página web del artículo
-/// - Acciones de compartir (iOS) o menús contextuales (macOS)
+/// Information displayed:
+/// - Full title of the article
+/// - Complete list of authors
+/// - Publication and update dates
+/// - Complete summary/abstract of the paper
+/// - Scientific categories as badges
+/// - Links to open the PDF and the article's web page
+/// - Share actions (iOS) or contextual menus (macOS)
 ///
-/// Navegación:
-/// - iOS: Modal o push navigation con botón de regreso
-/// - macOS: Panel de detalle en NavigationSplitView
-/// - Botones de acción adaptativos según la plataforma
+/// Navigation:
+/// - iOS: Modal or push navigation with back button
+/// - macOS: Detail panel in NavigationSplitView
+/// - Action buttons adaptive to the platform
 struct PaperDetailView: View {
-    /// El artículo a mostrar en detalle
+    /// The article to display in detail
     let paper: ArXivPaper
     
-    /// Controller para manejar la lógica de favoritos
+    /// Controller to handle favorite logic
     let controller: ArXivController?
     
-    /// Callback opcional para regresar a la lista (usado en algunos flujos de navegación)
+    /// Optional callback to return to the list (used in some navigation flows)
     let onBackToList: (() -> Void)?
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.dismiss) private var dismiss
@@ -38,13 +38,13 @@ struct PaperDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                // Título del paper
+                // Paper title
                 Text(paper.title)
                     .font(.title)
                     .fontWeight(.bold)
                     .padding(.bottom, 8)
                 
-                // Información de autores y fecha
+                // Author and date information
                 VStack(alignment: .leading, spacing: 8) {
                     Label(paper.authors, systemImage: "person.2")
                         .font(.subheadline)
@@ -55,10 +55,10 @@ struct PaperDetailView: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                     
-                    // Fecha de actualización (si existe y es diferente)
+                    // Update date (if exists and is different)
                     if let updatedDate = paper.updatedDate,
-                       abs(updatedDate.timeIntervalSince(paper.publishedDate)) > 3600 { // Más de 1 hora de diferencia
-                        Label("Actualizado: \(updatedDate.formatted(date: .abbreviated, time: .omitted))", 
+                       abs(updatedDate.timeIntervalSince(paper.publishedDate)) > 3600 { // More than 1 hour difference
+                        Label("Updated: \(updatedDate.formatted(date: .abbreviated, time: .omitted))", 
                               systemImage: "arrow.clockwise")
                             .font(.caption)
                             .foregroundColor(.orange)
@@ -67,10 +67,10 @@ struct PaperDetailView: View {
                 
                 Divider()
                 
-                // Categorías del paper
+                // Paper categories
                 if !paper.categories.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Categorías")
+                        Text("Categories")
                             .font(.headline)
                         
                         Text(paper.categories)
@@ -85,9 +85,9 @@ struct PaperDetailView: View {
                     Divider()
                 }
                 
-                // Resumen del paper
+                // Paper summary
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Resumen")
+                    Text("Summary")
                         .font(.headline)
                     
                     Text(paper.summary)
@@ -97,9 +97,9 @@ struct PaperDetailView: View {
                 
                 Divider()
                 
-                // Enlaces de acceso
+                // Access links
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Enlaces")
+                    Text("Links")
                         .font(.headline)
                     
                     HStack(spacing: 16) {
@@ -107,7 +107,7 @@ struct PaperDetailView: View {
                             Link(destination: URL(string: paper.pdfURL)!) {
                                 HStack {
                                     Image(systemName: "doc.fill")
-                                    Text("Ver PDF")
+                                    Text("View PDF")
                                 }
                                 .foregroundColor(.white)
                                 .padding(.horizontal, 16)
@@ -121,7 +121,7 @@ struct PaperDetailView: View {
                             Link(destination: URL(string: paper.linkURL)!) {
                                 HStack {
                                     Image(systemName: "link")
-                                    Text("Ver en ArXiv")
+                                    Text("View in ArXiv")
                                 }
                                 .foregroundColor(.white)
                                 .padding(.horizontal, 16)
@@ -137,7 +137,7 @@ struct PaperDetailView: View {
             }
             .padding()
         }
-        .navigationTitle("Detalle del Paper")
+        .navigationTitle("Paper Detail")
         #if os(macOS)
         .navigationSubtitle(paper.authors)
         .frame(minWidth: 400, minHeight: 300)
@@ -147,13 +147,13 @@ struct PaperDetailView: View {
         .toolbar {
             ToolbarItemGroup(placement: toolbarPlacement) {
                 #if os(iOS)
-                // Botón de volver para iOS
-                Button("Inicio") {
+                // Back button for iOS
+                Button("Home") {
                     dismiss()
                 }
                 #endif
                 
-                // Botón de favorito para ambas plataformas
+                // Favorite button for both platforms
                 if let controller = controller {
                     Button(action: {
                         controller.toggleFavorite(for: paper)
@@ -161,17 +161,17 @@ struct PaperDetailView: View {
                         Image(systemName: paper.isFavorite ? "heart.fill" : "heart")
                             .foregroundColor(paper.isFavorite ? .red : .primary)
                     }
-                    .help(paper.isFavorite ? "Quitar de favoritos" : "Añadir a favoritos")
+                    .help(paper.isFavorite ? "Remove from favorites" : "Add to favorites")
                 }
                 
                 #if os(macOS)
-                Button("Compartir") {
-                    // Funcionalidad de compartir para macOS
+                // Share functionality for macOS
+                Button("Share") {
                 }
                 #else
-                Menu("Opciones") {
-                    Button("Compartir", action: {})
-                    Button("Copiar enlace", action: {})
+                Menu("Options") {
+                    Button("Share", action: {})
+                    Button("Copy link", action: {})
                 } primaryAction: {
                     //Image(systemName: "ellipsis.circle")
                 }
@@ -180,7 +180,7 @@ struct PaperDetailView: View {
         }
     }
     
-    /// Determina la ubicación de la toolbar según la plataforma
+    /// Determine the toolbar location according to the platform
     private var toolbarPlacement: ToolbarItemPlacement {
         #if os(macOS)
         return .automatic
@@ -195,9 +195,9 @@ struct PaperDetailView: View {
         PaperDetailView(
             paper: ArXivPaper(
                 id: "2025.0001",
-                title: "Ejemplo de Paper de ArXiv para Vista de Detalle",
-                summary: "Este es un resumen más extenso de ejemplo de un paper científico que muestra cómo se vería en la vista de detalle de la aplicación. Incluye información técnica detallada y múltiples párrafos para demostrar el formato.",
-                authors: "Juan Pérez, María González, Carlos López",
+                title: "Example of ArXiv paper for Detail View",
+                summary: "This is a more extensive example of a scientific paper that shows how it would look in the detail view of the application. It includes detailed technical information and multiple paragraphs to demonstrate the format.",
+                authors: "John Doe, Jane Smith, Carlos López",
                 publishedDate: Date(),
                 updatedDate: Date(),
                 pdfURL: "https://arxiv.org/pdf/2025.0001.pdf",

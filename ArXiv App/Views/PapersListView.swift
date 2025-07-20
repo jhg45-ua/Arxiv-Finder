@@ -7,85 +7,85 @@
 
 import SwiftUI
 
-/// Vista que muestra la lista de artículos científicos de ArXiv
-/// Diseñada para funcionar en ambas plataformas con UI adaptativa
+/// View that shows the list of scientific papers from ArXiv
+/// Designed to work on both platforms with adaptive UI
 ///
-/// Funcionalidades:
-/// - Lista scrolleable de artículos con información resumida
-/// - Estados visuales: carga, error, vacío, y contenido
-/// - Toolbar con acciones de navegación y recarga
-/// - Búsqueda integrada para filtrar artículos
-/// - Navegación adaptativa (NavigationLink en iOS, binding en macOS)
+/// Features:
+/// - Scrollable list of papers with summary information
+/// - Visual states: loading, error, empty, and content
+/// - Toolbar with navigation and reload actions
+/// - Integrated search to filter papers
+/// - Adaptive navigation (NavigationLink in iOS, binding in macOS)
 ///
-/// Arquitectura MVC:
-/// - Esta vista solo maneja la presentación de datos
-/// - Toda la lógica de negocio está delegada al ArXivController
-/// - Los datos provienen del modelo ArXivPaper
+/// MVC architecture:
+/// - This view only handles the presentation of data
+/// - All business logic is delegated to the ArXivController
+/// - The data comes from the ArXivPaper model
 struct PapersListView: View {
-    /// Lista de papers a mostrar
+    /// List of papers to display
     let papers: [ArXivPaper]
     
-    /// Indica si está cargando datos
+    /// Indicates if data is being loaded
     let isLoading: Bool
     
-    /// Mensaje de error actual (si existe)
+    /// Current error message (if exists)
     @Binding var errorMessage: String?
     
-    /// Controller para manejar la lógica de favoritos
+    /// Controller to handle favorite logic
     let controller: ArXivController?
     
-    /// Función para cargar los últimos papers
+    /// Function to load the latest papers
     let loadLatestPapers: () async -> Void
     
-    /// Función opcional para cargar papers de Computer Science (solo iOS)
+    /// Optional function to load Computer Science papers (iOS only)
     let loadComputerSciencePapers: (() async -> Void)?
     
-    /// Función opcional para cargar papers de Mathematics (solo iOS)
+    /// Optional function to load Mathematics papers (iOS only)
     let loadMathematicsPapers: (() async -> Void)?
     
-    /// Función opcional para cargar papers de Physics (solo iOS)
+    /// Optional function to load Physics papers (iOS only)
     let loadPhysicsPapers: (() async -> Void)?
     
-    /// Función opcional para cargar papers de Quantitative Biology (solo iOS)
+    /// Optional function to load Quantitative Biology papers (iOS only)
     let loadQuantitativeBiologyPapers: (() async -> Void)?
     
-    /// Función opcional para cargar papers de Quantitative Finance (solo iOS)
+    /// Optional function to load Quantitative Finance papers (iOS only)
     let loadQuantitativeFinancePapers: (() async -> Void)?
     
-    /// Función opcional para cargar papers de Statistics (solo iOS)
+    /// Optional function to load Statistics papers (iOS only)
     let loadStatisticsPapers: (() async -> Void)?
     
-    /// Función opcional para cargar papers de Electrical Engineering (solo iOS)
+    /// Optional function to load Electrical Engineering papers (iOS only)
     let loadElectricalEngineeringPapers: (() async -> Void)?
     
-    /// Función opcional para cargar papers de Economics (solo iOS)
+    /// Optional function to load Economics papers (iOS only)
     let loadEconomicsPapers: (() async -> Void)?
     
-    /// Estado interno para controlar la recarga automática
+    /// Internal state to control automatic reload
     @State private var shouldRefreshOnAppear = false
     
-    /// Categoría actualmente seleccionada
+    /// Currently selected category
     @State private var currentCategory: String = "latest"
     
-    /// Paper seleccionado para macOS NavigationSplitView
+    /// Selected paper for macOS NavigationSplitView
     @Binding var selectedPaper: ArXivPaper?
     
-    /// Inicializador para iOS (sin selectedPaper)
-    /// Usado cuando la vista maneja su propia navegación con NavigationLink
+    /// Initializer for iOS (without selectedPaper)
+    /// Used when the view handles its own navigation with NavigationLink
     /// - Parameters:
-    ///   - papers: Lista de papers a mostrar
-    ///   - isLoading: Estado de carga
-    ///   - errorMessage: Binding para mensajes de error
-    ///   - controller: Controlador opcional para manejar operaciones de ArXiv
-    ///   - loadLatestPapers: Función para cargar últimos papers
-    ///   - loadComputerSciencePapers: Función opcional para CS papers
-    ///   - loadMathematicsPapers: Función opcional para Math papers
-    ///   - loadPhysicsPapers: Función opcional para Physics papers
-    ///   - loadQuantitativeBiologyPapers: Función opcional para Quantitative Biology papers
-    ///   - loadQuantitativeFinancePapers: Función opcional para Quantitative Finance papers
-    ///   - loadStatisticsPapers: Función opcional para Statistics papers
-    ///   - loadElectricalEngineeringPapers: Función opcional para Electrical Engineering papers
-    ///   - loadEconomicsPapers: Función opcional para Economics papers
+    ///   - papers: List of papers to display
+    ///   - isLoading: Loading state
+    ///   - errorMessage: Binding for error messages
+    ///   - controller: Optional controller to handle ArXiv operations
+    ///   - loadLatestPapers: Function to load latest papers
+    ///   - loadComputerSciencePapers: Optional function to load CS papers
+    ///   - loadMathematicsPapers: Optional function to load Math papers
+    ///   - loadPhysicsPapers: Optional function to load Physics papers
+    ///   - loadQuantitativeBiologyPapers: Optional function to load Quantitative Biology papers
+    ///   - loadQuantitativeFinancePapers: Optional function to load Quantitative Finance papers
+    ///   - loadStatisticsPapers: Optional function to load Statistics papers
+    ///   - loadElectricalEngineeringPapers: Optional function to load Electrical Engineering papers
+    ///   - loadEconomicsPapers: Optional function to load Economics papers
     init(papers: [ArXivPaper], isLoading: Bool, errorMessage: Binding<String?>, controller: ArXivController? = nil, loadLatestPapers: @escaping () async -> Void, loadComputerSciencePapers: (() async -> Void)? = nil, loadMathematicsPapers: (() async -> Void)? = nil, loadPhysicsPapers: (() async -> Void)? = nil, loadQuantitativeBiologyPapers: (() async -> Void)? = nil, loadQuantitativeFinancePapers: (() async -> Void)? = nil, loadStatisticsPapers: (() async -> Void)? = nil, loadElectricalEngineeringPapers: (() async -> Void)? = nil, loadEconomicsPapers: (() async -> Void)? = nil) {
         self.papers = papers
         self.isLoading = isLoading
@@ -103,14 +103,14 @@ struct PapersListView: View {
         self._selectedPaper = .constant(nil)
     }
     
-    /// Inicializador para macOS (con selectedPaper)
-    /// Usado con NavigationSplitView donde la selección se maneja externamente
+    /// Initializer for macOS (with selectedPaper)
+    /// Used with NavigationSplitView where the selection is handled externally
     /// - Parameters:
-    ///   - papers: Lista de papers a mostrar
-    ///   - isLoading: Estado de carga
-    ///   - errorMessage: Binding para mensajes de error
-    ///   - loadLatestPapers: Función para cargar últimos papers
-    ///   - selectedPaper: Binding del paper seleccionado para el detail view
+    ///   - papers: List of papers to display
+    ///   - isLoading: Loading state
+    ///   - errorMessage: Binding for error messages
+    ///   - loadLatestPapers: Function to load latest papers
+    ///   - selectedPaper: Binding for the selected paper for the detail view
     init(papers: [ArXivPaper], isLoading: Bool, errorMessage: Binding<String?>, loadLatestPapers: @escaping () async -> Void, selectedPaper: Binding<ArXivPaper?>) {
         self.papers = papers
         self.isLoading = isLoading
@@ -131,7 +131,7 @@ struct PapersListView: View {
     var body: some View {
         VStack {
             if isLoading {
-                // Indicador de carga mientras se obtienen los datos
+                // Loading indicator while data is being obtained
                 VStack(spacing: 16) {
                     ProgressView()
                         .controlSize(.regular)
@@ -140,28 +140,28 @@ struct PapersListView: View {
                         #else
                         .scaleEffect(1.2)
                         #endif
-                    Text("Cargando los últimos artículos de ArXiv...")
+                    Text("Loading the latest papers from ArXiv...")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
                 .padding()
             } else if let error = errorMessage {
-                // Mensaje de error prominente cuando hay problemas de conexión
+                // Error message when there are connection problems
                 ContentUnavailableView(
-                    "Error al cargar artículos",
+                    "Error loading papers",
                     systemImage: "wifi.exclamationmark",
                     description: Text(error)
                 )
                 .overlay(alignment: .bottom) {
                     VStack(spacing: 12) {
-                        Button("Reintentar") {
+                        Button("Retry") {
                             Task {
                                 await loadLatestPapers()
                             }
                         }
                         .buttonStyle(.borderedProminent)
                         
-                        Button("Limpiar error") {
+                        Button("Clear error") {
                             errorMessage = nil
                         }
                         .buttonStyle(.bordered)
@@ -169,14 +169,14 @@ struct PapersListView: View {
                     .padding()
                 }
             } else if papers.isEmpty {
-                // Mensaje cuando no hay artículos disponibles pero no hay error
+                // Message when there are no papers available but no error
                 ContentUnavailableView(
-                    "No hay artículos disponibles",
+                    "No papers available",
                     systemImage: "doc.text",
-                    description: Text("No se encontraron artículos. Verifica tu conexión a internet e intenta nuevamente.")
+                    description: Text("No papers found. Check your internet connection and try again.")
                 )
                 .overlay(alignment: .bottom) {
-                    Button("Cargar artículos") {
+                    Button("Load papers") {
                         Task {
                             await loadLatestPapers()
                         }
@@ -185,7 +185,7 @@ struct PapersListView: View {
                     .padding()
                 }
             } else {
-                // Lista de artículos de ArXiv
+                // List of ArXiv papers
                 #if os(macOS)
                 List(papers, id: \.id, selection: $selectedPaper) { paper in
                     ArXivPaperRow(paper: paper, controller: controller)
@@ -204,7 +204,7 @@ struct PapersListView: View {
             }
         }
         .onAppear {
-            // Recarga automáticamente cuando se vuelve a la vista principal
+            // Automatically reload when returning to the main view
             if shouldRefreshOnAppear && !papers.isEmpty {
                 Task {
                     await loadLatestPapers()
@@ -215,8 +215,8 @@ struct PapersListView: View {
         .toolbar {
             ToolbarItemGroup(placement: toolbarPlacement) {
                 #if os(iOS)
-                Menu("Categorías") {
-                    Button("Últimos Papers") {
+                Menu("Categories") {
+                    Button("Latest Papers") {
                         Task {
                             currentCategory = "latest"
                             await loadLatestPapers()
@@ -298,7 +298,7 @@ struct PapersListView: View {
                     Divider()
                     
                     if let controller = controller {
-                        Button("Favoritos") {
+                        Button("Favorites") {
                             Task {
                                 currentCategory = "favorites"
                                 await controller.loadFavoritePapers()
@@ -349,22 +349,22 @@ struct PapersListView: View {
                         }
                     }
                 }) {
-                    Label("Actualizar", systemImage: "arrow.clockwise")
+                    Label("Update", systemImage: "arrow.clockwise")
                 }
                 .disabled(isLoading)
                 
                 #if os(macOS)
                 Button(action: {
-                    // Acción para exportar o compartir
+                    // Action to export or share
                 }) {
-                    Label("Compartir", systemImage: "square.and.arrow.up")
+                    Label("Share", systemImage: "square.and.arrow.up")
                 }
                 #endif
             }
         }
     }
     
-    /// Determina la ubicación de la toolbar según la plataforma
+    /// Determine the toolbar location according to the platform
     private var toolbarPlacement: ToolbarItemPlacement {
         #if os(macOS)
         return .automatic
@@ -379,9 +379,9 @@ struct PapersListView: View {
         papers: [
             ArXivPaper(
                 id: "2025.0001",
-                title: "Ejemplo de Paper 1",
-                summary: "Este es un resumen de ejemplo",
-                authors: "Juan Pérez",
+                title: "Example of Paper 1",
+                summary: "This is an example summary",
+                authors: "John Doe",
                 publishedDate: Date(),
                 updatedDate: Date(),
                 pdfURL: "https://arxiv.org/pdf/2025.0001.pdf",

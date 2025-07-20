@@ -102,28 +102,28 @@ struct MainView: View {
         }
         .navigationTitle("ArXiv Papers")
         .onKeyPress(.escape) {
-            print("⌨️ Tecla ESC presionada - Deseleccionando paper")
+            print("⌨️ ESC key pressed - Deselecting paper")
             selectedPaper = nil
             return .handled
         }
         .onChange(of: selectedPaper) { oldValue, newValue in
             if let paper = newValue {
-                print("📄 Paper seleccionado: \(paper.title)")
+                print("📄 Paper selected: \(paper.title)")
             } else {
-                print("❌ Paper deseleccionado")
+                print("❌ Paper deselected")
             }
         }
         .onAppear {
-            // Configurar el contexto del modelo en el controlador
+            // Configure the model context in the controller
             controller.modelContext = modelContext
         }
         .task {
-            // Carga inicial usando configuración por defecto
+            // Initial load using default settings
             await controller.loadPapersWithSettings()
         }
         
         #else
-        // Diseño para iOS con NavigationStack
+        // iOS design with NavigationStack
         NavigationStack {
             PapersListView(
                 papers: controller.filteredPapers,
@@ -142,11 +142,11 @@ struct MainView: View {
             )
             .navigationTitle("ArXiv Papers")
             .onAppear {
-                // Configurar el contexto del modelo en el controlador
+                // Configure the model context in the controller
                 controller.modelContext = modelContext
             }
             .task {
-                // Carga inicial usando configuración por defecto
+                // Initial load using default settings
                 await controller.loadPapersWithSettings()
             }
         }

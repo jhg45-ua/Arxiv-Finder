@@ -7,26 +7,26 @@
 
 import SwiftUI
 
-/// Vista reutilizable que representa una fila individual de artículo en la lista
-/// Muestra información resumida del paper con diseño adaptativo
+/// Reusable view that represents a single paper row in the list
+/// Displays summary information about the paper with adaptive design
 ///
-/// Características:
-/// - Título del artículo con truncado inteligente
-/// - Lista de autores (oculta en modo compacto)
-/// - Fecha de publicación formateada
-/// - Vista previa del resumen (opcional)
-/// - Categorías del artículo como badges
-/// - Configuración personalizable via AppStorage
+/// Features:
+/// - Article title with intelligent truncation
+/// - List of authors (hidden in compact mode)
+/// - Formatted publication date
+/// - Summary preview (optional)
+/// - Article categories as badges
+/// - Customizable settings via AppStorage
 ///
-/// Configuraciones soportadas:
-/// - Tamaño de fuente adjustable
-/// - Modo compacto para mostrar más elementos
-/// - Toggle para mostrar/ocultar vista previa del resumen
+/// Supported settings:
+/// - Font size adjustable
+/// - Compact mode to show more elements
+/// - Toggle to show/hide summary preview
 struct ArXivPaperRow: View {
-    /// El artículo a mostrar en esta fila
+    /// The paper to display in this row
     let paper: ArXivPaper
     
-    /// Controller para manejar la lógica de favoritos
+    /// Controller to handle favorite logic
     let controller: ArXivController?
     
     // MARK: - Settings from AppStorage
@@ -37,13 +37,13 @@ struct ArXivPaperRow: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: compactMode ? 8 : 12) {
-                // Título del artículo
+                // Article title
                 Text(paper.title)
                     .font(.system(size: fontSize, weight: .medium))
                     .lineLimit(compactMode ? 2 : 4)
                     .multilineTextAlignment(.leading)
                 
-                // Autores del artículo (solo si no está en modo compacto)
+                // Article authors (only if not in compact mode)
                 if !compactMode {
                     Text(paper.authors)
                         .font(.system(size: fontSize - 2))
@@ -51,7 +51,7 @@ struct ArXivPaperRow: View {
                         .lineLimit(2)
                 }
                 
-                // Resumen del artículo (solo si la vista previa está habilitada)
+                // Article summary (only if preview is enabled)
                 if showPreview {
                     Text(paper.summary)
                         .font(.system(size: fontSize - 4))
@@ -61,15 +61,15 @@ struct ArXivPaperRow: View {
                 }
                 
                 HStack {
-                    // Fechas del paper
+                    // Paper dates
                     VStack(alignment: .leading, spacing: 2) {
-                        // Fecha de publicación
+                        // Publication date
                         Label(paper.publishedDate.formatted(date: .abbreviated, time: .omitted), 
                               systemImage: "calendar")
                             .font(.system(size: fontSize - 6))
                             .foregroundColor(.secondary)
                         
-                        // Fecha de actualización (si existe, es diferente y no estamos en modo compacto)
+                        // Update date (if exists, is different and not in compact mode)
                         if !compactMode,
                            let updatedDate = paper.updatedDate,
                            abs(updatedDate.timeIntervalSince(paper.publishedDate)) > 3600 { // Más de 1 hora de diferencia
@@ -82,7 +82,7 @@ struct ArXivPaperRow: View {
                     
                     Spacer()
                     
-                    // Categorías del artículo
+                    // Article categories
                     if !compactMode && !paper.categories.isEmpty {
                         let categories = paper.categories.split(separator: " ").map(String.init)
                         HStack(spacing: 4) {
@@ -100,7 +100,7 @@ struct ArXivPaperRow: View {
                 }
             }
             
-            // Botón de favorito (si el controller está disponible)
+            // Favorite button (if controller is available)
             if let controller = controller {
                 Button(action: {
                     controller.toggleFavorite(for: paper)
@@ -110,7 +110,7 @@ struct ArXivPaperRow: View {
                         .font(.system(size: fontSize))
                 }
                 .buttonStyle(PlainButtonStyle())
-                .help(paper.isFavorite ? "Quitar de favoritos" : "Añadir a favoritos")
+                .help(paper.isFavorite ? "Remove from favorites" : "Add to favorites")
             }
         }
         .padding(.vertical, compactMode ? 12 : 16)
@@ -127,9 +127,9 @@ struct ArXivPaperRow: View {
     ArXivPaperRow(
         paper: ArXivPaper(
             id: "2025.0001",
-            title: "Ejemplo de Paper de ArXiv",
-            summary: "Este es un resumen de ejemplo de un paper científico que muestra cómo se vería en la aplicación.",
-            authors: "Juan Pérez, María González",
+            title: "Example of ArXiv paper",
+            summary: "This is an example summary of a scientific paper that shows how it would look in the application.",
+            authors: "John Doe, Jane Smith",
             publishedDate: Date(),
             updatedDate: Date(),
             pdfURL: "https://arxiv.org/pdf/2025.0001.pdf",
