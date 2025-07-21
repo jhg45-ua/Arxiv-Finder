@@ -1,4 +1,4 @@
-# GitLab CI/CD Pipeline for ArXiv App (macOS)
+# GitLab CI/CD Pipeline for ArXiv App
 # Simple pipeline to build and create releases
 
 stages:
