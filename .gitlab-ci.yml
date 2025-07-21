@@ -14,8 +14,6 @@ variables:
 
 build_app:
   stage: build
-  tags:
-    - macos
   script:
     - echo "Building app..."
     - mkdir -p "$BUILD_PATH"
