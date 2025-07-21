@@ -100,31 +100,31 @@ private let availableCategories = [
     "math.ST": "Statistics",
     
     // Physics
-    "physics.gen-ph": "Física General",
-    "physics.comp-ph": "Física Computacional",
+    "physics.gen-ph": "General Physics",
+    "physics.comp-ph": "Computational Physics",
     
     // Quantitative Biology
-    "q-bio.BM": "Biomoléculas",
-    "q-bio.NC": "Neurociencia Computacional",
+    "q-bio.BM": "Biomolecules",
+    "q-bio.NC": "Computational Neuroscience",
     
     // Quantitative Finance
-    "q-fin.CP": "Precios Computacionales",
-    "q-fin.MF": "Finanzas Matemáticas",
+    "q-fin.CP": "Computational Pricing",
+    "q-fin.MF": "Mathematical Finance",
     
     // Statistics
     "stat.ML": "Machine Learning",
-    "stat.AP": "Aplicaciones",
+    "stat.AP": "Applications",
     
     // Electrical Engineering
-    "eess.SP": "Procesamiento de Señales",
-    "eess.IV": "Procesamiento de Imágenes",
+    "eess.SP": "Signal Processing",
+    "eess.IV": "Image Processing",
     
     // Economics
-    "econ.EM": "Econometría",
-    "econ.TH": "Teoría Económica"
+    "econ.EM": "Econometrics",
+    "econ.TH": "Economic Theory"
 ]
 
-/// Vista de filtros
+/// Filters view
 private var filtersView: some View {
     ScrollView(.horizontal, showsIndicators: false) {
         HStack {
@@ -140,7 +140,7 @@ private var filtersView: some View {
     }
 }
 
-/// Alternar filtro de categoría
+/// Toggle category filter
 private func toggleFilter(_ category: String) {
     if activeFilters.contains(category) {
         activeFilters.remove(category)
@@ -150,12 +150,12 @@ private func toggleFilter(_ category: String) {
 }
 ```
 
-## Estructura de la Lista
+## List Structure
 
-### 📝 Lista Principal
+### 📝 Main List
 
 ```swift
-/// Lista principal de artículos
+/// Main article list
 private var papersList: some View {
     List(filteredPapers) { paper in
         ArXivPaperRow(paper: paper)
@@ -179,58 +179,58 @@ private var papersList: some View {
 }
 ```
 
-### 📱 Acciones de Contexto
+### 📱 Context Actions
 
 ```swift
-/// Menú contextual para cada artículo
+/// Context menu for each article
 @ViewBuilder
 private func contextMenuItems(for paper: ArXivPaper) -> some View {
     Button(action: { sharePaper(paper) }) {
-        Label("Compartir", systemImage: "square.and.arrow.up")
+        Label("Share", systemImage: "square.and.arrow.up")
     }
     
     Button(action: { copyLink(paper) }) {
-        Label("Copiar Enlace", systemImage: "link")
+        Label("Copy Link", systemImage: "link")
     }
     
     Button(action: { savePaper(paper) }) {
-        Label("Guardar", systemImage: "bookmark")
+        Label("Save", systemImage: "bookmark")
     }
     
     Divider()
     
     Button(action: { reportPaper(paper) }) {
-        Label("Reportar", systemImage: "exclamationmark.triangle")
+        Label("Report", systemImage: "exclamationmark.triangle")
     }
 }
 
-/// Acciones de swipe
+/// Swipe actions
 @ViewBuilder
 private func swipeActions(for paper: ArXivPaper) -> some View {
     Button(action: { savePaper(paper) }) {
-        Label("Guardar", systemImage: "bookmark")
+        Label("Save", systemImage: "bookmark")
     }
     .tint(.blue)
     
     Button(action: { sharePaper(paper) }) {
-        Label("Compartir", systemImage: "square.and.arrow.up")
+        Label("Share", systemImage: "square.and.arrow.up")
     }
     .tint(.green)
 }
 ```
 
-## Estados de la Vista
+## View States
 
 ### 🔄 Loading State
 
 ```swift
-/// Vista de carga
+/// Loading view
 private var loadingView: some View {
     VStack(spacing: 20) {
         ProgressView()
             .scaleEffect(1.5)
         
-        Text("Cargando artículos...")
+        Text("Loading articles...")
             .font(.headline)
             .foregroundColor(.secondary)
     }
@@ -242,7 +242,7 @@ private var loadingView: some View {
 ### 📭 Empty State
 
 ```swift
-/// Vista de estado vacío
+/// Empty state view
 private var emptyStateView: some View {
     VStack(spacing: 24) {
         Image(systemName: "doc.text.magnifyingglass")
@@ -250,17 +250,17 @@ private var emptyStateView: some View {
             .foregroundColor(.secondary)
         
         VStack(spacing: 12) {
-            Text("No se encontraron artículos")
+            Text("No articles found")
                 .font(.title2)
                 .fontWeight(.semibold)
             
-            Text("Intenta ajustar tus filtros de búsqueda o explora diferentes categorías")
+            Text("Try adjusting your search filters or explore different categories")
                 .font(.body)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
         }
         
-        Button("Explorar Categorías") {
+        Button("Explore Categories") {
             showCategoryBrowser()
         }
         .buttonStyle(.borderedProminent)
@@ -273,7 +273,7 @@ private var emptyStateView: some View {
 ### ❌ Error State
 
 ```swift
-/// Vista de error
+/// Error view
 private var errorView: some View {
     VStack(spacing: 24) {
         Image(systemName: "wifi.slash")
@@ -281,17 +281,17 @@ private var errorView: some View {
             .foregroundColor(.red)
         
         VStack(spacing: 12) {
-            Text("Error de Conexión")
+            Text("Connection Error")
                 .font(.title2)
                 .fontWeight(.semibold)
             
-            Text("No se pudieron cargar los artículos. Verifica tu conexión a internet.")
+            Text("Could not load articles. Check your internet connection.")
                 .font(.body)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
         }
         
-        Button("Reintentar") {
+        Button("Retry") {
             Task {
                 await controller.loadLatestPapers()
             }
@@ -303,12 +303,12 @@ private var errorView: some View {
 }
 ```
 
-## Optimizaciones de Rendimiento
+## Performance Optimizations
 
 ### 🚀 Lazy Loading
 
 ```swift
-/// Carga más datos cuando se acerca al final de la lista
+/// Loads more data when nearing the end of the list
 private func loadMoreIfNeeded(_ paper: ArXivPaper) {
     guard let lastPaper = filteredPapers.last else { return }
     
@@ -319,7 +319,7 @@ private func loadMoreIfNeeded(_ paper: ArXivPaper) {
     }
 }
 
-/// Implementación de infinite scroll
+/// Infinite scroll implementation
 @State private var isLoadingMore = false
 
 private var loadMoreIndicator: some View {
@@ -328,7 +328,7 @@ private var loadMoreIndicator: some View {
             ProgressView()
                 .scaleEffect(0.8)
         }
-        Text("Cargando más artículos...")
+        Text("Loading more articles...")
             .font(.caption)
             .foregroundColor(.secondary)
     }
@@ -336,16 +336,16 @@ private var loadMoreIndicator: some View {
 }
 ```
 
-### 💾 Gestión de Memoria
+### 💾 Memory Management
 
 ```swift
-/// Limpia recursos cuando la vista desaparece
+/// Cleans up resources when the view disappears
 .onDisappear {
     searchText = ""
     activeFilters.removeAll()
 }
 
-/// Configura limits de memoria
+/// Memory limits configuration
 private let maxVisibleItems = 100
 
 private var limitedPapers: [ArXivPaper] {
@@ -353,24 +353,24 @@ private var limitedPapers: [ArXivPaper] {
 }
 ```
 
-## Características de Accesibilidad
+## Accessibility Features
 
-### ♿ Soporte para VoiceOver
+### ♿ VoiceOver Support
 
 ```swift
-/// Configuración de accesibilidad
+/// Accessibility configuration
 .accessibilityElement(children: .combine)
-.accessibilityLabel("Lista de artículos de ArXiv")
-.accessibilityHint("Toca un artículo para ver más detalles")
+.accessibilityLabel("ArXiv articles list")
+.accessibilityHint("Tap an article to see more details")
 .accessibilityAction(.escape) {
-    // Acción de escape para navegación
+    // Escape action for navigation
 }
 ```
 
-### ⌨️ Navegación por Teclado
+### ⌨️ Keyboard Navigation
 
 ```swift
-/// Soporte para navegación por teclado
+/// Keyboard navigation support
 .focusable(true)
 .onMoveCommand { direction in
     handleKeyboardNavigation(direction)
@@ -388,12 +388,12 @@ private func handleKeyboardNavigation(_ direction: MoveCommandDirection) {
 }
 ```
 
-## Personalización Visual
+## Visual Customization
 
 ### 🎨 Theming
 
 ```swift
-/// Configuración de tema
+/// Theme configuration
 @Environment(\.colorScheme) var colorScheme
 
 private var listBackgroundColor: Color {
@@ -405,10 +405,10 @@ private var separatorColor: Color {
 }
 ```
 
-### 📐 Layout Adaptativo
+### 📐 Adaptive Layout
 
 ```swift
-/// Configuración de layout para diferentes tamaños de pantalla
+/// Layout configuration for different screen sizes
 @Environment(\.horizontalSizeClass) var horizontalSizeClass
 
 private var columns: [GridItem] {
@@ -423,29 +423,29 @@ private var columns: [GridItem] {
 }
 ```
 
-## Integración con Otras Vistas
+## Integration with Other Views
 
-### 🔗 Comunicación con MainView
+### 🔗 Communication with MainView
 
 ```swift
-/// Binding para comunicación con vista padre
+/// Binding for communication with parent view
 @Binding var selectedPaper: ArXivPaper?
 
-/// Notifica selección a vista padre
+/// Notifies selection to parent view
 private func selectPaper(_ paper: ArXivPaper) {
     selectedPaper = paper
     
-    // Opcional: Analytics
+    // Optional: Analytics
     trackPaperSelection(paper)
 }
 ```
 
-### 📊 Métricas de Uso
+### 📊 Usage Metrics
 
 ```swift
-/// Tracking de métricas de uso
+/// Usage metrics tracking
 private func trackPaperSelection(_ paper: ArXivPaper) {
-    // Implementar analytics
+    // Implement analytics
     Analytics.track("paper_selected", properties: [
         "paper_id": paper.id,
         "category": paper.category,
@@ -454,10 +454,10 @@ private func trackPaperSelection(_ paper: ArXivPaper) {
 }
 ```
 
-## Ejemplo de Uso Completo
+## Full Usage Example
 
 ```swift
-/// Ejemplo de integración completa
+/// Full integration example
 struct ExampleListView: View {
     @StateObject private var controller = ArXivController()
     @State private var selectedPaper: ArXivPaper?
@@ -468,7 +468,7 @@ struct ExampleListView: View {
                 controller: controller,
                 selectedPaper: $selectedPaper
             )
-            .navigationTitle("Artículos ArXiv")
+            .navigationTitle("ArXiv Articles")
             .onAppear {
                 Task {
                     await controller.loadLatestPapers()
@@ -479,19 +479,19 @@ struct ExampleListView: View {
 }
 ```
 
-## Mejores Prácticas
+## Best Practices
 
-### ✅ Principios Implementados
+### ✅ Implemented Principles
 
-1. **Responsabilidad Única**: Solo maneja visualización de listas
-2. **Reactividad**: Responde a cambios de datos automáticamente
-3. **Rendimiento**: Optimizada para listas grandes
-4. **Accesibilidad**: Soporte completo para todos los usuarios
+1. **Single Responsibility**: Only handles list visualization
+2. **Reactivity**: Responds to data changes automatically
+3. **Performance**: Optimized for large lists
+4. **Accessibility**: Full support for all users
 
-### 🔧 Configuración Avanzada
+### 🔧 Advanced Configuration
 
 ```swift
-/// Configuración personalizable
+/// Customizable configuration
 struct PapersListConfig {
     let enableSearch: Bool = true
     let enableFilters: Bool = true
@@ -501,10 +501,10 @@ struct PapersListConfig {
 }
 ```
 
-## Recursos Relacionados
+## Related Resources
 
-- ``ArXivController`` - Controlador que proporciona los datos
-- ``ArXivPaperRow`` - Componente individual de cada artículo
-- ``MainView`` - Vista principal que contiene la lista
-- ``PaperDetailView`` - Vista de detalle para artículos seleccionados
-- ``SidebarView`` - Vista lateral para navegación por categorías
+- ``ArXivController`` - Controller that provides the data
+- ``ArXivPaperRow`` - Individual article component
+- ``MainView`` - Main view containing the list
+- ``PaperDetailView`` - Detail view for selected articles
+- ``SidebarView`` - Side view for category navigation 

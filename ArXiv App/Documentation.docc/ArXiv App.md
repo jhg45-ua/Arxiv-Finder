@@ -171,4 +171,4 @@ To contribute to the project:
 
 - [Official ArXiv API Documentation](https://arxiv.org/help/api)
 - [SwiftUI Guide](https://developer.apple.com/swiftui/)
-- [MVC Architecture Best Practices](https://developer.apple.com/documentation/swiftui/model-data)
+- [MVC Architecture Best Practices](https://developer.apple.com/documentation/swiftui/model-data) 

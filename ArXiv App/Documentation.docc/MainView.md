@@ -98,20 +98,20 @@ private let availableCategories = [
 ]
 ```
 
-**Funcionalidades por categoría:**
-- **Navegación**: Cada categoría tiene su propio botón en la barra lateral
-- **Estado independiente**: Cada categoría mantiene su propio estado de carga
-- **Datos persistentes**: Los papers se mantienen en caché por categoría
-- **Configuración**: El usuario puede seleccionar una categoría por defecto
+**Category functionalities:**
+- **Navigation**: Each category has its own button in the sidebar
+- **Independent state**: Each category maintains its own loading state
+- **Persistent data**: Papers are cached by category
+- **Configuration**: User can select a default category
 
-## Interfaz de iOS
+## iOS Interface
 
 ### 📱 NavigationStack
 
-Para iOS, utiliza navegación jerárquica:
+For iOS, it uses hierarchical navigation:
 
 ```swift
-/// Interfaz optimizada para iOS con NavigationStack
+/// Interface optimized for iOS with NavigationStack
 private var iOSInterface: some View {
     NavigationStack {
         PapersListView(controller: controller, selectedPaper: .constant(nil))
@@ -121,42 +121,42 @@ private var iOSInterface: some View {
 }
 ```
 
-### 🎯 Características de iOS
+### 🎯 iOS Features
 
-- **Navegación jerárquica**: Stack de navegación tradicional
-- **Títulos grandes**: Aprovecha el espacio disponible
-- **Gestos nativos**: Swipe back y otros gestos iOS
-- **Adaptación a tamaño**: Responsive design para diferentes tamaños
+- **Hierarchical navigation**: Traditional navigation stack
+- **Large titles**: Takes advantage of available space
+- **Native gestures**: Swipe back and other iOS gestures
+- **Size adaptation**: Responsive design for different sizes
 
-## Componentes Integrados
+## Integrated Components
 
-### 🔗 Integración con Controlador
+### 🔗 Controller Integration
 
-La vista se integra perfectamente con el controlador:
+The view integrates seamlessly with the controller:
 
 ```swift
-/// Binding reactivo con el controlador
+/// Reactive binding with the controller
 @StateObject private var controller = ArXivController()
 
-/// Actualización automática cuando cambian los datos
+/// Automatic update when data changes
 var body: some View {
-    // La vista se actualiza automáticamente cuando
-    // cambian las propiedades @Published del controlador
+    // The view automatically updates when
+    // the controller's @Published properties change
     List(controller.latestPapers) { paper in
         ArXivPaperRow(paper: paper)
     }
 }
 ```
 
-### 📊 Gestión de Estado
+### 📊 State Management
 
 ```swift
-/// Estado local específico de la vista
+/// View-specific local state
 @State private var selectedPaper: ArXivPaper?
 @State private var isShowingSettings = false
 @State private var searchText = ""
 
-/// Computed properties para estado derivado
+/// Computed properties for derived state
 private var filteredPapers: [ArXivPaper] {
     guard !searchText.isEmpty else { return controller.latestPapers }
     return controller.latestPapers.filter { 
@@ -165,43 +165,43 @@ private var filteredPapers: [ArXivPaper] {
 }
 ```
 
-## Características de Accesibilidad
+## Accessibility Features
 
-### ♿ Soporte para Tecnologías Asistivas
+### ♿ Assistive Technology Support
 
 ```swift
-/// Etiquetas de accesibilidad
-.accessibilityLabel("Lista de artículos de ArXiv")
-.accessibilityHint("Desliza para ver más artículos")
+/// Accessibility labels
+.accessibilityLabel("ArXiv articles list")
+.accessibilityHint("Swipe to see more articles")
 
-/// Navegación por teclado
+/// Keyboard navigation
 .focusable(true)
 .onMoveCommand { direction in
     handleKeyboardNavigation(direction)
 }
 ```
 
-### 🔍 Soporte para Dynamic Type
+### 🔍 Dynamic Type Support
 
 ```swift
-/// Texto que se adapta al tamaño preferido del usuario
+/// Text adapts to user's preferred size
 Text(paper.title)
     .font(.headline)
     .lineLimit(nil)
     .fixedSize(horizontal: false, vertical: true)
 ```
 
-## Características de Rendimiento
+## Performance Features
 
-### 🚀 Optimización de Listas
+### 🚀 List Optimization
 
 ```swift
-/// Lista optimizada con lazy loading
+/// Optimized list with lazy loading
 LazyVStack(spacing: 8) {
     ForEach(controller.latestPapers) { paper in
         ArXivPaperRow(paper: paper)
             .onAppear {
-                // Carga más datos cuando se acerca al final
+                // Load more data when nearing the end
                 if paper == controller.latestPapers.last {
                     Task {
                         await controller.loadMorePapers()
@@ -212,21 +212,21 @@ LazyVStack(spacing: 8) {
 }
 ```
 
-### 💾 Gestión de Memoria
+### 💾 Memory Management
 
 ```swift
-/// Configuración de memoria para listas grandes
+/// Memory configuration for large lists
 .onReceive(NotificationCenter.default.publisher(for: UIApplication.didReceiveMemoryWarningNotification)) { _ in
     controller.clearCache()
 }
 ```
 
-## Personalización Visual
+## Visual Customization
 
 ### 🎨 Theming
 
 ```swift
-/// Soporte para tema claro/oscuro
+/// Light/dark theme support
 @Environment(\.colorScheme) var colorScheme
 
 private var backgroundColor: Color {
@@ -238,41 +238,41 @@ private var textColor: Color {
 }
 ```
 
-### 🖼️ Recursos Visuales
+### 🖼️ Visual Resources
 
 ```swift
-/// Uso de recursos gráficos
+/// Use of graphic resources
 Image(systemName: "doc.text.magnifyingglass")
     .foregroundColor(.accentColor)
     .imageScale(.large)
 ```
 
-## Ejemplo de Uso Completo
+## Full Usage Example
 
 ```swift
-/// Ejemplo de implementación completa
+/// Full implementation example
 struct ContentView: View {
     var body: some View {
         MainView()
             .onAppear {
-                // Configuración inicial
+                // Initial setup
                 setupAppearance()
             }
     }
     
     private func setupAppearance() {
-        // Configuración de apariencia global
+        // Global appearance configuration
         UINavigationBar.appearance().prefersLargeTitles = true
     }
 }
 ```
 
-## Estados de la Vista
+## View States
 
-### 🔄 Estados de Carga
+### 🔄 Loading States
 
 ```swift
-/// Diferentes estados de la vista
+/// Different view states
 enum ViewState {
     case loading
     case loaded([ArXivPaper])
@@ -282,12 +282,12 @@ enum ViewState {
 
 @State private var viewState: ViewState = .loading
 
-/// Vista que se adapta al estado actual
+/// View that adapts to the current state
 @ViewBuilder
 private var contentView: some View {
     switch viewState {
     case .loading:
-        ProgressView("Cargando artículos...")
+        ProgressView("Loading articles...")
     case .loaded(let papers):
         List(papers) { paper in
             ArXivPaperRow(paper: paper)
@@ -304,19 +304,19 @@ private var contentView: some View {
 }
 ```
 
-## Navegación Avanzada
+## Advanced Navigation
 
 ### 🔗 Deep Linking
 
 ```swift
-/// Soporte para deep linking
+/// Deep linking support
 .onOpenURL { url in
     if let paperID = extractPaperID(from: url) {
         navigateToPaper(id: paperID)
     }
 }
 
-/// Navegación programática
+/// Programmatic navigation
 private func navigateToPaper(id: String) {
     if let paper = controller.findPaper(id: id) {
         selectedPaper = paper
@@ -327,7 +327,7 @@ private func navigateToPaper(id: String) {
 ### 📱 Handoff
 
 ```swift
-/// Soporte para Handoff entre dispositivos
+/// Handoff support between devices
 .userActivity("com.arxivapp.viewpaper") { activity in
     if let paper = selectedPaper {
         activity.title = paper.title
@@ -336,19 +336,19 @@ private func navigateToPaper(id: String) {
 }
 ```
 
-## Mejores Prácticas
+## Best Practices
 
-### ✅ Principios Implementados
+### ✅ Implemented Principles
 
-1. **Separación de Responsabilidades**: Solo maneja presentación
-2. **Reactividad**: Responde automáticamente a cambios de datos
-3. **Adaptabilidad**: Funciona en múltiples plataformas
-4. **Accesibilidad**: Soporte completo para todos los usuarios
+1. **Separation of Responsibilities**: Only handles presentation
+2. **Reactivity**: Automatically responds to data changes
+3. **Adaptability**: Works on multiple platforms
+4. **Accessibility**: Full support for all users
 
-### 🔧 Configuración Avanzada
+### 🔧 Advanced Configuration
 
 ```swift
-/// Configuración personalizada de la vista
+/// Custom view configuration
 struct MainViewConfig {
     let enablePullToRefresh: Bool = true
     let enableInfiniteScroll: Bool = true
@@ -357,10 +357,10 @@ struct MainViewConfig {
 }
 ```
 
-## Recursos Relacionados
+## Related Resources
 
-- ``ArXivController`` - Controlador principal de la aplicación
-- ``SidebarView`` - Barra lateral de navegación
-- ``PapersListView`` - Lista de artículos
-- ``PaperDetailView`` - Vista detallada de artículos
-- ``ArXivPaperRow`` - Fila individual de artículo
+- ``ArXivController`` - Main application controller
+- ``SidebarView`` - Navigation sidebar
+- ``PapersListView`` - Article list
+- ``PaperDetailView`` - Article detail view
+- ``ArXivPaperRow`` - Individual article row 

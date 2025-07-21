@@ -98,18 +98,18 @@ final class ArXivPaper: @unchecked Sendable {
     /// Indicates if the paper is marked as favorite
     var isFavorite: Bool = false
     
-    /// Fecha cuando se marcó como favorito
+    /// Date when marked as favorite
     var favoritedDate: Date?
 }
 ```
 
-### Implementación del Almacenamiento
+### Storage Implementation
 
-#### Cargar Favoritos
+#### Load Favorites
 ```swift
 func loadFavoritePapers() async {
     if let modelContext = modelContext {
-        // Cargar desde SwiftData
+        // Load from SwiftData
         let descriptor = FetchDescriptor<ArXivPaper>(
             predicate: #Predicate<ArXivPaper> { $0.isFavorite == true }
         )
@@ -121,52 +121,52 @@ func loadFavoritePapers() async {
 }
 ```
 
-#### Guardar Favoritos
+#### Save Favorites
 ```swift
 func toggleFavorite(for paper: ArXivPaper) {
-    // Actualizar estado del artículo
+    // Update article state
     paper.setFavorite(!paper.isFavorite)
     
-    // Guardar en SwiftData
+    // Save in SwiftData
     if let modelContext = modelContext {
         try modelContext.save()
     }
     
-    // Actualizar listas locales
+    // Update local lists
     updateFavoritesList()
 }
 ```
 
-## 🔄 Flujo de Datos
+## 🔄 Data Flow
 
-### Agregar a Favoritos
-1. El usuario toca el icono de corazón
-2. Se llama a `toggleFavorite(for:)`
-3. Se actualiza la propiedad `isFavorite` del artículo
-4. Los cambios se guardan en SwiftData
-5. Se actualiza la lista local de favoritos
-6. La UI refleja el cambio
+### Add to Favorites
+1. The user taps the heart icon
+2. `toggleFavorite(for:)` is called
+3. The article's `isFavorite` property is updated
+4. Changes are saved in SwiftData
+5. The local favorites list is updated
+6. The UI reflects the change
 
-### Quitar de Favoritos
-1. El usuario toca el icono de corazón lleno
-2. Se llama a `toggleFavorite(for:)`
-3. Se establece la propiedad `isFavorite` del artículo a false
-4. Los cambios se guardan en SwiftData
-5. Se elimina el artículo de la lista de favoritos
-6. La UI refleja el cambio
+### Remove from Favorites
+1. The user taps the filled heart icon
+2. `toggleFavorite(for:)` is called
+3. The article's `isFavorite` property is set to false
+4. Changes are saved in SwiftData
+5. The article is removed from the favorites list
+6. The UI reflects the change
 
-### Cargar Favoritos
-1. El usuario navega a la sección "Favoritos"
-2. Se llama a `loadFavoritePapers()`
-3. El descriptor de fetch de SwiftData recupera los artículos favoritos
-4. Los artículos se ordenan por `favoritedDate` (más recientes primero)
-5. La UI muestra los artículos favoritos
+### Load Favorites
+1. The user navigates to the "Favorites" section
+2. `loadFavoritePapers()` is called
+3. The SwiftData fetch descriptor retrieves favorite articles
+4. Articles are sorted by `favoritedDate` (most recent first)
+5. The UI displays the favorite articles
 
-## 🎨 Componentes de UI
+## 🎨 UI Components
 
-### Botón de Favoritos
+### Favorites Button
 
-#### Implementación
+#### Implementation
 ```swift
 Button(action: {
     controller.toggleFavorite(for: paper)
@@ -176,79 +176,79 @@ Button(action: {
 }
 ```
 
-#### Estados Visuales
-- **Sin Favorito**: Icono `heart` en color primario
-- **Favorito**: Icono `heart.fill` en color rojo
-- **Animación**: Transición suave entre estados
+#### Visual States
+- **Not Favorite**: `heart` icon in primary color
+- **Favorite**: `heart.fill` icon in red
+- **Animation**: Smooth transition between states
 
-### Integración en Fila de Artículo
+### Integration in Article Row
 
-Cada fila de artículo incluye:
-- Título del artículo y metadatos
-- Botón de favoritos (icono de corazón)
-- Espaciado y alineación adecuados
+Each article row includes:
+- Article title and metadata
+- Favorites button (heart icon)
+- Proper spacing and alignment
 
-### Integración en Navegación
+### Integration in Navigation
 
-#### Barra Lateral de macOS
-- Botón "Favoritos" en la lista de categorías
-- Consistente con otros botones de categoría
-- Muestra estado seleccionado cuando está activo
+#### macOS Sidebar
+- "Favorites" button in the category list
+- Consistent with other category buttons
+- Shows selected state when active
 
-#### Navegación por Pestañas de iOS
-- "Favoritos" en el menú de navegación inferior
-- Integración adecuada con la barra de pestañas
-- Soporte para insignias (mejora futura)
+#### iOS Tab Navigation
+- "Favorites" in the bottom navigation menu
+- Proper integration with the tab bar
+- Badge support (future improvement)
 
-## 📊 Consideraciones de Rendimiento
+## 📊 Performance Considerations
 
-### Gestión de Memoria
-- Los favoritos se cargan bajo demanda
-- SwiftData maneja consultas eficientes
-- No hay retención innecesaria de datos
+### Memory Management
+- Favorites are loaded on demand
+- SwiftData handles efficient queries
+- No unnecessary data retention
 
-### Optimización de Base de Datos
-- Consultas indexadas para la propiedad `isFavorite`
-- Descriptores de fetch eficientes
-- Uso adecuado de predicados
+### Database Optimization
+- Indexed queries for the `isFavorite` property
+- Efficient fetch descriptors
+- Proper use of predicates
 
-### Respuesta de la UI
-- Retroalimentación inmediata en la UI
-- Operaciones de datos asíncronas
-- Animaciones suaves
+### UI Responsiveness
+- Immediate feedback in the UI
+- Asynchronous data operations
+- Smooth animations
 
-## 🧪 Pruebas
+## 🧪 Testing
 
-### Pruebas Unitarias (Futuras)
-- Probar cambios de estado de favoritos
-- Probar persistencia de SwiftData
-- Probar actualizaciones de estado de UI
+### Unit Tests (Future)
+- Test favorite state changes
+- Test SwiftData persistence
+- Test UI state updates
 
-### Pruebas de Integración (Futuras)
-- Probar flujo completo de favoritos
-- Probar persistencia de datos entre sesiones de app
-- Probar integración de UI
+### Integration Tests (Future)
+- Test full favorites flow
+- Test data persistence across app sessions
+- Test UI integration
 
-## 🔮 Mejoras Futuras
+## 🔮 Future Improvements
 
-### Características Potenciales
-- **Colecciones de Favoritos**: Organizar favoritos en colecciones personalizadas
-- **Exportar Favoritos**: Exportar artículos favoritos como bibliografía
-- **Sincronización de Favoritos**: Sincronizar favoritos entre dispositivos
-- **Notas de Favoritos**: Añadir notas personales a artículos favoritos
-- **Búsqueda de Favoritos**: Buscar dentro de los artículos favoritos
-- **Estadísticas de Favoritos**: Mostrar conteos y tendencias de favoritos
+### Potential Features
+- **Favorite Collections**: Organize favorites into custom collections
+- **Export Favorites**: Export favorite articles as bibliography
+- **Favorites Sync**: Sync favorites across devices
+- **Favorite Notes**: Add personal notes to favorite articles
+- **Favorites Search**: Search within favorite articles
+- **Favorites Statistics**: Show favorite counts and trends
 
-### Mejoras Técnicas
-- **Operaciones por Lotes**: Operaciones masivas de favoritos/desfavoritos
-- **Soporte Offline**: Mejor gestión de favoritos offline
-- **Rendimiento**: Optimizar para listas grandes de favoritos
-- **Accesibilidad**: Características mejoradas de accesibilidad
+### Technical Improvements
+- **Batch Operations**: Bulk favorite/unfavorite operations
+- **Offline Support**: Better offline favorites management
+- **Performance**: Optimize for large favorites lists
+- **Accessibility**: Enhanced accessibility features
 
-## 🔗 Documentación Relacionada
+## 🔗 Related Documentation
 
-- [ArXivController](ArXivController.md) - Detalles de implementación del controlador
-- [ArXivPaper](ArXivPaper.md) - Documentación del modelo de datos
-- [Architecture](Architecture.md) - Arquitectura general de la app
-- [MainView](MainView.md) - Implementación de vista principal
-- [PapersListView](PapersListView.md) - Implementación de vista de lista
+- [ArXivController](ArXivController.md) - Controller implementation details
+- [ArXivPaper](ArXivPaper.md) - Data model documentation
+- [Architecture](Architecture.md) - General app architecture
+- [MainView](MainView.md) - Main view implementation
+- [PapersListView](PapersListView.md) - List view implementation 

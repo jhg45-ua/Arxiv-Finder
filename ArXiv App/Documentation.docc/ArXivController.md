@@ -164,17 +164,17 @@ func loadFavoritePapers() async {
     }
 }
 
-/// Alterna el estado de favorito de un artículo
+/// Toggles the favorite state of a paper
 func toggleFavorite(for paper: ArXivPaper) {
     let newFavoriteState = !paper.isFavorite
     paper.setFavorite(newFavoriteState)
     
-    // Guardar en SwiftData
+    // Save in SwiftData
     if let modelContext = modelContext {
         try? modelContext.save()
     }
     
-    // Actualizar lista de favoritos
+    // Update favorites list
     if newFavoriteState {
         if !favoritePapers.contains(where: { $0.id == paper.id }) {
             favoritePapers.append(paper)
@@ -186,19 +186,19 @@ func toggleFavorite(for paper: ArXivPaper) {
         favoritePapers.removeAll { $0.id == paper.id }
     }
     
-    // Actualizar en todas las categorías
+    // Update in all categories
     updatePaperInAllCategories(paper)
 }
 ```
 
-### 🔍 Búsqueda y Filtrado
+### 🔍 Search and Filtering
 
-Proporciona funcionalidades avanzadas de búsqueda:
+Provides advanced search functionalities:
 
 ```swift
-/// Busca artículos por términos específicos
-/// - Parameter query: Términos de búsqueda
-/// - Returns: Artículos que coinciden con la consulta
+/// Searches papers by specific terms
+/// - Parameter query: Search terms
+/// - Returns: Papers matching the query
 @Published var searchResults: [ArXivPaper] = []
 
 func searchPapers(query: String) async {
@@ -216,36 +216,36 @@ func searchPapers(query: String) async {
 }
 ```
 
-## Patrones de Diseño Implementados
+## Implemented Design Patterns
 
-### 🎯 Patrón MVC
+### 🎯 MVC Pattern
 
-El controlador implementa el patrón MVC de forma estricta:
+The controller strictly implements the MVC pattern:
 
-- **Modelo**: ``ArXivPaper`` - Datos puros sin lógica de negocio
-- **Vista**: Vistas SwiftUI - Solo presentación, sin lógica de negocio
-- **Controlador**: ``ArXivController`` - Toda la lógica de negocio y coordinación
+- **Model**: ``ArXivPaper`` - Pure data without business logic
+- **View**: SwiftUI Views - Only presentation, no business logic
+- **Controller**: ``ArXivController`` - All business logic and coordination
 
-### 🔄 Patrón Observer
+### 🔄 Observer Pattern
 
-Utiliza el patrón Observer a través de `@ObservableObject`:
+Uses the Observer pattern via `@ObservableObject`:
 
 ```swift
-// Las vistas se suscriben automáticamente a cambios
+// Views automatically subscribe to changes
 @StateObject private var controller = ArXivController()
 
-// Actualización automática cuando cambian los datos
+// Automatic update when data changes
 List(controller.latestPapers) { paper in
     ArXivPaperRow(paper: paper)
 }
 ```
 
-### ⚡ Patrón Command
+### ⚡ Command Pattern
 
-Implementa operaciones como comandos asíncronos:
+Implements operations as asynchronous commands:
 
 ```swift
-/// Comando para refrescar todos los datos
+/// Command to refresh all data
 func refreshAllData() async {
     await withTaskGroup(of: Void.self) { group in
         group.addTask { await self.loadLatestPapers() }
@@ -255,27 +255,27 @@ func refreshAllData() async {
 }
 ```
 
-## Gestión de Errores
+## Error Management
 
-### 🛡️ Manejo Robusto de Errores
+### 🛡️ Robust Error Handling
 
 ```swift
-/// Maneja errores de forma centralizada
+/// Handles errors centrally
 private func handleError(_ error: Error) {
-    print("❌ Error en ArXivController: \(error)")
+    print("❌ Error in ArXivController: \(error)")
     
-    // Aquí podrías implementar:
-    // - Logging estructurado
-    // - Notificaciones al usuario
-    // - Reintento automático
-    // - Fallback a datos en caché
+    // Here you could implement:
+    // - Structured logging
+    // - User notifications
+    // - Automatic retry
+    // - Fallback to cached data
 }
 ```
 
-### 📊 Estados de Error
+### 📊 Error States
 
 ```swift
-/// Estados posibles del controlador
+/// Possible controller states
 enum ControllerState {
     case idle
     case loading
@@ -286,26 +286,26 @@ enum ControllerState {
 @Published var state: ControllerState = .idle
 ```
 
-## Optimizaciones de Rendimiento
+## Performance Optimizations
 
-### 🚀 Carga Lazy
+### 🚀 Lazy Loading
 
 ```swift
-/// Carga artículos bajo demanda
+/// Loads papers on demand
 private var loadedCategories: Set<String> = []
 
 func loadCategoryIfNeeded(_ category: String) async {
     guard !loadedCategories.contains(category) else { return }
     
     loadedCategories.insert(category)
-    // Cargar datos...
+    // Load data...
 }
 ```
 
-### 💾 Caché Inteligente
+### 💾 Smart Cache
 
 ```swift
-/// Caché en memoria para artículos frecuentemente accedidos
+/// In-memory cache for frequently accessed papers
 private var paperCache: [String: ArXivPaper] = [:]
 
 func getCachedPaper(id: String) -> ArXivPaper? {
@@ -313,11 +313,11 @@ func getCachedPaper(id: String) -> ArXivPaper? {
 }
 ```
 
-## Integración con SwiftUI
+## SwiftUI Integration
 
-### 🔗 Binding Automático
+### 🔗 Automatic Binding
 
-El controlador se integra perfectamente con SwiftUI:
+The controller integrates seamlessly with SwiftUI:
 
 ```swift
 struct PapersListView: View {
@@ -334,38 +334,38 @@ struct PapersListView: View {
 }
 ```
 
-### 📱 Adaptación Multiplataforma
+### 📱 Multiplatform Adaptation
 
 ```swift
-// Comportamiento específico para cada plataforma
+// Platform-specific behavior
 #if os(macOS)
 func handleMacOSSpecificLogic() {
-    // Lógica específica de macOS
+    // macOS-specific logic
 }
 #elseif os(iOS)
 func handleiOSSpecificLogic() {
-    // Lógica específica de iOS
+    // iOS-specific logic
 }
 #endif
 ```
 
-## Ciclo de Vida del Controlador
+## Controller Lifecycle
 
-### 🌱 Inicialización
+### 🌱 Initialization
 
 ```swift
 init() {
-    // Configuración inicial
+    // Initial setup
     Task {
         await loadLatestPapers()
     }
 }
 ```
 
-### 🔄 Actualización Periódica
+### 🔄 Periodic Update
 
 ```swift
-/// Timer para actualización automática
+/// Timer for automatic refresh
 private var refreshTimer: Timer?
 
 func startPeriodicRefresh() {
@@ -377,10 +377,10 @@ func startPeriodicRefresh() {
 }
 ```
 
-## Ejemplo de Uso Completo
+## Full Usage Example
 
 ```swift
-// En una vista SwiftUI
+// In a SwiftUI view
 struct ContentView: View {
     @StateObject private var controller = ArXivController()
     
@@ -388,7 +388,7 @@ struct ContentView: View {
         NavigationView {
             VStack {
                 if controller.isLoading {
-                    ProgressView("Cargando artículos...")
+                    ProgressView("Loading papers...")
                 } else {
                     List(controller.latestPapers) { paper in
                         ArXivPaperRow(paper: paper)
@@ -405,19 +405,19 @@ struct ContentView: View {
 }
 ```
 
-## Mejores Prácticas
+## Best Practices
 
-### ✅ Principios Seguidos
+### ✅ Followed Principles
 
-1. **Responsabilidad Única**: Cada método tiene una responsabilidad específica
-2. **Inmutabilidad**: Los datos se actualizan de forma controlada
-3. **Testabilidad**: Fácil de probar mediante inyección de dependencias
-4. **Escalabilidad**: Estructura que permite agregar nuevas funcionalidades
+1. **Single Responsibility**: Each method has a specific responsibility
+2. **Immutability**: Data is updated in a controlled way
+3. **Testability**: Easy to test via dependency injection
+4. **Scalability**: Structure allows adding new features
 
-### 🔧 Configuración Avanzada
+### 🔧 Advanced Configuration
 
 ```swift
-/// Configuración personalizada del controlador
+/// Custom controller configuration
 struct ArXivControllerConfig {
     let maxCacheSize: Int = 1000
     let refreshInterval: TimeInterval = 300
@@ -425,9 +425,9 @@ struct ArXivControllerConfig {
 }
 ```
 
-## Recursos Relacionados
+## Related Resources
 
-- ``ArXivPaper`` - Modelo de datos principal
-- ``ArXivService`` - Servicio para comunicación con la API
-- ``MainView`` - Vista principal que utiliza el controlador
-- ``PapersListView`` - Vista de lista gestionada por el controlador
+- ``ArXivPaper`` - Main data model
+- ``ArXivService`` - Service for API communication
+- ``MainView`` - Main view using the controller
+- ``PapersListView`` - List view managed by the controller 

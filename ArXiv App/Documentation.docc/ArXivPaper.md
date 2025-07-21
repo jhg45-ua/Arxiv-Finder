@@ -149,41 +149,41 @@ let papers = try await ArXivService().fetchLatestPapers(count: 20)
 @Published var mathPapers: [ArXivPaper] = []
 ```
 
-### 🖥️ Visualización en Views
+### 🖥️ Visualization in Views
 
-Las vistas SwiftUI utilizan ``ArXivPaper`` para mostrar información:
+SwiftUI views use ``ArXivPaper`` to display information:
 
 ```swift
-// Vista de lista que muestra papers
+// List view displaying papers
 ForEach(papers) { paper in
     ArXivPaperRow(paper: paper)
 }
 ```
 
-## Consideraciones de Diseño
+## Design Considerations
 
-### 🏗️ Arquitectura Thread-Safe
+### 🏗️ Thread-Safe Architecture
 
-La clase utiliza `@unchecked Sendable` para permitir el uso en contextos concurrentes, asegurando que las operaciones de red y UI no bloqueen el hilo principal.
+The class uses `@unchecked Sendable` to allow usage in concurrent contexts, ensuring that network and UI operations do not block the main thread.
 
-### 📱 Compatibilidad Multiplataforma
+### 📱 Multiplatform Compatibility
 
-El modelo está diseñado para funcionar tanto en iOS como macOS, adaptándose automáticamente a las capacidades específicas de cada plataforma.
+The model is designed to work on both iOS and macOS, automatically adapting to the specific capabilities of each platform.
 
-### 🔄 Extensibilidad
+### 🔄 Extensibility
 
-La estructura permite añadir fácilmente nuevas propiedades sin romper la compatibilidad existente:
+The structure allows for easily adding new properties without breaking existing compatibility:
 
 ```swift
-// Futuras extensiones podrían incluir:
+// Future extensions could include:
 var citations: Int?
 var downloadCount: Int?
 var tags: [String]?
 ```
 
-## Recursos Relacionados
+## Related Resources
 
-- ``ArXivController`` - Controlador que maneja la lógica de negocio
-- ``ArXivService`` - Servicio para comunicación con la API
-- ``ArXivPaperRow`` - Vista para mostrar un artículo individual
-- ``PaperDetailView`` - Vista detallada de un artículo
+- ``ArXivController`` - Controller handling business logic
+- ``ArXivService`` - Service for API communication
+- ``ArXivPaperRow`` - View to display an individual paper
+- ``PaperDetailView`` - Detailed view of a paper 

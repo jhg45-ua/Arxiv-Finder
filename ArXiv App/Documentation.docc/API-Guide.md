@@ -149,71 +149,71 @@ func getLatestPapers(
 - `cs.DB` - Databases
 - `cs.DS` - Data Structures and Algorithms
 - `cs.LG` - Machine Learning
-- `cs.SE` - Ingeniería de Software
+- `cs.SE` - Software Engineering
 
 #### 🔢 Mathematics (math)
-- `math.AG` - Geometría Algebraica
-- `math.AP` - Análisis de EDPs
-- `math.AT` - Topología Algebraica
-- `math.CA` - Análisis Clásico
-- `math.CO` - Combinatoria
-- `math.NT` - Teoría de Números
-- `math.ST` - Teoría Estadística
+- `math.AG` - Algebraic Geometry
+- `math.AP` - Analysis of PDEs
+- `math.AT` - Algebraic Topology
+- `math.CA` - Classical Analysis
+- `math.CO` - Combinatorics
+- `math.NT` - Number Theory
+- `math.ST` - Statistical Theory
 
 #### ⚛️ Physics (physics)
-- `physics.ao-ph` - Física Atmosférica y Oceánica
-- `physics.atom-ph` - Física Atómica
-- `physics.bio-ph` - Biofísica
-- `physics.comp-ph` - Física Computacional
-- `physics.chem-ph` - Física Química
-- `physics.class-ph` - Física Clásica
-- `physics.data-an` - Análisis de Datos
+- `physics.ao-ph` - Atmospheric and Oceanic Physics
+- `physics.atom-ph` - Atomic Physics
+- `physics.bio-ph` - Biophysics
+- `physics.comp-ph` - Computational Physics
+- `physics.chem-ph` - Chemical Physics
+- `physics.class-ph` - Classical Physics
+- `physics.data-an` - Data Analysis
 
 #### 🧬 Quantitative Biology (q-bio)
-- `q-bio.BM` - Biomoléculas
-- `q-bio.CB` - Biología Celular
-- `q-bio.GN` - Genómica
-- `q-bio.MN` - Redes Moleculares
-- `q-bio.NC` - Neurociencia Computacional
-- `q-bio.PE` - Evolución Poblacional
-- `q-bio.QM` - Métodos Cuantitativos
-- `q-bio.SC` - Células Subceleulares
-- `q-bio.TO` - Tejidos y Órganos
+- `q-bio.BM` - Biomolecules
+- `q-bio.CB` - Cell Biology
+- `q-bio.GN` - Genomics
+- `q-bio.MN` - Molecular Networks
+- `q-bio.NC` - Computational Neuroscience
+- `q-bio.PE` - Population Evolution
+- `q-bio.QM` - Quantitative Methods
+- `q-bio.SC` - Subcellular Cells
+- `q-bio.TO` - Tissues and Organs
 
 #### 💰 Quantitative Finance (q-fin)
-- `q-fin.CP` - Precios Computacionales
-- `q-fin.EC` - Economía
-- `q-fin.GN` - Finanzas Generales
-- `q-fin.MF` - Finanzas Matemáticas
-- `q-fin.PM` - Gestión de Portafolios
-- `q-fin.PR` - Gestión de Riesgos
-- `q-fin.RM` - Gestión de Riesgos
-- `q-fin.ST` - Trading Estadístico
-- `q-fin.TR` - Trading y Microestructura
+- `q-fin.CP` - Computational Pricing
+- `q-fin.EC` - Economics
+- `q-fin.GN` - General Finance
+- `q-fin.MF` - Mathematical Finance
+- `q-fin.PM` - Portfolio Management
+- `q-fin.PR` - Risk Management
+- `q-fin.RM` - Risk Management
+- `q-fin.ST` - Statistical Trading
+- `q-fin.TR` - Trading and Microstructure
 
 #### 📊 Statistics (stat)
-- `stat.AP` - Aplicaciones
-- `stat.CO` - Computación
-- `stat.ME` - Metodología
+- `stat.AP` - Applications
+- `stat.CO` - Computation
+- `stat.ME` - Methodology
 - `stat.ML` - Machine Learning
-- `stat.OT` - Otros Temas
-- `stat.TH` - Teoría
+- `stat.OT` - Other Topics
+- `stat.TH` - Theory
 
 #### ⚡ Electrical Engineering and Systems Science (eess)
-- `eess.AS` - Procesamiento de Audio y Voz
-- `eess.IV` - Procesamiento de Imágenes y Video
-- `eess.SP` - Procesamiento de Señales
-- `eess.SY` - Sistemas y Control
+- `eess.AS` - Audio and Speech Processing
+- `eess.IV` - Image and Video Processing
+- `eess.SP` - Signal Processing
+- `eess.SY` - Systems and Control
 
 #### 💼 Economics (econ)
-- `econ.EM` - Econometría
-- `econ.GN` - Economía General
-- `econ.TH` - Teoría Económica
+- `econ.EM` - Econometrics
+- `econ.GN` - General Economics
+- `econ.TH` - Economic Theory
 
-### Enumeración de Categorías
+### Category Enumeration
 
 ```swift
-/// Categorías principales de ArXiv
+/// Main ArXiv categories
 enum ArXivCategory: String, CaseIterable {
     case computerScience = "cs"
     case mathematics = "math"
@@ -259,17 +259,12 @@ enum ArXivCategory: String, CaseIterable {
     }
 }
 ```
-            return ["stat.AP", "stat.CO", "stat.ME", "stat.ML", "stat.TH"]
-        }
-    }
-}
-```
 
-## 🔄 Procesamiento de Respuestas XML
+## 🔄 XML Response Processing
 
-### Estructura de Respuesta Atom
+### Atom Response Structure
 
-ArXiv devuelve respuestas en formato Atom XML:
+ArXiv returns responses in Atom XML format:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -277,10 +272,10 @@ ArXiv devuelve respuestas en formato Atom XML:
     <title>ArXiv Query: search_query=all</title>
     <entry>
         <id>http://arxiv.org/abs/2023.12345v1</id>
-        <title>Título del Artículo</title>
-        <summary>Resumen del artículo...</summary>
+        <title>Article Title</title>
+        <summary>Article summary...</summary>
         <author>
-            <name>Nombre del Autor</name>
+            <name>Author Name</name>
         </author>
         <published>2023-12-01T00:00:00Z</published>
         <updated>2023-12-01T00:00:00Z</updated>
@@ -291,12 +286,12 @@ ArXiv devuelve respuestas en formato Atom XML:
 </feed>
 ```
 
-### Integración con Parser
+### Integration with Parser
 
-El servicio utiliza ``ArXivSimpleParser`` para procesar las respuestas:
+The service uses ``ArXivSimpleParser`` to process responses:
 
 ```swift
-/// Procesa respuesta XML y devuelve artículos
+/// Processes XML response and returns articles
 private func performRequest(url: URL) async throws -> [ArXivPaper] {
     let (data, response) = try await session.data(from: url)
     
@@ -305,17 +300,17 @@ private func performRequest(url: URL) async throws -> [ArXivPaper] {
         throw ArXivError.networkError
     }
     
-    // Utiliza el parser especializado
+    // Uses the specialized parser
     return try ArXivSimpleParser().parse(data)
 }
 ```
 
-## 🚨 Manejo de Errores
+## 🚨 Error Handling
 
-### Errores Específicos de ArXiv
+### ArXiv-Specific Errors
 
 ```swift
-/// Errores específicos de la API de ArXiv
+/// ArXiv API specific errors
 enum ArXivError: Error, LocalizedError {
     case invalidURL
     case networkError
@@ -329,30 +324,30 @@ enum ArXivError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .invalidURL:
-            return "URL de ArXiv inválida"
+            return "Invalid ArXiv URL"
         case .networkError:
-            return "Error de conexión con ArXiv"
+            return "Connection error with ArXiv"
         case .parsingError:
-            return "Error al procesar respuesta XML"
+            return "Error processing XML response"
         case .noResults:
-            return "No se encontraron resultados"
+            return "No results found"
         case .rateLimited:
-            return "Límite de peticiones excedido"
+            return "Request limit exceeded"
         case .serverError(let code):
-            return "Error del servidor ArXiv: \(code)"
+            return "ArXiv server error: \(code)"
         case .invalidQuery:
-            return "Consulta de búsqueda inválida"
+            return "Invalid search query"
         case .timeout:
-            return "Tiempo de espera agotado"
+            return "Timeout expired"
         }
     }
 }
 ```
 
-### Manejo en el Controlador
+### Handling in the Controller
 
 ```swift
-/// Manejo de errores en ArXivController
+/// Error handling in ArXivController
 /// @MainActor
 func loadLatestPapers() async {
     isLoading = true
@@ -365,7 +360,7 @@ func loadLatestPapers() async {
         self.errorMessage = error.localizedDescription
         handleSpecificError(error)
     } catch {
-        self.errorMessage = "Error inesperado: \(error.localizedDescription)"
+        self.errorMessage = "Unexpected error: \(error.localizedDescription)"
     }
     
     isLoading = false
@@ -374,13 +369,13 @@ func loadLatestPapers() async {
 private func handleSpecificError(_ error: ArXivError) {
     switch error {
     case .rateLimited:
-        // Implementar retry con backoff
+        // Implement retry with backoff
         scheduleRetry()
     case .networkError:
-        // Mostrar opciones de conectividad
+        // Show connectivity options
         showNetworkOptions()
     case .noResults:
-        // Sugerir búsquedas alternativas
+        // Suggest alternative searches
         showSearchSuggestions()
     default:
         break
@@ -388,14 +383,14 @@ private func handleSpecificError(_ error: ArXivError) {
 }
 ```
 
-## 📈 Optimización y Rendimiento
+## 📈 Optimization and Performance
 
 ### 🕒 Rate Limiting
 
-ArXiv limita las peticiones a 3 por segundo:
+ArXiv limits requests to 3 per second:
 
 ```swift
-/// Gestor de rate limiting
+/// Rate limiting manager
 private class RateLimiter {
     private let queue = DispatchQueue(label: "arxiv.requests", qos: .utility)
     private var lastRequestTime: Date = Date.distantPast
@@ -429,13 +424,13 @@ private class RateLimiter {
 }
 ```
 
-### 💾 Estrategia de Caché
+### 💾 Cache Strategy
 
 ```swift
-/// Caché para respuestas de la API
+/// Cache for API responses
 private class APICache {
     private let cache = NSCache<NSString, CachedResponse>()
-    private let expirationInterval: TimeInterval = 300 // 5 minutos
+    private let expirationInterval: TimeInterval = 300 // 5 minutes
     
     struct CachedResponse {
         let data: Data
@@ -449,7 +444,7 @@ private class APICache {
             return nil
         }
         
-        // Verificar si ha expirado
+        // Check if expired
         if Date().timeIntervalSince(cached.timestamp) > expirationInterval {
             cache.removeObject(forKey: key)
             return nil
@@ -466,12 +461,12 @@ private class APICache {
 }
 ```
 
-## 🔍 Búsqueda Avanzada
+## 🔍 Advanced Search
 
-### Constructor de Consultas
+### Query Builder
 
 ```swift
-/// Constructor para consultas complejas de ArXiv
+/// Builder for complex ArXiv queries
 struct ArXivQuery {
     var title: String?
     var author: String?
@@ -480,7 +475,7 @@ struct ArXivQuery {
     var dateRange: DateInterval?
     var exactMatch: Bool = false
     
-    /// Construye la consulta para la API
+    /// Builds the query for the API
     func buildQueryString() -> String {
         var components: [String] = []
         
@@ -515,10 +510,10 @@ struct ArXivQuery {
 }
 ```
 
-### Uso en la Aplicación
+### Usage in the Application
 
 ```swift
-/// Ejemplo de búsqueda avanzada
+/// Example of advanced search
 func performAdvancedSearch() async throws -> [ArXivPaper] {
     let query = ArXivQuery(
         title: "machine learning",
@@ -532,21 +527,21 @@ func performAdvancedSearch() async throws -> [ArXivPaper] {
 }
 ```
 
-## 🔗 Integración con el Patrón MVC
+## 🔗 Integration with MVC Pattern
 
-### Flujo de Datos
+### Data Flow
 
-1. **Vista** solicita datos al **Controlador**
-2. **Controlador** utiliza **ArXivService** para obtener datos
-3. **ArXivService** realiza petición HTTP a la API
-4. **ArXivSimpleParser** procesa respuesta XML
-5. **Controlador** actualiza propiedades `@Published`
-6. **Vista** se actualiza automáticamente
+1. **View** requests data from the **Controller**
+2. **Controller** uses **ArXivService** to get data
+3. **ArXivService** makes HTTP request to the API
+4. **ArXivSimpleParser** processes XML response
+5. **Controller** updates `@Published` properties
+6. **View** updates automatically
 
-### Ejemplo de Integración
+### Integration Example
 
 ```swift
-/// Integración completa en el controlador
+/// Full integration in the controller
 /// @MainActor
 class ArXivController: ObservableObject {
     @Published var papers: [ArXivPaper] = []
@@ -571,21 +566,21 @@ class ArXivController: ObservableObject {
 }
 ```
 
-## 📚 Recursos Adicionales
+## 📚 Additional Resources
 
-### Enlaces Útiles
+### Useful Links
 
-- [Documentación oficial de ArXiv API](https://arxiv.org/help/api)
-- [Guía de categorías de ArXiv](https://arxiv.org/category_taxonomy)
-- [Formato Atom RSS](https://tools.ietf.org/html/rfc4287)
+- [Official ArXiv API Documentation](https://arxiv.org/help/api)
+- [ArXiv Category Guide](https://arxiv.org/category_taxonomy)
+- [Atom RSS Format](https://tools.ietf.org/html/rfc4287)
 
-### Componentes Relacionados
+### Related Components
 
-- ``ArXivService`` - Implementación del servicio
-- ``ArXivSimpleParser`` - Parser XML especializado
-- ``ArXivController`` - Controlador que utiliza la API
-- ``ArXivPaper`` - Modelo de datos resultado
+- ``ArXivService`` - Service implementation
+- ``ArXivSimpleParser`` - Specialized XML parser
+- ``ArXivController`` - Controller using the API
+- ``ArXivPaper`` - Result data model
 
 ---
 
-*Esta documentación refleja la implementación actual de la integración con la API de ArXiv y se actualiza continuamente.*
+*This documentation reflects the current implementation of the ArXiv API integration and is continuously updated.* 

@@ -98,61 +98,61 @@ func fetchComputerSciencePapers() async throws -> [ArXivPaper] {
     return try await fetchPapersByCategory("cs.*")
 }
 
-/// Obtiene artículos de Mathematics
+/// Gets Mathematics papers
 func fetchMathematicsPapers() async throws -> [ArXivPaper] {
     return try await fetchPapersByCategory("math.*")
 }
 
-/// Obtiene artículos de Physics
+/// Gets Physics papers
 func fetchPhysicsPapers() async throws -> [ArXivPaper] {
     return try await fetchPapersByCategory("physics.*")
 }
 
-/// Obtiene artículos de Quantitative Biology
+/// Gets Quantitative Biology papers
 func fetchQuantitativeBiologyPapers() async throws -> [ArXivPaper] {
     return try await fetchPapersByCategory("q-bio.*")
 }
 
-/// Obtiene artículos de Quantitative Finance
+/// Gets Quantitative Finance papers
 func fetchQuantitativeFinancePapers() async throws -> [ArXivPaper] {
     return try await fetchPapersByCategory("q-fin.*")
 }
 
-/// Obtiene artículos de Statistics
+/// Gets Statistics papers
 func fetchStatisticsPapers() async throws -> [ArXivPaper] {
     return try await fetchPapersByCategory("stat.*")
 }
 
-/// Obtiene artículos de Electrical Engineering and Systems Science
+/// Gets Electrical Engineering and Systems Science papers
 func fetchElectricalEngineeringPapers() async throws -> [ArXivPaper] {
     return try await fetchPapersByCategory("eess.*")
 }
 
-/// Obtiene artículos de Economics
+/// Gets Economics papers
 func fetchEconomicsPapers() async throws -> [ArXivPaper] {
     return try await fetchPapersByCategory("econ.*")
 }
 ```
 
-**Categorías Soportadas:**
-- **Computer Science** (`cs.*`) - Ciencias de la Computación
-- **Mathematics** (`math.*`) - Matemáticas
-- **Physics** (`physics.*`) - Física
-- **Quantitative Biology** (`q-bio.*`) - Biología Cuantitativa
-- **Quantitative Finance** (`q-fin.*`) - Finanzas Cuantitativas
-- **Statistics** (`stat.*`) - Estadística
-- **Electrical Engineering** (`eess.*`) - Ingeniería Eléctrica y Sistemas
-- **Economics** (`econ.*`) - Economía
+**Supported Categories:**
+- **Computer Science** (`cs.*`)
+- **Mathematics** (`math.*`)
+- **Physics** (`physics.*`)
+- **Quantitative Biology** (`q-bio.*`)
+- **Quantitative Finance** (`q-fin.*`)
+- **Statistics** (`stat.*`)
+- **Electrical Engineering** (`eess.*`)
+- **Economics** (`econ.*`)
 
-### 🔍 Búsqueda Avanzada
+### 🔍 Advanced Search
 
 ```swift
-/// Busca artículos por términos específicos
-/// - Parameter query: Términos de búsqueda
-/// - Parameter maxResults: Máximo número de resultados
-/// - Returns: Array de artículos que coinciden con la búsqueda
+/// Searches papers by specific terms
+/// - Parameter query: Search terms
+/// - Parameter maxResults: Maximum number of results
+/// - Returns: Array of papers matching the search
 func searchPapers(query: String, maxResults: Int = 20) async throws -> [ArXivPaper] {
-    // Codifica la consulta para URL
+    // Encode the query for URL
     let encodedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
     
     let searchQuery = "all:\(encodedQuery)"
@@ -160,26 +160,26 @@ func searchPapers(query: String, maxResults: Int = 20) async throws -> [ArXivPap
 }
 ```
 
-## Procesamiento de Datos XML
+## XML Data Processing
 
-### 🔄 Parsing de Respuestas
+### 🔄 Response Parsing
 
-El servicio utiliza ``ArXivSimpleParser`` para procesar las respuestas XML:
+The service uses ``ArXivSimpleParser`` to process XML responses:
 
 ```swift
-/// Parsea la respuesta XML de ArXiv
-/// - Parameter data: Datos XML de la respuesta
-/// - Returns: Array de artículos parseados
+/// Parses the XML response from ArXiv
+/// - Parameter data: XML response data
+/// - Returns: Array of parsed papers
 private func parseXMLResponse(_ data: Data) throws -> [ArXivPaper] {
     let parser = ArXivSimpleParser()
     return try parser.parse(data)
 }
 ```
 
-### 📊 Transformación de Datos
+### 📊 Data Transformation
 
 ```swift
-/// Convierte un elemento XML en un objeto ArXivPaper
+/// Converts an XML element into an ArXivPaper object
 private func transformXMLToArXivPaper(_ element: XMLElement) -> ArXivPaper {
     return ArXivPaper(
         id: extractID(from: element),
@@ -194,12 +194,12 @@ private func transformXMLToArXivPaper(_ element: XMLElement) -> ArXivPaper {
 }
 ```
 
-## Manejo de Errores
+## Error Handling
 
-### 🛡️ Tipos de Error Específicos
+### 🛡️ Specific Error Types
 
 ```swift
-/// Errores específicos del servicio ArXiv
+/// Specific errors for the ArXiv service
 enum ArXivError: Error, LocalizedError {
     case invalidURL
     case networkError
@@ -210,24 +210,24 @@ enum ArXivError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .invalidURL:
-            return "URL de ArXiv inválida"
+            return "Invalid ArXiv URL"
         case .networkError:
-            return "Error de conexión con ArXiv"
+            return "Connection error with ArXiv"
         case .parseError:
-            return "Error al procesar respuesta de ArXiv"
+            return "Error processing ArXiv response"
         case .noData:
-            return "No se encontraron datos"
+            return "No data found"
         case .rateLimited:
-            return "Límite de peticiones excedido"
+            return "Request limit exceeded"
         }
     }
 }
 ```
 
-### 🔄 Reintentos Automáticos
+### 🔄 Automatic Retries
 
 ```swift
-/// Ejecuta una petición con reintentos automáticos
+/// Executes a request with automatic retries
 private func performRequestWithRetry<T>(
     _ operation: @escaping () async throws -> T,
     maxRetries: Int = 3
@@ -249,16 +249,16 @@ private func performRequestWithRetry<T>(
 }
 ```
 
-## Optimizaciones de Rendimiento
+## Performance Optimizations
 
-### 🚀 Caché de Peticiones
+### 🚀 Request Cache
 
 ```swift
-/// Caché para evitar peticiones duplicadas
+/// Cache to avoid duplicate requests
 private var requestCache: [String: [ArXivPaper]] = [:]
-private let cacheTimeout: TimeInterval = 300 // 5 minutos
+private let cacheTimeout: TimeInterval = 300 // 5 minutes
 
-/// Obtiene datos del caché o realiza nueva petición
+/// Gets data from cache or makes a new request
 private func getCachedOrFetch(url: String) async throws -> [ArXivPaper] {
     if let cached = requestCache[url] {
         return cached
@@ -270,30 +270,30 @@ private func getCachedOrFetch(url: String) async throws -> [ArXivPaper] {
 }
 ```
 
-### 📊 Paginación Eficiente
+### 📊 Efficient Pagination
 
 ```swift
-/// Obtiene artículos con paginación
+/// Gets papers with pagination
 /// - Parameters:
-///   - query: Consulta de búsqueda
-///   - start: Índice inicial
-///   - maxResults: Máximo número de resultados por página
+///   - query: Search query
+///   - start: Start index
+///   - maxResults: Maximum number of results per page
 func fetchPaginatedPapers(
     query: String,
     start: Int = 0,
     maxResults: Int = 20
 ) async throws -> [ArXivPaper] {
     let urlString = "\(baseURL)?search_query=\(query)&start=\(start)&max_results=\(maxResults)"
-    // ... implementación
+    // ... implementation
 }
 ```
 
-## Configuración Avanzada
+## Advanced Configuration
 
-### ⚙️ Parámetros de Configuración
+### ⚙️ Configuration Parameters
 
 ```swift
-/// Configuración del servicio ArXiv
+/// ArXiv service configuration
 struct ArXivServiceConfig {
     let baseURL: String = "https://export.arxiv.org/api/query"
     let timeout: TimeInterval = 30.0
@@ -303,22 +303,22 @@ struct ArXivServiceConfig {
 }
 ```
 
-### 🔧 Personalización de Peticiones
+### 🔧 Request Customization
 
 ```swift
-/// Personaliza los headers de las peticiones
+/// Customize request headers
 private func customizeRequest(_ request: inout URLRequest) {
     request.setValue("ArXiv-App/1.0", forHTTPHeaderField: "User-Agent")
     request.setValue("application/atom+xml", forHTTPHeaderField: "Accept")
 }
 ```
 
-## Integración con el Controlador
+## Controller Integration
 
-### 🔗 Inyección de Dependencias
+### 🔗 Dependency Injection
 
 ```swift
-// En ArXivController
+// In ArXivController
 private let arXivService: ArXivService
 
 init(service: ArXivService = ArXivService()) {
@@ -326,10 +326,10 @@ init(service: ArXivService = ArXivService()) {
 }
 ```
 
-### 📱 Uso en Vistas
+### 📱 Usage in Views
 
 ```swift
-// Uso directo desde una vista (no recomendado)
+// Direct use from a view (not recommended)
 struct DirectServiceView: View {
     @State private var papers: [ArXivPaper] = []
     private let service = ArXivService()
@@ -351,26 +351,26 @@ struct DirectServiceView: View {
 }
 ```
 
-## Ejemplo de Uso Completo
+## Full Usage Example
 
 ```swift
-// Ejemplo de uso completo del servicio
+// Full usage example of the service
 class ExampleUsage {
     private let service = ArXivService()
     
     func demonstrateUsage() async {
         do {
-            // Obtener artículos recientes
+            // Get recent papers
             let latest = try await service.fetchLatestPapers(count: 10)
-            print("Últimos artículos: \(latest.count)")
+            print("Latest papers: \(latest.count)")
             
-            // Buscar por categoría
+            // Search by category
             let aiPapers = try await service.fetchPapersByCategory("cs.AI")
-            print("Artículos de IA: \(aiPapers.count)")
+            print("AI papers: \(aiPapers.count)")
             
-            // Búsqueda por términos
+            // Search by terms
             let searchResults = try await service.searchPapers(query: "machine learning")
-            print("Resultados de búsqueda: \(searchResults.count)")
+            print("Search results: \(searchResults.count)")
             
         } catch {
             print("Error: \(error)")
@@ -379,19 +379,19 @@ class ExampleUsage {
 }
 ```
 
-## Mejores Prácticas
+## Best Practices
 
-### ✅ Principios Implementados
+### ✅ Implemented Principles
 
-1. **Responsabilidad Única**: Solo maneja comunicación con ArXiv
-2. **Abstracción**: Oculta complejidad de XML y HTTP
-3. **Reutilización**: Métodos reutilizables para diferentes tipos de búsqueda
-4. **Robustez**: Manejo completo de errores y casos edge
+1. **Single Responsibility**: Only handles communication with ArXiv
+2. **Abstraction**: Hides XML and HTTP complexity
+3. **Reusability**: Reusable methods for different search types
+4. **Robustness**: Complete error and edge case handling
 
-### 🔧 Configuración de Producción
+### 🔧 Production Configuration
 
 ```swift
-/// Configuración optimizada para producción
+/// Optimized configuration for production
 extension ArXivService {
     static func productionService() -> ArXivService {
         let config = ArXivServiceConfig()
@@ -400,9 +400,9 @@ extension ArXivService {
 }
 ```
 
-## Recursos Relacionados
+## Related Resources
 
-- ``ArXivSimpleParser`` - Parser XML especializado
-- ``ArXivPaper`` - Modelo de datos resultado
-- ``ArXivController`` - Controlador que usa el servicio
-- ``ArXivError`` - Tipos de error específicos del servicio
+- ``ArXivSimpleParser`` - Specialized XML parser
+- ``ArXivPaper`` - Result data model
+- ``ArXivController`` - Controller using the service
+- ``ArXivError`` - Specific service error types 

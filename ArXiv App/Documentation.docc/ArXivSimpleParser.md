@@ -98,15 +98,15 @@ func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceU
     
     switch elementName {
     case "entry":
-        // Inicia un nuevo artículo
+        // Start a new paper
         currentPaper = ArXivPaper()
     case "category":
-        // Procesa categorías con atributos
+        // Process categories with attributes
         if let term = attributes["term"] {
             currentPaper?.category = term
         }
     case "link":
-        // Procesa enlaces con atributos
+        // Process links with attributes
         if let href = attributes["href"] {
             currentPaper?.link = href
         }
@@ -116,19 +116,19 @@ func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceU
 }
 ```
 
-### 📝 Procesamiento de Contenido
+### 📝 Content Processing
 
 ```swift
-/// Procesa el contenido de texto de elementos XML
+/// Processes the text content of XML elements
 func parser(_ parser: XMLParser, foundCharacters string: String) {
     currentValue += string.trimmingCharacters(in: .whitespacesAndNewlines)
 }
 ```
 
-### ✅ Finalización de Elementos
+### ✅ Element Completion
 
 ```swift
-/// Finaliza el procesamiento de un elemento XML
+/// Completes the processing of an XML element
 func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName: String?) {
     defer {
         currentElement = ""
@@ -139,7 +139,7 @@ func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI
     
     switch elementName {
     case "entry":
-        // Finaliza el artículo actual
+        // Finish the current paper
         papers.append(paper)
         currentPaper = nil
     case "id":
@@ -149,7 +149,7 @@ func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI
     case "summary":
         paper.summary = cleanSummary(currentValue)
     case "name":
-        // Procesa nombres de autores
+        // Process author names
         paper.authors = processAuthorName(currentValue, existing: paper.authors)
     case "published":
         paper.publishedDate = parseDate(currentValue)
@@ -163,27 +163,27 @@ func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI
 }
 ```
 
-## Procesamiento de Datos Específicos
+## Specific Data Processing
 
-### 🔗 Extracción de ID de ArXiv
+### 🔗 ArXiv ID Extraction
 
 ```swift
-/// Extrae el ID de ArXiv de la URL completa
-/// - Parameter fullURL: URL completa del artículo
-/// - Returns: ID limpio de ArXiv (ej: "2023.12345v1")
+/// Extracts the ArXiv ID from the full URL
+/// - Parameter fullURL: Full article URL
+/// - Returns: Clean ArXiv ID (e.g.: "2023.12345v1")
 private func extractArXivID(from fullURL: String) -> String {
-    // Ejemplo: "http://arxiv.org/abs/2023.12345v1" -> "2023.12345v1"
+    // Example: "http://arxiv.org/abs/2023.12345v1" -> "2023.12345v1"
     let components = fullURL.components(separatedBy: "/")
     return components.last ?? fullURL
 }
 ```
 
-### 🧹 Limpieza de Títulos
+### 🧹 Title Cleaning
 
 ```swift
-/// Limpia y formatea títulos de artículos
-/// - Parameter rawTitle: Título sin procesar
-/// - Returns: Título limpio y formateado
+/// Cleans and formats article titles
+/// - Parameter rawTitle: Raw title
+/// - Returns: Clean and formatted title
 private func cleanTitle(_ rawTitle: String) -> String {
     return rawTitle
         .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -192,12 +192,12 @@ private func cleanTitle(_ rawTitle: String) -> String {
 }
 ```
 
-### 📄 Procesamiento de Resúmenes
+### 📄 Summary Processing
 
 ```swift
-/// Procesa y limpia resúmenes de artículos
-/// - Parameter rawSummary: Resumen sin procesar
-/// - Returns: Resumen limpio y formateado
+/// Processes and cleans article summaries
+/// - Parameter rawSummary: Raw summary
+/// - Returns: Clean and formatted summary
 private func cleanSummary(_ rawSummary: String) -> String {
     return rawSummary
         .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -206,14 +206,14 @@ private func cleanSummary(_ rawSummary: String) -> String {
 }
 ```
 
-### 👥 Gestión de Autores
+### 👥 Author Management
 
 ```swift
-/// Procesa nombres de autores y los concatena
+/// Processes author names and concatenates them
 /// - Parameters:
-///   - newAuthor: Nuevo autor a agregar
-///   - existing: Autores existentes
-/// - Returns: String con todos los autores separados por comas
+///   - newAuthor: New author to add
+///   - existing: Existing authors
+/// - Returns: String with all authors separated by commas
 private func processAuthorName(_ newAuthor: String, existing: String) -> String {
     let cleanName = newAuthor.trimmingCharacters(in: .whitespacesAndNewlines)
     
@@ -225,24 +225,24 @@ private func processAuthorName(_ newAuthor: String, existing: String) -> String 
 }
 ```
 
-### 📅 Parsing de Fechas
+### 📅 Date Parsing
 
 ```swift
-/// Parsea fechas en formato ISO 8601 de ArXiv
-/// - Parameter dateString: Fecha en formato string
-/// - Returns: Objeto Date parseado
+/// Parses dates in ArXiv's ISO 8601 format
+/// - Parameter dateString: Date as string
+/// - Returns: Parsed Date object
 private func parseDate(_ dateString: String) -> Date {
     let formatter = ISO8601DateFormatter()
     return formatter.date(from: dateString) ?? Date()
 }
 ```
 
-## Manejo de Errores
+## Error Handling
 
-### 🛡️ Tipos de Error Específicos
+### 🛡️ Specific Error Types
 
 ```swift
-/// Errores específicos del parser XML
+/// Specific errors for the XML parser
 enum ArXivParserError: Error, LocalizedError {
     case xmlParsingFailed(Error)
     case invalidDateFormat(String)
@@ -252,43 +252,43 @@ enum ArXivParserError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .xmlParsingFailed(let error):
-            return "Error al parsear XML: \(error.localizedDescription)"
+            return "XML parsing error: \(error.localizedDescription)"
         case .invalidDateFormat(let date):
-            return "Formato de fecha inválido: \(date)"
+            return "Invalid date format: \(date)"
         case .missingRequiredField(let field):
-            return "Campo requerido faltante: \(field)"
+            return "Missing required field: \(field)"
         case .unknownError:
-            return "Error desconocido en el parser"
+            return "Unknown parser error"
         }
     }
 }
 ```
 
-### 🔄 Recuperación de Errores
+### 🔄 Error Recovery
 
 ```swift
-/// Maneja errores durante el parsing
+/// Handles errors during parsing
 func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
-    print("❌ Error de parsing XML: \(parseError)")
+    print("❌ XML parsing error: \(parseError)")
     
-    // Intenta recuperar datos parciales
+    // Attempt to recover partial data
     if !papers.isEmpty {
-        print("✅ Recuperando \(papers.count) artículos procesados")
+        print("✅ Recovering \(papers.count) processed papers")
     }
 }
 ```
 
-## Optimizaciones de Rendimiento
+## Performance Optimizations
 
 ### 🚀 Streaming Parser
 
 ```swift
-/// Procesa XML de forma streaming para archivos grandes
+/// Processes XML in streaming mode for large files
 func parseStream(_ inputStream: InputStream) throws -> [ArXivPaper] {
     let parser = XMLParser(stream: inputStream)
     parser.delegate = self
     
-    // Configura parser para streaming
+    // Configure parser for streaming
     parser.shouldProcessNamespaces = false
     parser.shouldReportNamespacePrefixes = false
     
@@ -300,30 +300,30 @@ func parseStream(_ inputStream: InputStream) throws -> [ArXivPaper] {
 }
 ```
 
-### 💾 Caché de Elementos
+### 💾 Element Cache
 
 ```swift
-/// Caché para elementos frecuentemente procesados
+/// Cache for frequently processed elements
 private var elementCache: [String: String] = [:]
 
-/// Utiliza caché para elementos repetitivos
+/// Uses cache for repetitive elements
 private func getCachedElement(_ key: String) -> String? {
     return elementCache[key]
 }
 ```
 
-## Extensibilidad
+## Extensibility
 
-### 🔧 Campos Personalizados
+### 🔧 Custom Fields
 
 ```swift
-/// Protocolo para campos personalizados
+/// Protocol for custom fields
 protocol ArXivCustomField {
     var fieldName: String { get }
     func process(_ value: String) -> Any?
 }
 
-/// Soporte para campos personalizados
+/// Support for custom fields
 private var customFields: [ArXivCustomField] = []
 
 func addCustomField(_ field: ArXivCustomField) {
@@ -331,10 +331,10 @@ func addCustomField(_ field: ArXivCustomField) {
 }
 ```
 
-### 📊 Métricas de Parsing
+### 📊 Parsing Metrics
 
 ```swift
-/// Métricas de rendimiento del parser
+/// Parser performance metrics
 struct ParsingMetrics {
     let totalElements: Int
     let processingTime: TimeInterval
@@ -342,7 +342,7 @@ struct ParsingMetrics {
     let failedPapers: Int
 }
 
-/// Recopila métricas durante el parsing
+/// Collects metrics during parsing
 private func collectMetrics() -> ParsingMetrics {
     return ParsingMetrics(
         totalElements: totalElementsProcessed,
@@ -353,39 +353,39 @@ private func collectMetrics() -> ParsingMetrics {
 }
 ```
 
-## Ejemplo de Uso
+## Usage Example
 
 ```swift
-/// Ejemplo de uso completo del parser
+/// Full usage example of the parser
 class ParserExample {
     private let parser = ArXivSimpleParser()
     
     func processArXivResponse(_ xmlData: Data) async throws -> [ArXivPaper] {
         do {
             let papers = try parser.parse(xmlData)
-            print("✅ Parseados \(papers.count) artículos")
+            print("✅ Parsed \(papers.count) papers")
             return papers
         } catch {
-            print("❌ Error en parsing: \(error)")
+            print("❌ Parsing error: \(error)")
             throw error
         }
     }
 }
 ```
 
-## Mejores Prácticas
+## Best Practices
 
-### ✅ Principios Implementados
+### ✅ Implemented Principles
 
-1. **Responsabilidad Única**: Solo maneja parsing de XML
-2. **Robustez**: Maneja datos malformados gracefully
-3. **Eficiencia**: Procesa grandes volúmenes de datos
-4. **Extensibilidad**: Fácil agregar nuevos campos
+1. **Single Responsibility**: Only handles XML parsing
+2. **Robustness**: Handles malformed data gracefully
+3. **Efficiency**: Processes large volumes of data
+4. **Extensibility**: Easy to add new fields
 
-### 🔧 Configuración Avanzada
+### 🔧 Advanced Configuration
 
 ```swift
-/// Configuración personalizada del parser
+/// Custom parser configuration
 struct ParserConfig {
     let strictMode: Bool = false
     let validateDates: Bool = true
@@ -394,8 +394,8 @@ struct ParserConfig {
 }
 ```
 
-## Recursos Relacionados
+## Related Resources
 
-- ``ArXivService`` - Servicio que utiliza el parser
-- ``ArXivPaper`` - Modelo de datos resultado del parsing
-- ``ArXivController`` - Controlador que coordina el parsing
+- ``ArXivService`` - Service that uses the parser
+- ``ArXivPaper`` - Data model resulting from parsing
+- ``ArXivController`` - Controller that coordinates parsing 

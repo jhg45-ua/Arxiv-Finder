@@ -260,7 +260,7 @@ struct SearchView: View {
 }
 ```
 
-## 📱 Adaptación Multiplataforma
+## 📱 Multiplatform Adaptation
 
 ### iOS Design Pattern
 
@@ -280,11 +280,11 @@ struct iOSMainView: View {
 #endif
 ```
 
-**Características iOS:**
-- 📱 NavigationStack para navegación jerárquica
-- 📄 Sheet/Modal para presentación de detalles
-- 🔧 Toolbar con acciones contextuales
-- 👆 Elementos optimizados para touch
+**iOS Features:**
+- 📱 NavigationStack for hierarchical navigation
+- 📄 Sheet/Modal for detail presentation
+- 🔧 Toolbar with contextual actions
+- 👆 Touch-optimized elements
 
 ### macOS Design Pattern
 
@@ -306,25 +306,25 @@ struct macOSMainView: View {
 #endif
 ```
 
-**Características macOS:**
-- 🖥️ NavigationSplitView para tres columnas
-- 📋 Sidebar para navegación principal
-- 🪟 Window management nativo
+**macOS Features:**
+- 🖥️ NavigationSplitView for three columns
+- 📋 Sidebar for main navigation
+- 🪟 Native window management
 - ⌨️ Keyboard shortcuts
 - 📂 Menu bar integration
 
-## 🚀 Patrones de Diseño Implementados
+## 🚀 Implemented Design Patterns
 
 ### 1. 🎯 Observer Pattern
 
 ```swift
-// El controlador notifica cambios automáticamente
+// The controller automatically notifies changes
 @MainActor
 class ArXivController: ObservableObject {
-    @Published var papers: [ArXivPaper] = [] // Notificación automática
+    @Published var papers: [ArXivPaper] = [] // Automatic notification
     
     func updatePapers() {
-        // Cambio automático activa notificación
+        // Automatic change triggers notification
         papers = newPapers
     }
 }
@@ -333,7 +333,7 @@ class ArXivController: ObservableObject {
 ### 2. 🏭 Factory Pattern
 
 ```swift
-// Factory para crear servicios según contexto
+// Factory to create services according to context
 struct ServiceFactory {
     static func createArXivService() -> ArXivService {
         #if DEBUG
@@ -348,7 +348,7 @@ struct ServiceFactory {
 ### 3. 🔄 Command Pattern
 
 ```swift
-// Comandos para operaciones asíncronas
+// Commands for asynchronous operations
 enum ArXivCommand {
     case loadLatest
     case search(String)
@@ -369,29 +369,29 @@ extension ArXivController {
 }
 ```
 
-## 🔧 Mejores Prácticas Implementadas
+## 🔧 Best Practices Implemented
 
-### 1. ✅ Responsabilidad Única
+### 1. ✅ Single Responsibility
 
 ```swift
-// Cada clase tiene una responsabilidad específica
+// Each class has a specific responsibility
 class ArXivService {
-    // Solo se encarga de comunicación con API
+    // Only handles API communication
 }
 
 class ArXivController {
-    // Solo coordina lógica de negocio
+    // Only coordinates business logic
 }
 
 struct PapersListView {
-    // Solo presenta datos
+    // Only presents data
 }
 ```
 
-### 2. ✅ Inversión de Dependencias
+### 2. ✅ Dependency Inversion
 
 ```swift
-// Controlador depende de abstracción, no implementación
+// Controller depends on abstraction, not implementation
 protocol ArXivServiceProtocol {
     func fetchLatestPapers() async throws -> [ArXivPaper]
 }
@@ -405,55 +405,55 @@ class ArXivController {
 }
 ```
 
-### 3. ✅ Immutabilidad
+### 3. ✅ Immutability
 
 ```swift
-// Estructuras inmutables para modelos
+// Immutable structures for models
 struct ArXivPaper {
     let id: String
     let title: String
     let summary: String
-    // Propiedades inmutables
+    // Immutable properties
 }
 ```
 
-## 📊 Métricas de Calidad
+## 📊 Quality Metrics
 
-### 🏗️ Acoplamiento Bajo
+### 🏗️ Low Coupling
 
-- **Vistas** no conocen implementación de servicios
-- **Controladores** no dependen de detalles de UI
-- **Servicios** son independientes de la lógica de negocio
+- **Views** do not know service implementation
+- **Controllers** do not depend on UI details
+- **Services** are independent of business logic
 
-### 🎯 Cohesión Alta
+### 🎯 High Cohesion
 
-- Cada componente tiene responsabilidades relacionadas
-- Funcionalidades agrupadas lógicamente
-- Interfaces claras y específicas
+- Each component has related responsibilities
+- Features grouped logically
+- Clear and specific interfaces
 
-### 🔄 Flexibilidad
+### 🔄 Flexibility
 
-- Fácil intercambio de implementaciones
-- Modificaciones localizadas
-- Extensibilidad sin romper código existente
+- Easy to swap implementations
+- Localized modifications
+- Extensibility without breaking existing code
 
-## 🚀 Próximos Pasos Arquitectónicos
+## 🚀 Next Architectural Steps
 
-### 1. 🧪 Testing Avanzado
+### 1. 🧪 Advanced Testing
 
 ```swift
-// Implementar tests de integración
+// Implement integration tests
 class IntegrationTests: XCTestCase {
     func testFullWorkflow() async {
-        // Test completo del flujo MVC
+        // Full MVC flow test
     }
 }
 ```
 
-### 2. 💾 Persistencia Mejorada
+### 2. 💾 Improved Persistence
 
 ```swift
-// Implementar repository pattern
+// Implement repository pattern
 protocol ArXivRepository {
     func save(_ papers: [ArXivPaper]) async throws
     func fetch() async throws -> [ArXivPaper]
@@ -463,7 +463,7 @@ protocol ArXivRepository {
 ### 3. 🔄 State Management
 
 ```swift
-// Considerar implementación de Redux pattern
+// Consider implementing Redux pattern
 struct AppState {
     var papers: [ArXivPaper] = []
     var isLoading: Bool = false
@@ -474,7 +474,7 @@ struct AppState {
 ### 4. 🎨 Design System
 
 ```swift
-// Implementar design system reutilizable
+// Implement reusable design system
 struct ArXivDesignSystem {
     static let colors = ArXivColors()
     static let typography = ArXivTypography()
@@ -482,21 +482,21 @@ struct ArXivDesignSystem {
 }
 ```
 
-## 📚 Recursos Relacionados
+## 📚 Related Resources
 
-### 🔗 Componentes Principales
+### 🔗 Main Components
 
-- ``ArXivPaper`` - Modelo de datos fundamental
-- ``ArXivController`` - Controlador principal MVC
-- ``ArXivService`` - Servicio de comunicación
-- ``MainView`` - Vista principal de la aplicación
+- ``ArXivPaper`` - Fundamental data model
+- ``ArXivController`` - Main MVC controller
+- ``ArXivService`` - Communication service
+- ``MainView`` - Main application view
 
-### 📖 Documentación Adicional
+### 📖 Additional Documentation
 
-- <doc:API-Guide> - Guía de integración con la API
-- <doc:ArXivService> - Documentación del servicio
-- <doc:ArXivController> - Documentación del controlador
+- <doc:API-Guide> - API integration guide
+- <doc:ArXivService> - Service documentation
+- <doc:ArXivController> - Controller documentation
 
 ---
 
-*Esta arquitectura MVC proporciona una base sólida para el crecimiento y mantenimiento futuro de ArXiv App, adaptándose a las necesidades cambiantes mientras mantiene la claridad y simplicidad del código.*
+*This MVC architecture provides a solid foundation for the future growth and maintenance of ArXiv App, adapting to changing needs while maintaining code clarity and simplicity.* 
