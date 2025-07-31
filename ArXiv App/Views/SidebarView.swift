@@ -56,6 +56,9 @@ struct SidebarView: View {
     /// Callback to load favorite papers
     let onFavoritesSelected: () async -> Void
     
+    /// Callback to open search view
+    let onSearchSelected: () async -> Void
+    
     var body: some View {
         VStack(spacing: 0) {
             // Header simplified
@@ -168,10 +171,9 @@ struct SidebarView: View {
                 sidebarButton(
                     title: "Search",
                     icon: "magnifyingglass",
-                    isSelected: false,
-                    isEnabled: false
+                    isSelected: currentCategory == "search"
                 ) {
-                    // Pending functionality
+                    Task { await onSearchSelected() }
                 }
             }
             .padding(.horizontal, 12)
@@ -219,7 +221,7 @@ struct SidebarView: View {
                 Spacer()
                 
                 if !isEnabled {
-                    Text("Pronto")
+                    Text("WIP")
                         .font(.caption2)
                         .foregroundColor(.secondary)
                         .padding(.horizontal, 6)
@@ -253,7 +255,8 @@ struct SidebarView: View {
         onStatisticsSelected: { },
         onElectricalEngineeringSelected: { },
         onEconomicsSelected: { },
-        onFavoritesSelected: { }
+        onFavoritesSelected: { },
+        onSearchSelected: { }
     )
     .frame(width: 320, height: 500)
 }

@@ -75,17 +75,25 @@ struct MainView: View {
                 onFavoritesSelected: {
                     await controller.loadFavoritePapers()
                     selectedPaper = nil // Return to main view
+                },
+                onSearchSelected: {
+                    controller.currentCategory = "search" // Switch to search view
+                    selectedPaper = nil // Return to main view
                 }
             )
         } content: {
-            // Main papers view
-            PapersListView(
-                papers: controller.filteredPapers,
-                isLoading: controller.isLoading,
-                errorMessage: .constant(controller.errorMessage),
-                loadLatestPapers: { await controller.loadLatestPapers() },
-                selectedPaper: $selectedPaper
-            )
+            // Main papers view or search view
+            if controller.currentCategory == "search" {
+                SearchResultsView(controller: controller, selectedPaper: $selectedPaper)
+            } else {
+                PapersListView(
+                    papers: controller.filteredPapers,
+                    isLoading: controller.isLoading,
+                    errorMessage: .constant(controller.errorMessage),
+                    loadLatestPapers: { await controller.loadLatestPapers() },
+                    selectedPaper: $selectedPaper
+                )
+            }
         } detail: {
             // Detail view or placeholder
             if let paper = selectedPaper {

@@ -59,6 +59,22 @@ final class ArXivController: ObservableObject {
     /// Currently selected category
     @Published var currentCategory: String = "latest"
     
+    // MARK: - Search Properties
+    /// Search results
+    @Published var searchResults: [ArXivPaper] = []
+    
+    /// Current search query
+    @Published var searchQuery: String = ""
+    
+    /// Search category filter
+    @Published var searchCategory: String = ""
+    
+    /// Whether search is active
+    @Published var isSearchActive: Bool = false
+    
+    /// Search loading state
+    @Published var isSearching: Bool = false
+    
     // MARK: - Private Properties
     /// Service for obtaining ArXiv data
     private let arxivService = ArXivService()
@@ -91,6 +107,8 @@ final class ArXivController: ObservableObject {
     /// Papers filtered by current category
     var filteredPapers: [ArXivPaper] {
         switch currentCategory {
+        case "search":
+            return searchResults
         case "cs":
             return csPapers
         case "math":
@@ -116,92 +134,155 @@ final class ArXivController: ObservableObject {
     
     // MARK: - Public Methods
     
-    /// Carga los últimos papers publicados de ArXiv
-    /// Actualiza la propiedad `latestPapers` con los resultados
+    /// Loads the latest papers published on ArXiv
+    /// Updates the `latestPapers` property with the results
     func loadLatestPapers() async {
         print("🚀 Controller: Starting to load latest papers...")
         await loadPapers(category: "latest")
     }
     
-    /// Carga papers de la categoría Computer Science
-    /// Actualiza la propiedad `csPapers` con los resultados
+    /// Loads papers from the Computer Science category
+    /// Updates the `csPapers` property with the results
     func loadComputerSciencePapers() async {
         print("🚀 Controller: Starting to load Computer Science papers...")
         await loadPapers(category: "cs")
     }
     
-    /// Carga papers de la categoría Mathematics
-    /// Actualiza la propiedad `mathPapers` con los resultados
+    /// Loads papers from the Mathematics category
+    /// Updates the `mathPapers` property with the results
     func loadMathematicsPapers() async {
         print("🚀 Controller: Starting to load Mathematics papers...")
         await loadPapers(category: "math")
     }
     
-    /// Carga papers de la categoría Physics
-    /// Actualiza la propiedad `physicsPapers` con los resultados
+    /// Loads papers from the Physics category
+    /// Updates the `physicsPapers` property with the results
     func loadPhysicsPapers() async {
         print("🚀 Controller: Starting to load Physics papers...")
         await loadPapers(category: "physics")
     }
     
-    /// Carga papers de la categoría Quantitative Biology
-    /// Actualiza la propiedad `quantitativeBiologyPapers` con los resultados
+    /// Loads papers from the Quantitative Biology category
+    /// Updates the `quantitativeBiologyPapers` property with the results
     func loadQuantitativeBiologyPapers() async {
         print("🚀 Controller: Starting to load Quantitative Biology papers...")
         await loadPapers(category: "q-bio")
     }
     
-    /// Carga papers de la categoría Quantitative Finance
-    /// Actualiza la propiedad `quantitativeFinancePapers` con los resultados
+    /// Loads papers from the Quantitative Finance category
+    /// Updates the `quantitativeFinancePapers` property with the results
     func loadQuantitativeFinancePapers() async {
         print("🚀 Controller: Starting to load Quantitative Finance papers...")
         await loadPapers(category: "q-fin")
     }
     
-    /// Carga papers de la categoría Statistics
-    /// Actualiza la propiedad `statisticsPapers` con los resultados
+    /// Loads papers from the Statistics category
+    /// Updates the `statisticsPapers` property with the results
     func loadStatisticsPapers() async {
         print("🚀 Controller: Starting to load Statistics papers...")
         await loadPapers(category: "stat")
     }
     
-    /// Carga papers de la categoría Electrical Engineering and Systems Science
-    /// Actualiza la propiedad `electricalEngineeringPapers` con los resultados
+    /// Loads papers from the Electrical Engineering and Systems Science category
+    /// Updates the `electricalEngineeringPapers` property with the results
     func loadElectricalEngineeringPapers() async {
         print("🚀 Controller: Starting to load Electrical Engineering papers...")
         await loadPapers(category: "eess")
     }
     
-    /// Carga papers de la categoría Economics
-    /// Actualiza la propiedad `economicsPapers` con los resultados
+    /// Loads papers from the Economics category
+    /// Updates the `economicsPapers` property with the results
     func loadEconomicsPapers() async {
         print("🚀 Controller: Starting to load Economics papers...")
         await loadPapers(category: "econ")
     }
     
-    /// Cambia la categoría actual y actualiza la UI
-    /// - Parameter category: Nueva categoría a seleccionar ("latest", "cs", "math", "physics", "q-bio", "q-fin", "stat", "eess", "econ", "favorites")
+    // MARK: - Search Methods
+    
+    /// Performs a search for papers on ArXiv
+    /// - Parameters:
+    ///   - query: Search terms
+    ///   - category: Optional category to filter
+    func searchPapers(query: String, category: String = "") async {
+        guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            print("⚠️ Controller: Empty search query, ignoring search request")
+            return
+        }
+        
+        print("🔍 Controller: Starting search for query: '\(query)' in category: '\(category)'")
+        
+        isSearching = true
+        errorMessage = nil
+        searchQuery = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        searchCategory = category
+        isSearchActive = true
+        currentCategory = "search"
+        
+        // Registra el tiempo de inicio para garantizar una duración mínima de carga
+        let startTime = Date()
+        
+        do {
+            let results = try await arxivService.searchPapers(
+                query: searchQuery,
+                count: maxPapers,
+                category: category.isEmpty ? nil : category
+            )
+            
+            searchResults = results
+            
+            // Asegura que la animación de carga dure al menos 1 segundo
+            await ensureMinimumLoadingTime(startTime: startTime)
+            
+            isSearching = false
+            print("✅ Controller: Search completed successfully with \(results.count) results")
+            
+        } catch {
+            print("❌ Controller: Search error: \(error.localizedDescription)")
+            errorMessage = "Error en la búsqueda: \(error.localizedDescription)"
+            
+            // Asegura que la animación de carga dure al menos 1 segundo incluso en caso de error
+            await ensureMinimumLoadingTime(startTime: startTime)
+            isSearching = false
+        }
+    }
+    
+    /// Clears the current search and returns to the normal view
+    func clearSearch() {
+        print("🧹 Controller: Clearing search")
+        searchQuery = ""
+        searchCategory = ""
+        searchResults = []
+        isSearchActive = false
+        isSearching = false
+        errorMessage = nil
+        
+        // Volver a la categoría por defecto
+        currentCategory = defaultCategory
+    }
+    
+    /// Changes the current category and updates the UI
+    /// - Parameter category: New category to select ("latest", "cs", "math", "physics", "q-bio", "q-fin", "stat", "eess", "econ", "favorites")
     func changeCategory(to category: String) {
         currentCategory = category
     }
     
     // MARK: - Private Methods
     
-    /// Método genérico para cargar papers según la categoría especificada
-    /// Gestiona el estado de carga, errores y actualiza las propiedades correspondientes
-    /// - Parameter category: Categoría de papers a cargar ("latest", "cs", "math", "physics", "q-bio", "q-fin", "stat", "eess", "econ")
+    /// Generic method to load papers according to the specified category
+    /// Manages the loading state, errors and updates the corresponding properties
+    /// - Parameter category: Category of papers to load ("latest", "cs", "math", "physics", "q-bio", "q-fin", "stat", "eess", "econ")
     private func loadPapers(category: String) async {
         isLoading = true
         errorMessage = nil
         currentCategory = category
         
-        // Registra el tiempo de inicio para garantizar una duración mínima de carga
+        // Register the start time to ensure a minimum loading duration
         let startTime = Date()
         
         do {
             var fetchedPapers: [ArXivPaper] = []
             
-            // Obtiene papers según la categoría
+            // Get papers according to the category
             switch category {
             case "cs":
                 fetchedPapers = try await fetchComputerSciencePapersWithFallback()
@@ -220,17 +301,17 @@ final class ArXivController: ObservableObject {
             case "econ":
                 fetchedPapers = try await fetchEconomicsPapersWithFallback()
             case "favorites":
-                // Para favoritos, no necesitamos hacer fetch, solo cargar desde memoria
+                // For favorites, we don't need to fetch, just load from memory
                 await loadFavoritePapers()
                 return
             default: // "latest"
                 fetchedPapers = try await fetchLatestPapersWithFallback()
             }
             
-            // Actualiza los papers según la categoría
+            // Update the papers according to the category
             updatePapers(fetchedPapers, for: category)
             
-            // Asegura que la animación de carga dure al menos 1 segundo
+            // Ensure that the loading animation lasts at least 1 second
             await ensureMinimumLoadingTime(startTime: startTime)
             
             isLoading = false
@@ -240,27 +321,27 @@ final class ArXivController: ObservableObject {
             print("❌ Controller: Error loading papers: \(error.localizedDescription)")
             errorMessage = error.localizedDescription
             
-            // Asegura que la animación de carga dure al menos 1 segundo incluso en caso de error
+            // Ensure that the loading animation lasts at least 1 second even in case of error
             await ensureMinimumLoadingTime(startTime: startTime)
             isLoading = false
         }
     }
     
-    /// Obtiene los últimos papers con fallback
+    /// Gets the latest papers with fallback
     private func fetchLatestPapersWithFallback() async throws -> [ArXivPaper] {
-        // Usar configuración de maxPapers
+        // Use the maxPapers configuration
         let count = maxPapers
         
-        // Intenta primero con la consulta específica
+        // Try first with the specific query
         var papers = try await arxivService.fetchLatestPapers(count: count)
         
-        // Si no obtiene resultados, intenta con la consulta simple
+        // If no results, try with the simple query
         if papers.isEmpty {
             print("⚠️ Controller: No papers found with specific query, trying simple query...")
             papers = try await arxivService.fetchRecentPapers(count: count)
         }
         
-        // Si aún no obtiene resultados, intenta con la consulta de respaldo final
+        // If still no results, try with the final fallback query
         if papers.isEmpty {
             print("⚠️ Controller: No papers found with simple query, trying fallback query...")
             papers = try await arxivService.fetchFallbackPapers(count: count)
@@ -269,55 +350,55 @@ final class ArXivController: ObservableObject {
         return papers
     }
     
-    /// Obtiene papers de Computer Science con fallback
+    /// Gets papers from Computer Science with fallback
     private func fetchComputerSciencePapersWithFallback() async throws -> [ArXivPaper] {
         let papers = try await arxivService.fetchComputerSciencePapers(count: maxPapers)
         return papers
     }
     
-    /// Obtiene papers de Mathematics con fallback
+    /// Gets papers from Mathematics with fallback
     private func fetchMathematicsPapersWithFallback() async throws -> [ArXivPaper] {
         let papers = try await arxivService.fetchMathematicsPapers(count: maxPapers)
         return papers
     }
     
-    /// Obtiene papers de Physics con fallback
+    /// Gets papers from Physics with fallback
     private func fetchPhysicsPapersWithFallback() async throws -> [ArXivPaper] {
         let papers = try await arxivService.fetchPhysicsPapers(count: maxPapers)
         return papers
     }
     
-    /// Obtiene papers de Quantitative Biology con fallback
+    /// Gets papers from Quantitative Biology with fallback
     private func fetchQuantitativeBiologyPapersWithFallback() async throws -> [ArXivPaper] {
         let papers = try await arxivService.fetchQuantitativeBiologyPapers(count: maxPapers)
         return papers
     }
     
-    /// Obtiene papers de Quantitative Finance con fallback
+    /// Gets papers from Quantitative Finance with fallback
     private func fetchQuantitativeFinancePapersWithFallback() async throws -> [ArXivPaper] {
         let papers = try await arxivService.fetchQuantitativeFinancePapers(count: maxPapers)
         return papers
     }
     
-    /// Obtiene papers de Statistics con fallback
+    /// Gets papers from Statistics with fallback
     private func fetchStatisticsPapersWithFallback() async throws -> [ArXivPaper] {
         let papers = try await arxivService.fetchStatisticsPapers(count: maxPapers)
         return papers
     }
     
-    /// Obtiene papers de Electrical Engineering and Systems Science con fallback
+    /// Gets papers from Electrical Engineering and Systems Science with fallback
     private func fetchElectricalEngineeringPapersWithFallback() async throws -> [ArXivPaper] {
         let papers = try await arxivService.fetchElectricalEngineeringPapers(count: maxPapers)
         return papers
     }
     
-    /// Obtiene papers de Economics con fallback
+    /// Gets papers from Economics with fallback
     private func fetchEconomicsPapersWithFallback() async throws -> [ArXivPaper] {
         let papers = try await arxivService.fetchEconomicsPapers(count: maxPapers)
         return papers
     }
     
-    /// Actualiza los papers según la categoría
+    /// Updates the papers according to the category
     private func updatePapers(_ papers: [ArXivPaper], for category: String) {
         switch category {
         case "cs":
@@ -340,7 +421,7 @@ final class ArXivController: ObservableObject {
             latestPapers = papers
         }
         
-        // Guardar papers en SwiftData si está disponible
+        // Save papers to SwiftData if available
         if let modelContext = modelContext {
             for paper in papers {
                 modelContext.insert(paper)
@@ -355,7 +436,7 @@ final class ArXivController: ObservableObject {
         }
     }
     
-    /// Asegura que la carga dure al menos 1 segundo para una mejor UX
+    /// Ensures that the loading lasts at least 1 second for a better UX
     private func ensureMinimumLoadingTime(startTime: Date) async {
         let elapsedTime = Date().timeIntervalSince(startTime)
         let minimumLoadingTime: TimeInterval = 1.0
@@ -368,19 +449,19 @@ final class ArXivController: ObservableObject {
     
     // MARK: - Initialization
     
-    /// Inicializador del controlador que configura el estado inicial
-    /// Establece la categoría por defecto, configura la actualización automática
-    /// y registra observers para cambios en configuración del usuario
+    /// Initializer for the controller that sets the initial state
+    /// Sets the default category, configures automatic updates
+    /// and registers observers for user configuration changes
     init(modelContext: ModelContext? = nil) {
         self.modelContext = modelContext
         
-        // Configurar categoría inicial basada en configuración del usuario
+        // Set the initial category based on user settings
         currentCategory = defaultCategory
         
-        // Configurar actualización automática si está habilitada en settings
+        // Configure automatic updates if enabled in settings
         setupAutoRefresh()
         
-        // Escuchar cambios en configuración para reaccionar dinámicamente
+        // Listen for configuration changes to react dynamically
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(settingsChanged(_:)),
@@ -410,16 +491,16 @@ final class ArXivController: ObservableObject {
     
     // MARK: - Auto Refresh
     
-    /// Configura el timer de actualización automática
+    /// Configures the automatic refresh timer
     private func setupAutoRefresh() {
-        autoRefreshTimer?.invalidate() // Invalida el timer anterior si existe
+        autoRefreshTimer?.invalidate() // Invalidate the previous timer if it exists
         
         guard autoRefresh else {
             print("🚫 Controller: Auto-refresh is disabled in settings.")
             return
         }
         
-        // Configura un nuevo timer para la actualización automática
+        // Configure a new timer for automatic updates
         autoRefreshTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(refreshInterval * 60), repeats: true) { [weak self] _ in
             Task {
                 await self?.performAutoRefresh()
@@ -429,13 +510,13 @@ final class ArXivController: ObservableObject {
         print("🕒 Controller: Auto-refresh timer set up to refresh every \(refreshInterval) minutes.")
     }
     
-    /// Realiza una actualización automática
+    /// Performs an automatic update
     private func performAutoRefresh() async {
         guard !isLoading else { return }
         
-        print("🔄 Realizando actualización automática...")
+        print("🔄 Performing automatic update...")
         
-        // Actualizar la categoría actual
+        // Update the current category
         switch currentCategory {
         case "cs":
             await loadComputerSciencePapers()
@@ -445,13 +526,13 @@ final class ArXivController: ObservableObject {
             await loadLatestPapers()
         }
         
-        // Mostrar notificación si está habilitada
+        // Show notification if enabled
         if UserDefaults.standard.bool(forKey: "showNotifications") {
             showAutoRefreshNotification()
         }
     }
     
-    /// Muestra una notificación de actualización automática
+    /// Shows an automatic update notification
     private func showAutoRefreshNotification() {
         let content = UNMutableNotificationContent()
         content.title = "ArXiv App"
@@ -466,14 +547,14 @@ final class ArXivController: ObservableObject {
         
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
-                print("❌ Error al mostrar notificación: \(error)")
+                print("❌ Error showing notification: \(error)")
             }
         }
     }
     
-    /// Maneja cambios en la configuración
+    /// Handles configuration changes
     @objc private func settingsChanged(_ notification: Notification) {
-        print("⚙️ Configuración cambiada, actualizando...")
+        print("⚙️ Configuration changed, updating...")
         
         if let userInfo = notification.userInfo,
            let setting = userInfo["setting"] as? String {
@@ -482,7 +563,7 @@ final class ArXivController: ObservableObject {
             case "autoRefresh", "refreshInterval":
                 setupAutoRefresh()
             case "maxPapers":
-                print("📄 Configuración de máximo de papers actualizada")
+                print("📄 Maximum papers configuration updated")
             case "defaultCategory":
                 if let newCategory = userInfo["value"] as? String {
                     currentCategory = newCategory
@@ -491,26 +572,26 @@ final class ArXivController: ObservableObject {
                 break
             }
         } else {
-            // Fallback para UserDefaults.didChangeNotification
+            // Fallback for UserDefaults.didChangeNotification
             setupAutoRefresh()
         }
     }
     
-    /// Maneja cambios en configuración de interfaz
+    /// Handles interface configuration changes
     @objc private func interfaceSettingsChanged(_ notification: Notification) {
-        print("🖼️ Configuración de interfaz cambiada")
-        // Aquí podrías actualizar la UI si fuera necesario
+        print("🖼️ Interface configuration changed")
+        // Here you could update the UI if needed
     }
     
-    /// Maneja el restablecimiento de configuración
+    /// Handles the reset of configuration
     @objc private func settingsReset() {
-        print("🔄 Configuración restablecida, reiniciando controlador...")
+        print("🔄 Configuration reset, restarting controller...")
         
-        // Restablecer valores del controlador
+        // Reset the controller values
         currentCategory = "latest"
         setupAutoRefresh()
         
-        // Recargar datos con configuración por defecto
+        // Reload data with default configuration
         Task {
             await loadPapersWithSettings()
         }
@@ -518,7 +599,7 @@ final class ArXivController: ObservableObject {
     
     // MARK: - Settings Integration Methods
     
-    /// Carga papers usando la configuración actual
+    /// Loads papers using the current configuration
     func loadPapersWithSettings() async {
         let category = defaultCategory
         currentCategory = category
@@ -549,7 +630,7 @@ final class ArXivController: ObservableObject {
     
     // MARK: - Favorites Management
     
-    /// Carga todos los papers favoritos desde la base de datos
+    /// Loads all favorite papers from the database
     func loadFavoritePapers() async {
         print("🚀 Controller: Starting to load favorite papers...")
         currentCategory = "favorites"
@@ -557,13 +638,13 @@ final class ArXivController: ObservableObject {
         
         do {
             if let modelContext = modelContext {
-                // Cargar desde SwiftData
+                // Load from SwiftData
                 let descriptor = FetchDescriptor<ArXivPaper>(predicate: #Predicate<ArXivPaper> { $0.isFavorite == true })
                 let favoriteResults = try modelContext.fetch(descriptor)
                 favoritePapers = favoriteResults.sorted { $0.favoritedDate ?? Date.distantPast > $1.favoritedDate ?? Date.distantPast }
                 print("✅ Controller: Loaded \(favoritePapers.count) favorite papers from SwiftData")
             } else {
-                // Fallback: cargar desde memoria
+                // Fallback: load from memory
                 favoritePapers = getAllPapers().filter { $0.isFavorite }
                     .sorted { $0.favoritedDate ?? Date.distantPast > $1.favoritedDate ?? Date.distantPast }
                 print("✅ Controller: Loaded \(favoritePapers.count) favorite papers from memory")
@@ -576,16 +657,16 @@ final class ArXivController: ObservableObject {
         isLoading = false
     }
     
-    /// Alterna el estado de favorito de un paper
-    /// - Parameter paper: El paper a marcar/desmarcar como favorito
+    /// Toggles the favorite state of a paper
+    /// - Parameter paper: The paper to mark/unmark as favorite
     func toggleFavorite(for paper: ArXivPaper) {
         print("🚀 Controller: Toggling favorite for paper: \(paper.title)")
         
-        // Actualizar el estado del paper
+        // Update the paper's favorite state
         let newFavoriteState = !paper.isFavorite
         paper.setFavorite(newFavoriteState)
         
-        // Guardar en SwiftData si está disponible
+        // Save to SwiftData if available
         if let modelContext = modelContext {
             do {
                 try modelContext.save()
@@ -595,27 +676,27 @@ final class ArXivController: ObservableObject {
             }
         }
         
-        // Actualizar la lista de favoritos
+        // Update the favorite list
         if newFavoriteState {
-            // Añadir a favoritos si no está ya
+            // Add to favorites if not already in the list
             if !favoritePapers.contains(where: { $0.id == paper.id }) {
                 favoritePapers.append(paper)
                 favoritePapers.sort { $0.favoritedDate ?? Date.distantPast > $1.favoritedDate ?? Date.distantPast }
             }
         } else {
-            // Remover de favoritos
+            // Remove from favorites
             favoritePapers.removeAll { $0.id == paper.id }
         }
         
-        // Actualizar también en las otras listas de categorías
+        // Update in all other category lists
         updatePaperInAllCategories(paper)
         
         print("✅ Controller: Paper favorite status updated to: \(newFavoriteState)")
     }
     
-    /// Actualiza un paper en todas las categorías donde aparece
+    /// Updates a paper in all categories where it appears
     private func updatePaperInAllCategories(_ paper: ArXivPaper) {
-        // Actualizar en todas las listas de categorías
+        // Update in all category lists
         if let index = latestPapers.firstIndex(where: { $0.id == paper.id }) {
             latestPapers[index] = paper
         }
@@ -645,7 +726,7 @@ final class ArXivController: ObservableObject {
         }
     }
     
-    /// Obtiene todos los papers de todas las categorías (helper method)
+    /// Gets all papers from all categories (helper method)
     private func getAllPapers() -> [ArXivPaper] {
         var allPapers: [ArXivPaper] = []
         allPapers.append(contentsOf: latestPapers)
@@ -658,7 +739,7 @@ final class ArXivController: ObservableObject {
         allPapers.append(contentsOf: electricalEngineeringPapers)
         allPapers.append(contentsOf: economicsPapers)
         
-        // Remover duplicados basándose en el ID
+        // Remove duplicates based on the ID
         var uniquePapers: [ArXivPaper] = []
         var seenIDs: Set<String> = []
         

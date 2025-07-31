@@ -72,8 +72,8 @@ struct ArXivPaperRow: View {
                         // Update date (if exists, is different and not in compact mode)
                         if !compactMode,
                            let updatedDate = paper.updatedDate,
-                           abs(updatedDate.timeIntervalSince(paper.publishedDate)) > 3600 { // Más de 1 hora de diferencia
-                            Label("Actualizado: \(updatedDate.formatted(date: .abbreviated, time: .omitted))", 
+                           abs(updatedDate.timeIntervalSince(paper.publishedDate)) > 3600 { // More than 1 hour difference
+                            Label("Updated: \(updatedDate.formatted(date: .abbreviated, time: .omitted))", 
                                   systemImage: "arrow.clockwise")
                                 .font(.system(size: fontSize - 8))
                                 .foregroundColor(.orange)

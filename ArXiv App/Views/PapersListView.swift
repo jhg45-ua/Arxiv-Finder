@@ -184,6 +184,27 @@ struct PapersListView: View {
                     .buttonStyle(.borderedProminent)
                     .padding()
                 }
+            } else if controller?.isSearchActive == true && papers.isEmpty {
+                // No search results
+                ContentUnavailableView(
+                    "No search results",
+                    systemImage: "magnifyingglass",
+                    description: Text("No papers found matching your search criteria. Try different keywords or categories.")
+                )
+                .overlay(alignment: .bottom) {
+                    VStack(spacing: 12) {
+                        Button("Try Again") {
+                            // This will be handled by the search view
+                        }
+                        .buttonStyle(.borderedProminent)
+                        
+                        Button("Clear Search") {
+                            controller?.clearSearch()
+                        }
+                        .buttonStyle(.bordered)
+                    }
+                    .padding()
+                }
             } else {
                 // List of ArXiv papers
                 #if os(macOS)
@@ -214,6 +235,23 @@ struct PapersListView: View {
         }
         .toolbar {
             ToolbarItemGroup(placement: toolbarPlacement) {
+                // Search info when search is active
+                if controller?.isSearchActive == true {
+                    HStack {
+                        Image(systemName: "magnifyingglass")
+                            .foregroundColor(.blue)
+                        Text("Search: \(controller?.searchQuery ?? "")")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        
+                        Button("Clear") {
+                            controller?.clearSearch()
+                        }
+                        .buttonStyle(.bordered)
+                        .controlSize(.small)
+                    }
+                }
+                
                 #if os(iOS)
                 Menu("Categories") {
                     Button("Latest Papers") {

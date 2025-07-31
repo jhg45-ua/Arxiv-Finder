@@ -102,13 +102,13 @@ final class ArXivService: @unchecked Sendable {
         }
     }
     
-    /// Obtiene artículos de Mathematics de ArXiv
-    /// - Parameter count: Número de artículos a obtener (por defecto 10)
-    /// - Returns: Array de artículos de Mathematics
-    /// - Throws: Error si falla la petición o el parsing
+    /// Gets papers from Mathematics from ArXiv
+    /// - Parameter count: Number of papers to fetch (default 10)
+    /// - Returns: Array of papers from Mathematics
+    /// - Throws: Error if the request or parsing fails
     nonisolated func fetchMathematicsPapers(count: Int = 10) async throws -> [ArXivPaper] {
-        // Construye la URL para obtener artículos de Mathematics (categoría math)
-        // Usa lastUpdatedDate para obtener los más recientes
+        // Build the URL to get papers from Mathematics (category math)
+        // Uses lastUpdatedDate to get the most recent
         guard let url = URL(string: "\(baseURL)?search_query=cat:math*&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending") else {
             throw ArXivError.invalidURL
         }
@@ -119,7 +119,7 @@ final class ArXivService: @unchecked Sendable {
             let (data, response) = try await URLSession.shared.data(from: url)
             
             guard let httpResponse = response as? HTTPURLResponse else {
-                throw ArXivError.networkError("Respuesta inválida del servidor")
+                throw ArXivError.networkError("Invalid server response")
             }
             
             print("📡 HTTP Status: \(httpResponse.statusCode)")
@@ -142,13 +142,13 @@ final class ArXivService: @unchecked Sendable {
         }
     }
     
-    /// Obtiene artículos de Physics de ArXiv
-    /// - Parameter count: Número de artículos a obtener (por defecto 10)
-    /// - Returns: Array de artículos de Physics
-    /// - Throws: Error si falla la petición o el parsing
+    /// Gets papers from Physics from ArXiv
+    /// - Parameter count: Number of papers to fetch (default 10)
+    /// - Returns: Array of papers from Physics
+    /// - Throws: Error if the request or parsing fails
     nonisolated func fetchPhysicsPapers(count: Int = 10) async throws -> [ArXivPaper] {
-        // Construye la URL para obtener artículos de Physics (categoría physics)
-        // Usa lastUpdatedDate para obtener los más recientes
+        // Build the URL to get papers from Physics (category physics)
+        // Uses lastUpdatedDate to get the most recent
         guard let url = URL(string: "\(baseURL)?search_query=cat:physics*&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending") else {
             throw ArXivError.invalidURL
         }
@@ -159,7 +159,7 @@ final class ArXivService: @unchecked Sendable {
             let (data, response) = try await URLSession.shared.data(from: url)
             
             guard let httpResponse = response as? HTTPURLResponse else {
-                throw ArXivError.networkError("Respuesta inválida del servidor")
+                throw ArXivError.networkError("Invalid server response")
             }
             
             print("📡 HTTP Status: \(httpResponse.statusCode)")
@@ -182,13 +182,13 @@ final class ArXivService: @unchecked Sendable {
         }
     }
     
-    /// Obtiene artículos de Quantitative Biology de ArXiv
-    /// - Parameter count: Número de artículos a obtener (por defecto 10)
-    /// - Returns: Array de artículos de Quantitative Biology
-    /// - Throws: Error si falla la petición o el parsing
+    /// Gets papers from Quantitative Biology from ArXiv
+    /// - Parameter count: Number of papers to fetch (default 10)
+    /// - Returns: Array of papers from Quantitative Biology
+    /// - Throws: Error if the request or parsing fails
     nonisolated func fetchQuantitativeBiologyPapers(count: Int = 10) async throws -> [ArXivPaper] {
-        // Construye la URL para obtener artículos de Quantitative Biology (categoría q-bio)
-        // Usa lastUpdatedDate para obtener los más recientes
+        // Build the URL to get papers from Quantitative Biology (category q-bio)
+        // Uses lastUpdatedDate to get the most recent
         guard let url = URL(string: "\(baseURL)?search_query=cat:q-bio*&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending") else {
             throw ArXivError.invalidURL
         }
@@ -199,7 +199,7 @@ final class ArXivService: @unchecked Sendable {
             let (data, response) = try await URLSession.shared.data(from: url)
             
             guard let httpResponse = response as? HTTPURLResponse else {
-                throw ArXivError.networkError("Respuesta inválida del servidor")
+                throw ArXivError.networkError("Invalid server response")
             }
             
             print("📡 HTTP Status: \(httpResponse.statusCode)")
@@ -222,13 +222,13 @@ final class ArXivService: @unchecked Sendable {
         }
     }
     
-    /// Obtiene artículos de Quantitative Finance de ArXiv
-    /// - Parameter count: Número de artículos a obtener (por defecto 10)
-    /// - Returns: Array de artículos de Quantitative Finance
-    /// - Throws: Error si falla la petición o el parsing
+    /// Gets papers from Quantitative Finance from ArXiv
+    /// - Parameter count: Number of papers to fetch (default 10)
+    /// - Returns: Array of papers from Quantitative Finance
+    /// - Throws: Error if the request or parsing fails
     nonisolated func fetchQuantitativeFinancePapers(count: Int = 10) async throws -> [ArXivPaper] {
-        // Construye la URL para obtener artículos de Quantitative Finance (categoría q-fin)
-        // Usa lastUpdatedDate para obtener los más recientes
+        // Build the URL to get papers from Quantitative Finance (category q-fin)
+        // Uses lastUpdatedDate to get the most recent
         guard let url = URL(string: "\(baseURL)?search_query=cat:q-fin*&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending") else {
             throw ArXivError.invalidURL
         }
@@ -239,7 +239,7 @@ final class ArXivService: @unchecked Sendable {
             let (data, response) = try await URLSession.shared.data(from: url)
             
             guard let httpResponse = response as? HTTPURLResponse else {
-                throw ArXivError.networkError("Respuesta inválida del servidor")
+                throw ArXivError.networkError("Invalid server response")
             }
             
             print("📡 HTTP Status: \(httpResponse.statusCode)")
@@ -262,13 +262,13 @@ final class ArXivService: @unchecked Sendable {
         }
     }
     
-    /// Obtiene artículos de Statistics de ArXiv
-    /// - Parameter count: Número de artículos a obtener (por defecto 10)
-    /// - Returns: Array de artículos de Statistics
-    /// - Throws: Error si falla la petición o el parsing
+    /// Gets papers from Statistics from ArXiv
+    /// - Parameter count: Number of papers to fetch (default 10)
+    /// - Returns: Array of papers from Statistics
+    /// - Throws: Error if the request or parsing fails
     nonisolated func fetchStatisticsPapers(count: Int = 10) async throws -> [ArXivPaper] {
-        // Construye la URL para obtener artículos de Statistics (categoría stat)
-        // Usa lastUpdatedDate para obtener los más recientes
+        // Build the URL to get papers from Statistics (category stat)
+        // Uses lastUpdatedDate to get the most recent
         guard let url = URL(string: "\(baseURL)?search_query=cat:stat*&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending") else {
             throw ArXivError.invalidURL
         }
@@ -279,7 +279,7 @@ final class ArXivService: @unchecked Sendable {
             let (data, response) = try await URLSession.shared.data(from: url)
             
             guard let httpResponse = response as? HTTPURLResponse else {
-                throw ArXivError.networkError("Respuesta inválida del servidor")
+                throw ArXivError.networkError("Invalid server response")
             }
             
             print("📡 HTTP Status: \(httpResponse.statusCode)")
@@ -302,13 +302,13 @@ final class ArXivService: @unchecked Sendable {
         }
     }
     
-    /// Obtiene artículos de Electrical Engineering and Systems Science de ArXiv
-    /// - Parameter count: Número de artículos a obtener (por defecto 10)
-    /// - Returns: Array de artículos de Electrical Engineering and Systems Science
-    /// - Throws: Error si falla la petición o el parsing
+    /// Gets papers from Electrical Engineering and Systems Science from ArXiv
+    /// - Parameter count: Number of papers to fetch (default 10)
+    /// - Returns: Array of papers from Electrical Engineering and Systems Science
+    /// - Throws: Error if the request or parsing fails
     nonisolated func fetchElectricalEngineeringPapers(count: Int = 10) async throws -> [ArXivPaper] {
-        // Construye la URL para obtener artículos de Electrical Engineering and Systems Science (categoría eess)
-        // Usa lastUpdatedDate para obtener los más recientes
+        // Build the URL to get papers from Electrical Engineering and Systems Science (category eess)
+        // Uses lastUpdatedDate to get the most recent
         guard let url = URL(string: "\(baseURL)?search_query=cat:eess*&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending") else {
             throw ArXivError.invalidURL
         }
@@ -319,7 +319,7 @@ final class ArXivService: @unchecked Sendable {
             let (data, response) = try await URLSession.shared.data(from: url)
             
             guard let httpResponse = response as? HTTPURLResponse else {
-                throw ArXivError.networkError("Respuesta inválida del servidor")
+                throw ArXivError.networkError("Invalid server response")
             }
             
             print("📡 HTTP Status: \(httpResponse.statusCode)")
@@ -342,13 +342,13 @@ final class ArXivService: @unchecked Sendable {
         }
     }
     
-    /// Obtiene artículos de Economics de ArXiv
-    /// - Parameter count: Número de artículos a obtener (por defecto 10)
-    /// - Returns: Array de artículos de Economics
-    /// - Throws: Error si falla la petición o el parsing
+    /// Gets papers from Economics from ArXiv
+    /// - Parameter count: Number of papers to fetch (default 10)
+    /// - Returns: Array of papers from Economics
+    /// - Throws: Error if the request or parsing fails
     nonisolated func fetchEconomicsPapers(count: Int = 10) async throws -> [ArXivPaper] {
-        // Construye la URL para obtener artículos de Economics (categoría econ)
-        // Usa lastUpdatedDate para obtener los más recientes
+        // Build the URL to get papers from Economics (category econ)
+        // Uses lastUpdatedDate to get the most recent
         guard let url = URL(string: "\(baseURL)?search_query=cat:econ*&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending") else {
             throw ArXivError.invalidURL
         }
@@ -359,7 +359,7 @@ final class ArXivService: @unchecked Sendable {
             let (data, response) = try await URLSession.shared.data(from: url)
             
             guard let httpResponse = response as? HTTPURLResponse else {
-                throw ArXivError.networkError("Respuesta inválida del servidor")
+                throw ArXivError.networkError("Invalid server response")
             }
             
             print("📡 HTTP Status: \(httpResponse.statusCode)")
@@ -382,11 +382,74 @@ final class ArXivService: @unchecked Sendable {
         }
     }
     
-    /// Función alternativa para obtener los últimos artículos usando una consulta simple
-    /// Útil cuando la consulta principal no funciona
+    /// Search papers in ArXiv using search terms
+    /// - Parameters:
+    ///   - query: Search terms (title, author, summary)
+    ///   - count: Maximum number of results (default 20)
+    ///   - category: Optional category to filter (e.g.: "cs", "math", "physics")
+    /// - Returns: Array of papers that match the search
+    /// - Throws: Error if the request or parsing fails
+    nonisolated func searchPapers(query: String, count: Int = 20, category: String? = nil) async throws -> [ArXivPaper] {
+        // Build the search query
+        var searchQuery = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        // If a category is specified, add it to the filter
+        if let category = category, !category.isEmpty {
+            searchQuery = "all:\(searchQuery)+AND+cat:\(category)*"
+        } else {
+            searchQuery = "all:\(searchQuery)"
+        }
+        
+        // Encode the query for URL
+        guard let encodedQuery = searchQuery.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+            throw ArXivError.invalidURL
+        }
+        
+        // Build the search URL
+        guard let url = URL(string: "\(baseURL)?search_query=\(encodedQuery)&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending") else {
+            throw ArXivError.invalidURL
+        }
+        
+        print("🔍 Searching papers with query: \(searchQuery)")
+        print("🌐 Search URL: \(url.absoluteString)")
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw ArXivError.networkError("Respuesta inválida del servidor")
+            }
+            
+            print("📡 HTTP Status: \(httpResponse.statusCode)")
+            
+            guard httpResponse.statusCode == 200 else {
+                throw ArXivError.networkError("Error HTTP: \(httpResponse.statusCode)")
+            }
+            
+            print("📄 Data received: \(data.count) bytes")
+            
+            // Debug: Print the XML content for analysis
+            if let xmlString = String(data: data, encoding: .utf8) {
+                print("🔍 XML Content preview: \(String(xmlString.prefix(500)))...")
+            }
+            
+            let papers = try parseArXivXML(data)
+            print("✅ Successfully found \(papers.count) papers for query: \(query)")
+            return papers
+            
+        } catch let error as ArXivError {
+            throw error
+        } catch {
+            print("❌ Search error: \(error.localizedDescription)")
+            throw ArXivError.networkError(error.localizedDescription)
+        }
+    }
+    
+    /// Alternative function to get the latest papers using a simple query
+    /// Useful when the main query doesn't work
     nonisolated func fetchRecentPapers(count: Int = 10) async throws -> [ArXivPaper] {
-        // Usa una consulta que busca papers recientes en categorías específicas con ordenamiento por fecha
-        // Codifica correctamente los espacios como + para OR
+        // Use a query that searches for recent papers in specific categories with date sorting
+        // Encode spaces correctly as + for OR
         guard let url = URL(string: "\(baseURL)?search_query=cat:cs.LG+OR+cat:cs.AI+OR+cat:cs.CV&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending") else {
             throw ArXivError.invalidURL
         }
@@ -408,7 +471,7 @@ final class ArXivService: @unchecked Sendable {
             
             print("📄 Data received: \(data.count) bytes")
             
-            // Debug: Imprimir el contenido XML para análisis
+            // Debug: Print the XML content for analysis
             if let xmlString = String(data: data, encoding: .utf8) {
                 print("🔍 XML Content preview: \(String(xmlString.prefix(800)))...")
             }
@@ -425,10 +488,10 @@ final class ArXivService: @unchecked Sendable {
         }
     }
     
-    /// Función de respaldo final para obtener artículos cuando otras consultas fallan
-    /// Usa una consulta extremadamente simple y confiable
+    /// Final backup function to get papers when other queries fail
+    /// Uses an extremely simple and reliable query
     nonisolated func fetchFallbackPapers(count: Int = 10) async throws -> [ArXivPaper] {
-        // Usa una consulta simple por categoría específica que siempre funciona con ordenamiento por fecha
+        // Use a simple query by specific category that always works with date sorting
         guard let url = URL(string: "\(baseURL)?search_query=cat:cs.LG&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending") else {
             throw ArXivError.invalidURL
         }
@@ -462,11 +525,11 @@ final class ArXivService: @unchecked Sendable {
         }
     }
     
-    /// Método privado que parsea la respuesta XML de la API de ArXiv
-    /// Utiliza ArXivSimpleParser para convertir XML en objetos ArXivPaper
-    /// - Parameter data: Datos XML en bruto recibidos de la API
-    /// - Returns: Array de artículos científicos parseados y validados
-    /// - Throws: ArXivError.parsingError si falla el proceso de parsing
+    /// Private method to parse the XML response from the ArXiv API
+    /// Uses ArXivSimpleParser to convert XML into ArXivPaper objects
+    /// - Parameter data: Raw XML data received from the API
+    /// - Returns: Array of parsed and validated scientific papers
+    /// - Throws: ArXivError.parsingError if the parsing process fails
     private func parseArXivXML(_ data: Data) throws -> [ArXivPaper] {
         let parser = ArXivSimpleParser()
         do {
@@ -478,25 +541,25 @@ final class ArXivService: @unchecked Sendable {
     }
 }
 
-/// Enumeración de errores específicos del servicio ArXiv
-/// Define los tipos de errores que pueden ocurrir durante la comunicación con la API
+/// Enumeration of specific errors for the ArXiv service
+/// Defines the types of errors that can occur during communication with the API
 enum ArXivError: Error, LocalizedError {
-    /// Error cuando la URL construida es inválida
+    /// Error when the constructed URL is invalid
     case invalidURL
-    /// Error de red con mensaje descriptivo
+    /// Network error with descriptive message
     case networkError(String)
-    /// Error durante el parsing del XML con mensaje descriptivo
+    /// Error during XML parsing with descriptive message
     case parsingError(String)
     
-    /// Descripción localizada del error para mostrar al usuario
+    /// Localized error description for display to the user
     var errorDescription: String? {
         switch self {
         case .invalidURL:
-            return "URL de ArXiv inválida"
+            return "Invalid ArXiv URL"
         case .networkError(let message):
-            return "Error de conexión: \(message)"
+            return "Connection error: \(message)"
         case .parsingError(let message):
-            return "Error al procesar datos: \(message)"
+            return "Error processing data: \(message)"
         }
     }
 }

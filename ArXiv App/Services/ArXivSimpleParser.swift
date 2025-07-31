@@ -7,20 +7,20 @@
 
 import Foundation
 
-/// Parser simplificado para procesar respuestas XML de la API de ArXiv
-/// Utiliza expresiones regulares y parsing de strings para un enfoque más directo
-/// Este parser fue diseñado como alternativa robusta a XMLParser para casos donde
-/// la estructura XML es predecible y se necesita mayor control sobre el proceso
+/// Simplified parser to process XML responses from the ArXiv API
+/// Uses regular expressions and string parsing for a more direct approach
+/// This parser was designed as a robust alternative to XMLParser for cases where
+/// the XML structure is predictable and more control over the parsing process is needed
 final class ArXivSimpleParser: @unchecked Sendable {
     
-    /// Parsea los datos XML de ArXiv y retorna un array de artículos
-    /// - Parameter data: Datos XML de la respuesta de ArXiv
-    /// - Returns: Array de artículos parseados
-    /// - Throws: ArXivError.parsingError si falla el parsing
+    /// Parses the XML data from ArXiv and returns an array of papers
+    /// - Parameter data: XML data from the ArXiv response
+    /// - Returns: Array of parsed papers
+    /// - Throws: ArXivError.parsingError if parsing fails
     /// 
-    /// Este método implementa un parser de dos etapas:
-    /// 1. Extrae todas las entradas <entry> del XML usando regex
-    /// 2. Procesa cada entrada individualmente para crear objetos ArXivPaper
+    /// This method implements a two-stage parser:
+    /// 1. Extracts all <entry> elements from the XML using regex
+    /// 2. Processes each entry individually to create ArXivPaper objects
     nonisolated func parse(_ data: Data) throws -> [ArXivPaper] {
         print("🔍 Starting XML parsing with simplified parser...")
         
@@ -28,11 +28,11 @@ final class ArXivSimpleParser: @unchecked Sendable {
             throw ArXivError.parsingError("No se pudo convertir datos a string")
         }
         
-        // Divide el XML en entradas individuales
+        // Divide the XML into individual entries
         let entries = extractEntries(from: xmlString)
         print("📊 Found \(entries.count) entries in XML")
         
-        // Convierte cada entrada en un ArXivPaper
+        // Convert each entry into an ArXivPaper
         let papers = entries.compactMap { entryXML -> ArXivPaper? in
             return parseEntry(from: entryXML)
         }
@@ -41,10 +41,10 @@ final class ArXivSimpleParser: @unchecked Sendable {
         return papers
     }
     
-    /// Extrae todas las entradas <entry> del XML
-    /// Utiliza una expresión regular para encontrar todos los bloques <entry>...</entry>
-    /// - Parameter xml: String XML completo de la respuesta
-    /// - Returns: Array de strings, cada uno conteniendo una entrada completa
+    /// Extracts all <entry> elements from the XML
+    /// Uses a regular expression to find all <entry>...</entry> blocks
+    /// - Parameter xml: String XML of the full response
+    /// - Returns: Array of strings, each containing a complete entry
     private func extractEntries(from xml: String) -> [String] {
         let pattern = "<entry[^>]*>.*?</entry>"
         let regex = try! NSRegularExpression(pattern: pattern, options: [.dotMatchesLineSeparators])
@@ -56,35 +56,35 @@ final class ArXivSimpleParser: @unchecked Sendable {
         }
     }
     
-    /// Parsea una entrada individual del XML
-    /// Extrae todos los campos necesarios para crear un ArXivPaper
-    /// - Parameter entryXML: String XML de una entrada individual
-    /// - Returns: ArXivPaper opcional (nil si los datos son insuficientes)
+    /// Parses an individual entry from the XML
+    /// Extracts all necessary fields to create an ArXivPaper
+    /// - Parameter entryXML: String XML of an individual entry
+    /// - Returns: Optional ArXivPaper (nil if data is insufficient)
     /// 
     /// Proceso de parsing:
-    /// 1. Extrae campos básicos (id, título, resumen, fechas)
-    /// 2. Procesa datos complejos (autores, URLs, categorías)
-    /// 3. Valida que los datos mínimos estén presentes
-    /// 4. Crea y retorna el objeto ArXivPaper
+    /// 1. Extracts basic fields (id, title, summary, dates)
+    /// 2. Processes complex data (authors, URLs, categories)
+    /// 3. Validates that the minimum data is present
+    /// 4. Creates and returns the ArXivPaper object
     private func parseEntry(from entryXML: String) -> ArXivPaper? {
-        // Extrae campos básicos
+        // Extracts basic fields
         let id = extractValue(from: entryXML, pattern: "<id>([^<]+)</id>")
         let title = extractValue(from: entryXML, pattern: "<title>([^<]+)</title>")
         let summary = extractValue(from: entryXML, pattern: "<summary>([^<]+)</summary>")
         let publishedDateString = extractValue(from: entryXML, pattern: "<published>([^<]+)</published>")
         let updatedDateString = extractValue(from: entryXML, pattern: "<updated>([^<]+)</updated>")
         
-        // Extrae datos complejos
+        // Extracts complex data
         let authors = extractAuthors(from: entryXML)
         let (pdfURL, linkURL) = extractURLs(from: entryXML)
         let categories = extractCategories(from: entryXML)
         
-        // Procesa datos
+        // Processes data
         let cleanId = id.components(separatedBy: "/").last ?? id
         let publishedDate = parseDate(from: publishedDateString)
         let updatedDate = updatedDateString.isEmpty ? nil : parseDate(from: updatedDateString)
         
-        // Valida datos mínimos
+        // Validates minimum data
         guard !cleanId.isEmpty, !title.isEmpty else { return nil }
         
         return ArXivPaper(
@@ -100,12 +100,12 @@ final class ArXivSimpleParser: @unchecked Sendable {
         )
     }
     
-    /// Extrae un valor usando expresión regular
-    /// Método auxiliar para simplificar la extracción de campos del XML
+    /// Extracts a value using a regular expression
+    /// Helper method to simplify the extraction of fields from the XML
     /// - Parameters:
-    ///   - xml: String XML donde buscar
-    ///   - pattern: Patrón de expresión regular con un grupo de captura
-    /// - Returns: String extraído o vacío si no se encuentra
+    ///   - xml: String XML to search
+    ///   - pattern: Regular expression pattern with a capture group
+    /// - Returns: Extracted string or empty if not found
     private func extractValue(from xml: String, pattern: String) -> String {
         let matches = findMatches(in: xml, pattern: pattern)
         guard let match = matches.first,
@@ -115,21 +115,21 @@ final class ArXivSimpleParser: @unchecked Sendable {
         return String(xml[range])
     }
     
-    /// Helper para crear y ejecutar regex
-    /// Centraliza la creación de expresiones regulares para evitar duplicación
+    /// Helper to create and execute regex
+    /// Centralizes the creation of regular expressions to avoid duplication
     /// - Parameters:
-    ///   - text: Texto donde buscar coincidencias
-    ///   - pattern: Patrón de expresión regular
-    /// - Returns: Array de resultados de coincidencias
+    ///   - text: Text to search for matches
+    ///   - pattern: Regular expression pattern
+    /// - Returns: Array of match results
     private func findMatches(in text: String, pattern: String) -> [NSTextCheckingResult] {
         let regex = try! NSRegularExpression(pattern: pattern, options: [.dotMatchesLineSeparators])
         return regex.matches(in: text, options: [], range: NSRange(location: 0, length: text.count))
     }
     
-    /// Extrae autores del XML
-    /// Los autores están anidados en elementos <author><name>...</name></author>
-    /// - Parameter xml: String XML de la entrada
-    /// - Returns: String con autores separados por comas
+    /// Extracts authors from the XML
+    /// Authors are nested in <author><name>...</name></author> elements
+    /// - Parameter xml: String XML of the entry
+    /// - Returns: String with authors separated by commas
     private func extractAuthors(from xml: String) -> String {
         let matches = findMatches(in: xml, pattern: "<author>.*?<name>([^<]+)</name>.*?</author>")
         let authors = matches.compactMap { match -> String? in
@@ -139,14 +139,14 @@ final class ArXivSimpleParser: @unchecked Sendable {
         return authors.joined(separator: ", ")
     }
     
-    /// Extrae URLs del PDF y enlace
-    /// ArXiv proporciona múltiples enlaces con diferentes tipos MIME
-    /// - Parameter xml: String XML de la entrada
-    /// - Returns: Tupla con (pdfURL, linkURL)
+    /// Extracts URLs from the PDF and link
+    /// ArXiv provides multiple links with different MIME types
+    /// - Parameter xml: String XML of the entry
+    /// - Returns: Tuple with (pdfURL, linkURL)
     /// 
-    /// Busca elementos <link> con atributos href y type:
-    /// - type="application/pdf" para el enlace al PDF
-    /// - type="text/html" para el enlace a la página web
+    /// Searches for <link> elements with href and type attributes:
+    /// - type="application/pdf" for the link to the PDF
+    /// - type="text/html" for the link to the web page
     private func extractURLs(from xml: String) -> (pdfURL: String, linkURL: String) {
         let matches = findMatches(in: xml, pattern: "<link\\s+[^>]*href=\"([^\"]+)\"[^>]*type=\"([^\"]+)\"[^>]*/?>")
         var pdfURL = "", linkURL = ""
@@ -168,12 +168,12 @@ final class ArXivSimpleParser: @unchecked Sendable {
         return (pdfURL, linkURL)
     }
     
-    /// Extrae categorías
-    /// Las categorías están en elementos <category term="..."/>
-    /// - Parameter xml: String XML de la entrada
-    /// - Returns: String con categorías separadas por comas
+    /// Extracts categories
+    /// Categories are in <category term="..."/> elements
+    /// - Parameter xml: String XML of the entry
+    /// - Returns: String with categories separated by commas
     /// 
-    /// Ejemplo de categorías: "cs.AI", "cs.LG", "stat.ML"
+    /// Example of categories: "cs.AI", "cs.LG", "stat.ML"
     private func extractCategories(from xml: String) -> String {
         let matches = findMatches(in: xml, pattern: "<category\\s+[^>]*term=\"([^\"]+)\"[^>]*/?>")
         let categories = matches.compactMap { match -> String? in
@@ -183,12 +183,12 @@ final class ArXivSimpleParser: @unchecked Sendable {
         return categories.joined(separator: ", ")
     }
     
-    /// Convierte string de fecha a Date
-    /// Utiliza ISO8601DateFormatter para parsear fechas de ArXiv
-    /// - Parameter dateString: String de fecha en formato ISO8601
-    /// - Returns: Date parseada o Date() si falla el parsing
+    /// Converts string of date to Date
+    /// Uses ISO8601DateFormatter to parse dates from ArXiv
+    /// - Parameter dateString: String of date in ISO8601 format
+    /// - Returns: Parsed Date or Date() if parsing fails
     /// 
-    /// ArXiv usa formato: "2025-07-03T10:30:00Z"
+    /// ArXiv uses format: "2025-07-03T10:30:00Z"
     private func parseDate(from dateString: String) -> Date {
         ISO8601DateFormatter().date(from: dateString) ?? Date()
     }
