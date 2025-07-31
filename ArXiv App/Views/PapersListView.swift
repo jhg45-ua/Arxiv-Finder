@@ -109,13 +109,14 @@ struct PapersListView: View {
     ///   - papers: List of papers to display
     ///   - isLoading: Loading state
     ///   - errorMessage: Binding for error messages
+    ///   - controller: Controller to handle ArXiv operations
     ///   - loadLatestPapers: Function to load latest papers
     ///   - selectedPaper: Binding for the selected paper for the detail view
-    init(papers: [ArXivPaper], isLoading: Bool, errorMessage: Binding<String?>, loadLatestPapers: @escaping () async -> Void, selectedPaper: Binding<ArXivPaper?>) {
+    init(papers: [ArXivPaper], isLoading: Bool, errorMessage: Binding<String?>, controller: ArXivController?, loadLatestPapers: @escaping () async -> Void, selectedPaper: Binding<ArXivPaper?>) {
         self.papers = papers
         self.isLoading = isLoading
         self._errorMessage = errorMessage
-        self.controller = nil
+        self.controller = controller
         self.loadLatestPapers = loadLatestPapers
         self.loadComputerSciencePapers = nil
         self.loadMathematicsPapers = nil
@@ -329,17 +330,6 @@ struct PapersListView: View {
                             Task {
                                 currentCategory = "econ"
                                 await loadEcon()
-                            }
-                        }
-                    }
-                    
-                    Divider()
-                    
-                    if let controller = controller {
-                        Button("Favorites") {
-                            Task {
-                                currentCategory = "favorites"
-                                await controller.loadFavoritePapers()
                             }
                         }
                     }

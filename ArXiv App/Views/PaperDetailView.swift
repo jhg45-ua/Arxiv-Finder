@@ -146,13 +146,6 @@ struct PaperDetailView: View {
         #endif
         .toolbar {
             ToolbarItemGroup(placement: toolbarPlacement) {
-                #if os(iOS)
-                // Back button for iOS
-                Button("Home") {
-                    dismiss()
-                }
-                #endif
-                
                 // Favorite button for both platforms
                 if let controller = controller {
                     Button(action: {
@@ -167,13 +160,6 @@ struct PaperDetailView: View {
                 #if os(macOS)
                 // Share functionality for macOS
                 Button("Share") {
-                }
-                #else
-                Menu("Options") {
-                    Button("Share", action: {})
-                    Button("Copy link", action: {})
-                } primaryAction: {
-                    //Image(systemName: "ellipsis.circle")
                 }
                 #endif
             }

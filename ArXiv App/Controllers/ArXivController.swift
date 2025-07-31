@@ -138,7 +138,9 @@ final class ArXivController: ObservableObject {
     /// Updates the `latestPapers` property with the results
     func loadLatestPapers() async {
         print("🚀 Controller: Starting to load latest papers...")
+        print("🔧 Controller: MaxPapers setting: \(maxPapers)")
         await loadPapers(category: "latest")
+        print("🔧 Controller: Latest papers loaded: \(latestPapers.count) papers")
     }
     
     /// Loads papers from the Computer Science category
@@ -246,6 +248,43 @@ final class ArXivController: ObservableObject {
         }
     }
     
+    /// Enhanced search function that uses multiple strategies
+    func enhancedSearch(query: String, category: String = "") async {
+        guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            print("⚠️ Controller: Empty search query, ignoring search request")
+            return
+        }
+        
+        print("🔍 Controller: Starting enhanced search for query: '\(query)'")
+        
+        isSearching = true
+        errorMessage = nil
+        searchQuery = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        searchCategory = category
+        isSearchActive = true
+        currentCategory = "search"
+        
+        let startTime = Date()
+        
+        do {
+            let results = try await arxivService.enhancedSearch(query: searchQuery, count: maxPapers)
+            
+            searchResults = results
+            
+            await ensureMinimumLoadingTime(startTime: startTime)
+            
+            isSearching = false
+            print("✅ Controller: Enhanced search completed successfully with \(results.count) results")
+            
+        } catch {
+            print("❌ Controller: Enhanced search error: \(error.localizedDescription)")
+            errorMessage = "Error en búsqueda mejorada: \(error.localizedDescription)"
+            
+            await ensureMinimumLoadingTime(startTime: startTime)
+            isSearching = false
+        }
+    }
+    
     /// Clears the current search and returns to the normal view
     func clearSearch() {
         print("🧹 Controller: Clearing search")
@@ -283,29 +322,12 @@ final class ArXivController: ObservableObject {
             var fetchedPapers: [ArXivPaper] = []
             
             // Get papers according to the category
-            switch category {
-            case "cs":
-                fetchedPapers = try await fetchComputerSciencePapersWithFallback()
-            case "math":
-                fetchedPapers = try await fetchMathematicsPapersWithFallback()
-            case "physics":
-                fetchedPapers = try await fetchPhysicsPapersWithFallback()
-            case "q-bio":
-                fetchedPapers = try await fetchQuantitativeBiologyPapersWithFallback()
-            case "q-fin":
-                fetchedPapers = try await fetchQuantitativeFinancePapersWithFallback()
-            case "stat":
-                fetchedPapers = try await fetchStatisticsPapersWithFallback()
-            case "eess":
-                fetchedPapers = try await fetchElectricalEngineeringPapersWithFallback()
-            case "econ":
-                fetchedPapers = try await fetchEconomicsPapersWithFallback()
-            case "favorites":
+            if category == "favorites" {
                 // For favorites, we don't need to fetch, just load from memory
                 await loadFavoritePapers()
                 return
-            default: // "latest"
-                fetchedPapers = try await fetchLatestPapersWithFallback()
+            } else {
+                fetchedPapers = try await fetchPapersForCategory(category)
             }
             
             // Update the papers according to the category
@@ -327,75 +349,30 @@ final class ArXivController: ObservableObject {
         }
     }
     
-    /// Gets the latest papers with fallback
-    private func fetchLatestPapersWithFallback() async throws -> [ArXivPaper] {
-        // Use the maxPapers configuration
-        let count = maxPapers
-        
-        // Try first with the specific query
-        var papers = try await arxivService.fetchLatestPapers(count: count)
-        
-        // If no results, try with the simple query
-        if papers.isEmpty {
-            print("⚠️ Controller: No papers found with specific query, trying simple query...")
-            papers = try await arxivService.fetchRecentPapers(count: count)
+    /// Gets papers from the specified category using ArxivKit
+    /// - Parameter category: Category to fetch papers from
+    /// - Returns: Array of papers from the category
+    private func fetchPapersForCategory(_ category: String) async throws -> [ArXivPaper] {
+        switch category {
+        case "cs":
+            return try await arxivService.fetchComputerSciencePapers(count: maxPapers)
+        case "math":
+            return try await arxivService.fetchMathematicsPapers(count: maxPapers)
+        case "physics":
+            return try await arxivService.fetchPhysicsPapers(count: maxPapers)
+        case "q-bio":
+            return try await arxivService.fetchQuantitativeBiologyPapers(count: maxPapers)
+        case "q-fin":
+            return try await arxivService.fetchQuantitativeFinancePapers(count: maxPapers)
+        case "stat":
+            return try await arxivService.fetchStatisticsPapers(count: maxPapers)
+        case "eess":
+            return try await arxivService.fetchElectricalEngineeringPapers(count: maxPapers)
+        case "econ":
+            return try await arxivService.fetchEconomicsPapers(count: maxPapers)
+        default: // "latest"
+            return try await arxivService.fetchLatestPapers(count: maxPapers)
         }
-        
-        // If still no results, try with the final fallback query
-        if papers.isEmpty {
-            print("⚠️ Controller: No papers found with simple query, trying fallback query...")
-            papers = try await arxivService.fetchFallbackPapers(count: count)
-        }
-        
-        return papers
-    }
-    
-    /// Gets papers from Computer Science with fallback
-    private func fetchComputerSciencePapersWithFallback() async throws -> [ArXivPaper] {
-        let papers = try await arxivService.fetchComputerSciencePapers(count: maxPapers)
-        return papers
-    }
-    
-    /// Gets papers from Mathematics with fallback
-    private func fetchMathematicsPapersWithFallback() async throws -> [ArXivPaper] {
-        let papers = try await arxivService.fetchMathematicsPapers(count: maxPapers)
-        return papers
-    }
-    
-    /// Gets papers from Physics with fallback
-    private func fetchPhysicsPapersWithFallback() async throws -> [ArXivPaper] {
-        let papers = try await arxivService.fetchPhysicsPapers(count: maxPapers)
-        return papers
-    }
-    
-    /// Gets papers from Quantitative Biology with fallback
-    private func fetchQuantitativeBiologyPapersWithFallback() async throws -> [ArXivPaper] {
-        let papers = try await arxivService.fetchQuantitativeBiologyPapers(count: maxPapers)
-        return papers
-    }
-    
-    /// Gets papers from Quantitative Finance with fallback
-    private func fetchQuantitativeFinancePapersWithFallback() async throws -> [ArXivPaper] {
-        let papers = try await arxivService.fetchQuantitativeFinancePapers(count: maxPapers)
-        return papers
-    }
-    
-    /// Gets papers from Statistics with fallback
-    private func fetchStatisticsPapersWithFallback() async throws -> [ArXivPaper] {
-        let papers = try await arxivService.fetchStatisticsPapers(count: maxPapers)
-        return papers
-    }
-    
-    /// Gets papers from Electrical Engineering and Systems Science with fallback
-    private func fetchElectricalEngineeringPapersWithFallback() async throws -> [ArXivPaper] {
-        let papers = try await arxivService.fetchElectricalEngineeringPapers(count: maxPapers)
-        return papers
-    }
-    
-    /// Gets papers from Economics with fallback
-    private func fetchEconomicsPapersWithFallback() async throws -> [ArXivPaper] {
-        let papers = try await arxivService.fetchEconomicsPapers(count: maxPapers)
-        return papers
     }
     
     /// Updates the papers according to the category
@@ -604,6 +581,8 @@ final class ArXivController: ObservableObject {
         let category = defaultCategory
         currentCategory = category
         
+        print("🔧 Controller: Loading papers with settings - Category: \(category), MaxPapers: \(maxPapers)")
+        
         switch category {
         case "cs":
             await loadComputerSciencePapers()
@@ -626,6 +605,8 @@ final class ArXivController: ObservableObject {
         default:
             await loadLatestPapers()
         }
+        
+        print("🔧 Controller: Finished loading papers - Current category: \(currentCategory), Papers count: \(filteredPapers.count)")
     }
     
     // MARK: - Favorites Management
@@ -643,11 +624,27 @@ final class ArXivController: ObservableObject {
                 let favoriteResults = try modelContext.fetch(descriptor)
                 favoritePapers = favoriteResults.sorted { $0.favoritedDate ?? Date.distantPast > $1.favoritedDate ?? Date.distantPast }
                 print("✅ Controller: Loaded \(favoritePapers.count) favorite papers from SwiftData")
+                print("📋 Favorite papers: \(favoritePapers.map { $0.title })")
+                
+                // Also check if any papers from search results are favorites
+                let searchFavorites = searchResults.filter { $0.isFavorite }
+                for searchPaper in searchFavorites {
+                    if !favoritePapers.contains(where: { $0.id == searchPaper.id }) {
+                        favoritePapers.append(searchPaper)
+                        print("✅ Controller: Added search paper to favorites: \(searchPaper.title)")
+                    }
+                }
+                
+                // Re-sort after adding search papers
+                favoritePapers.sort { $0.favoritedDate ?? Date.distantPast > $1.favoritedDate ?? Date.distantPast }
+                print("✅ Controller: Final favorite papers count: \(favoritePapers.count)")
+                
             } else {
                 // Fallback: load from memory
                 favoritePapers = getAllPapers().filter { $0.isFavorite }
                     .sorted { $0.favoritedDate ?? Date.distantPast > $1.favoritedDate ?? Date.distantPast }
                 print("✅ Controller: Loaded \(favoritePapers.count) favorite papers from memory")
+                print("📋 Favorite papers: \(favoritePapers.map { $0.title })")
             }
         } catch {
             print("❌ Controller: Error loading favorites: \(error)")
@@ -655,6 +652,8 @@ final class ArXivController: ObservableObject {
         }
         
         isLoading = false
+        print("🎯 Controller: Current category is now: \(currentCategory)")
+        print("🎯 Controller: Filtered papers count: \(filteredPapers.count)")
     }
     
     /// Toggles the favorite state of a paper
@@ -662,19 +661,74 @@ final class ArXivController: ObservableObject {
     func toggleFavorite(for paper: ArXivPaper) {
         print("🚀 Controller: Toggling favorite for paper: \(paper.title)")
         
+        // Check if paper already exists in SwiftData
+        if let modelContext = modelContext {
+            do {
+                // Fetch all papers and find the one with matching ID
+                let descriptor = FetchDescriptor<ArXivPaper>()
+                let allPapers = try modelContext.fetch(descriptor)
+                let existingPaper = allPapers.first { $0.id == paper.id }
+                
+                let paperToUpdate: ArXivPaper
+                if let existingPaper = existingPaper {
+                    // Use existing paper from SwiftData
+                    paperToUpdate = existingPaper
+                    print("✅ Controller: Found existing paper in SwiftData")
+                } else {
+                    // Insert new paper into SwiftData
+                    modelContext.insert(paper)
+                    paperToUpdate = paper
+                    print("✅ Controller: Inserted new paper into SwiftData")
+                }
+                
+                // Update the paper's favorite state
+                let newFavoriteState = !paperToUpdate.isFavorite
+                paperToUpdate.setFavorite(newFavoriteState)
+                
+                // Also update the original paper object for UI consistency
+                paper.setFavorite(newFavoriteState)
+                
+                try modelContext.save()
+                print("✅ Controller: Paper favorite status saved to SwiftData")
+                
+                // Update the favorite list
+                if newFavoriteState {
+                    // Add to favorites if not already in the list
+                    if !favoritePapers.contains(where: { $0.id == paperToUpdate.id }) {
+                        favoritePapers.append(paperToUpdate)
+                        favoritePapers.sort { $0.favoritedDate ?? Date.distantPast > $1.favoritedDate ?? Date.distantPast }
+                        print("✅ Controller: Added paper to favorites list. Total favorites: \(favoritePapers.count)")
+                    }
+                } else {
+                    // Remove from favorites
+                    favoritePapers.removeAll { $0.id == paperToUpdate.id }
+                    print("✅ Controller: Removed paper from favorites list. Total favorites: \(favoritePapers.count)")
+                }
+                
+                // Update in all other category lists
+                updatePaperInAllCategories(paperToUpdate)
+                
+                print("✅ Controller: Paper favorite status updated to: \(newFavoriteState)")
+                print("📋 Current favorites: \(favoritePapers.map { $0.title })")
+                
+            } catch {
+                print("❌ Controller: Error managing paper in SwiftData: \(error)")
+                // Fallback to the old method
+                fallbackToggleFavorite(for: paper)
+            }
+        } else {
+            // No SwiftData available, use fallback
+            fallbackToggleFavorite(for: paper)
+        }
+    }
+    
+    /// Fallback method for toggling favorites when SwiftData is not available
+    private func fallbackToggleFavorite(for paper: ArXivPaper) {
+        print("🔄 Controller: Using fallback method for paper: \(paper.title)")
+        
         // Update the paper's favorite state
         let newFavoriteState = !paper.isFavorite
         paper.setFavorite(newFavoriteState)
-        
-        // Save to SwiftData if available
-        if let modelContext = modelContext {
-            do {
-                try modelContext.save()
-                print("✅ Controller: Paper favorite status saved to SwiftData")
-            } catch {
-                print("❌ Controller: Error saving to SwiftData: \(error)")
-            }
-        }
         
         // Update the favorite list
         if newFavoriteState {
@@ -682,16 +736,19 @@ final class ArXivController: ObservableObject {
             if !favoritePapers.contains(where: { $0.id == paper.id }) {
                 favoritePapers.append(paper)
                 favoritePapers.sort { $0.favoritedDate ?? Date.distantPast > $1.favoritedDate ?? Date.distantPast }
+                print("✅ Controller: Added paper to favorites list. Total favorites: \(favoritePapers.count)")
             }
         } else {
             // Remove from favorites
             favoritePapers.removeAll { $0.id == paper.id }
+            print("✅ Controller: Removed paper from favorites list. Total favorites: \(favoritePapers.count)")
         }
         
         // Update in all other category lists
         updatePaperInAllCategories(paper)
         
         print("✅ Controller: Paper favorite status updated to: \(newFavoriteState)")
+        print("📋 Current favorites: \(favoritePapers.map { $0.title })")
     }
     
     /// Updates a paper in all categories where it appears

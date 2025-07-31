@@ -1,174 +1,232 @@
 # ArXiv App
 
-A SwiftUI application for exploring and searching academic papers from the ArXiv repository.
-
-@Metadata {
-    @PageColor(blue)
-}
+A modern iOS application for browsing and searching arXiv papers, built with SwiftUI and powered by the ArxivKit library.
 
 ## Overview
 
-The ArXiv application provides an intuitive interface for researchers and students to discover, explore, and read academic papers from the ArXiv preprint repository. Built with SwiftUI and following the MVC architectural pattern, it offers a clean and responsive user experience optimized for macOS.
-
-This application demonstrates SwiftUI development best practices, including:
-- Well-structured MVC architecture
-- Asynchronous communication with external APIs
-- Efficient application state management
-- Adaptive and accessible user interface
+ArXiv App provides a clean, intuitive interface for exploring academic papers from arXiv, the popular repository for electronic preprints. The app leverages ArxivKit, a modern Swift library, to provide type-safe access to the arXiv API with automatic XML parsing and comprehensive error handling.
 
 ## Key Features
 
-- **🔍 Smart Search**: Search papers by title, author, keywords, or specific categories
-- **📚 Category Exploration**: Browse through 8 main academic disciplines from ArXiv
-- **⭐ Favorites Management**: Mark papers as favorites for quick access and later reading
-- **📄 Detailed View**: View complete information including abstracts, authors, dates, and links
-- **💾 Data Persistence**: Favorites are saved using SwiftData and persist between sessions
-- **💻 Native Interface**: SwiftUI design optimized for macOS with full dark mode support
-- **⚡ Optimized Performance**: Asynchronous data loading and efficient memory management
+### 📚 **Paper Browsing**
+- Browse papers by category (Computer Science, Mathematics, Physics, etc.)
+- View latest papers across multiple disciplines
+- Clean, readable paper listings with titles, authors, and abstracts
 
-### 🏷️ Supported Academic Categories
+### 🔍 **Advanced Search**
+- Search papers by keywords, titles, or authors
+- Filter results by specific arXiv categories
+- Real-time search results with comprehensive metadata
 
-The application provides access to the following ArXiv categories:
+### 💾 **Favorites System**
+- Save interesting papers to your favorites
+- Persistent storage across app sessions
+- Quick access to your saved papers
 
-- **💻 Computer Science** (`cs`)
-- **🔢 Mathematics** (`math`)
-- **⚛️ Physics** (`physics`)
-- **🧬 Quantitative Biology** (`q-bio`)
-- **💰 Quantitative Finance** (`q-fin`)
-- **📊 Statistics** (`stat`)
-- **⚡ Electrical Engineering** (`eess`)
-- **💼 Economics** (`econ`)
+### 📱 **Modern UI**
+- Native iOS design with SwiftUI
+- Dark mode support
+- Responsive layout for different screen sizes
+- Intuitive navigation with sidebar
 
-## Application Architecture
+### ⚡ **Performance**
+- Async/await for smooth user experience
+- Efficient data loading and caching
+- Optimized network requests
 
-The application follows the **Model-View-Controller (MVC)** pattern to maintain clear separation of responsibilities:
+## Architecture
 
-### 🏗️ Main Components
+### **MVVM Pattern**
+The app follows the Model-View-ViewModel architecture:
 
-- **📊 Models**: Data structures representing ArXiv papers and their metadata
-- **🖥️ Views**: Reusable SwiftUI components for the user interface
-- **🎛️ Controllers**: Business logic and data flow management between models and views
-- **🔌 Services**: Communication with the ArXiv API and XML data parsing
+- **Models**: `ArXivPaper` - Represents individual papers
+- **Views**: SwiftUI views for the user interface
+- **ViewModels**: `ArXivController` - Manages data and business logic
 
-### 🔄 Data Flow
+### **Service Layer**
+- **ArXivService**: Uses ArxivKit to communicate with the arXiv API
+- **Data Persistence**: Local storage for favorites
 
-1. **User** interacts with SwiftUI **Views**
-2. **Controller** processes user actions
-3. **Services** make requests to the ArXiv API
-4. **Models** are updated with received data
-5. **Views** automatically refresh through binding
+### **Dependencies**
+- **ArxivKit 2.1.0**: Modern Swift library for arXiv API access
+- **SwiftUI**: Native iOS UI framework
+- **Foundation**: Core Swift functionality
 
-## System Requirements
+## Core Components
 
-- **macOS**: 12.0 or later
-- **Xcode**: 14.0 or later
-- **Swift**: 5.7 or later
-- **SwiftUI**: 4.0 or later
-
-## Getting Started
-
-To get started with the ArXiv application, explore the following fundamental components:
-
-### 🎯 Key Components
-
-- ``ArXivPaper`` - The main data model representing an academic paper with all its metadata
-- ``ArXivController`` - Main controller managing application state and coordinating data flow
-- ``ArXivService`` - Specialized service for communicating with the ArXiv REST API
-- ``MainView`` - The root UI component that orchestrates the entire experience
-
-### 📚 Development Guide
-
-1. **Set up the Project**: Clone the repository and open the `.xcodeproj` file
-2. **Explore Models**: Start by reviewing ``ArXivPaper`` to understand the data structure
-3. **Review Services**: Analyze ``ArXivService`` to understand API communication
-4. **Examine Views**: Study ``MainView`` and its related components
-5. **Test the Application**: Run the project and experiment with different functionalities
-
-## Topics
-
-### 📊 Data Models
-- ``ArXivPaper`` - Represents an academic paper with complete metadata
-
-### 🎛️ Controllers
-- ``ArXivController`` - Main application controller
-
-### 🔌 Services and APIs
-- ``ArXivService`` - Communication with the ArXiv API
-- ``ArXivSimpleParser`` - Parsing of ArXiv XML responses
-
-### 🖥️ User Interface
-- ``MainView`` - Main application view
-- ``PapersListView`` - Paper list with search functionality
-- ``PaperDetailView`` - Detailed view of a specific paper
-- ``SidebarView`` - Side navigation with categories and favorites
-- ``ArXivPaperRow`` - Individual paper component with favorites button
-
-### ⭐ Favorites Management
-- [Favorites Functionality](Funcionalidad-de-Favoritos.md) - Complete documentation of favorites functionality
-- **SwiftData Integration** - Favorites persistence using SwiftData
-- **UI Integration** - Heart buttons in list and detail views
-- **Navigation** - Dedicated "Favorites" section in navigation
-- ``ArXivPaperRow`` - Individual cell for displaying summary information
-- ``SidebarView`` - Sidebar for navigation and filters
-- **SettingsView** - Application settings
-
-## Detailed Guides
-
-### 📋 Main Components
-
-Explore the detailed guides for each component:
-
-- <doc:ArXivPaper> - Fundamental data model with SwiftData persistence
-- <doc:ArXivController> - MVC controller with reactive state management
-- <doc:ArXivService> - Network service with robust error handling
-- <doc:ArXivSimpleParser> - XML parser specialized for Atom format
-- <doc:MainView> - Main view with multiplatform adaptation
-- <doc:PapersListView> - Optimized list with search and filters
-
-### 🏗️ Architecture and APIs
-
-Complete technical documentation:
-
-- <doc:Architecture> - Detailed MVC architecture with design patterns
-- <doc:API-Guide> - Complete ArXiv API integration guide
-
-### 🎯 Advanced Features
-
-Each component is documented with:
-- **Design patterns** used
-- **Best practices** implemented
-- **Complete code examples**
-- **Performance considerations**
-- **Accessibility features**
-
-## Usage Example
+### **ArXivService**
+The service layer that handles all arXiv API communication using ArxivKit:
 
 ```swift
-// Create an ArXiv service instance
-let service = ArXivService()
+// Example: Fetching Computer Science papers
+let papers = try await arxivService.fetchComputerSciencePapers(count: 20)
 
-// Search for machine learning related papers
-service.searchPapers(query: "machine learning", maxResults: 10) { papers in
-    // Process found papers
-    for paper in papers {
-        print("Title: \(paper.title)")
-        print("Authors: \(paper.authors.joined(separator: ", "))")
+// Example: Searching for papers
+let results = try await arxivService.searchPapers(
+    query: "machine learning", 
+    count: 20, 
+    category: "cs"
+)
+```
+
+**Benefits of ArxivKit Integration:**
+- Type-safe queries with compile-time checking
+- Automatic XML parsing and error handling
+- Support for all arXiv subjects and categories
+- Modern async/await support
+- Regular updates and community maintenance
+
+### **ArXivController**
+The main view model that manages the app's state and coordinates between the UI and service layer:
+
+```swift
+class ArXivController: ObservableObject {
+    @Published var papers: [ArXivPaper] = []
+    @Published var isLoading = false
+    @Published var errorMessage: String?
+    
+    func loadLatestPapers() async {
+        // Implementation using ArxivService
     }
 }
 ```
 
+### **Views**
+- **MainView**: Main app interface with sidebar navigation
+- **PapersListView**: Displays lists of papers
+- **PaperDetailView**: Shows detailed paper information
+- **SearchResultsView**: Displays search results
+- **SettingsView**: App configuration and preferences
+
+## Data Model
+
+### **ArXivPaper**
+Represents a single arXiv paper with all relevant metadata:
+
+```swift
+struct ArXivPaper: Identifiable, Codable {
+    let id: String
+    let title: String
+    let summary: String
+    let authors: String
+    let publishedDate: Date
+    let updatedDate: Date
+    let pdfURL: String
+    let linkURL: String
+    let categories: String
+    var isFavorite: Bool
+}
+```
+
+## Supported Categories
+
+The app supports all major arXiv categories:
+
+- **Computer Science** (`cs.*`)
+- **Mathematics** (`math.*`)
+- **Physics** (`physics.*`)
+- **Quantitative Biology** (`q-bio.*`)
+- **Quantitative Finance** (`q-fin.*`)
+- **Statistics** (`stat.*`)
+- **Electrical Engineering** (`eess.*`)
+- **Economics** (`econ.*`)
+
+## Error Handling
+
+The app provides comprehensive error handling:
+
+- **Network Errors**: Connection issues and timeouts
+- **API Errors**: Invalid responses from arXiv
+- **Parsing Errors**: Data processing issues
+- **User-Friendly Messages**: Clear error descriptions for users
+
+## Performance Optimizations
+
+### **Async/Await**
+All network operations use modern Swift concurrency:
+
+```swift
+func loadPapers() async {
+    isLoading = true
+    do {
+        papers = try await arxivService.fetchLatestPapers()
+    } catch {
+        errorMessage = error.localizedDescription
+    }
+    isLoading = false
+}
+```
+
+### **Efficient Data Loading**
+- Lazy loading of paper lists
+- Optimized network requests
+- Smart caching strategies
+
+## User Experience
+
+### **Intuitive Navigation**
+- Sidebar for quick category access
+- Search functionality prominently displayed
+- Favorites easily accessible
+
+### **Responsive Design**
+- Adapts to different screen sizes
+- Supports both iPhone and iPad
+- Dark mode compatibility
+
+### **Accessibility**
+- VoiceOver support
+- Dynamic Type compatibility
+- High contrast mode support
+
+## Development
+
+### **Requirements**
+- iOS 17.6+
+- Xcode 15.0+
+- Swift 5.9+
+
+### **Setup**
+1. Clone the repository
+2. Open `ArXiv App.xcodeproj` in Xcode
+3. Build and run on simulator or device
+
+### **Dependencies**
+The project uses Swift Package Manager for dependencies:
+- **ArxivKit**: `https://github.com/ivicamil/ArxivKit.git`
+
+## Future Enhancements
+
+### **Planned Features**
+- Offline paper caching
+- PDF download and viewing
+- Citation export
+- Paper recommendations
+- Social sharing features
+
+### **Technical Improvements**
+- Enhanced search filters
+- Advanced sorting options
+- Performance optimizations
+- Additional arXiv categories
+
 ## Contributing
 
-To contribute to the project:
+The app is designed with extensibility in mind. Key areas for contribution:
 
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/new-feature`)
-3. **Commit** your changes (`git commit -am 'Add new feature'`)
-4. **Push** to the branch (`git push origin feature/new-feature`)
-5. **Create** a Pull Request
+- **UI/UX Improvements**: Enhanced user interface and experience
+- **Feature Additions**: New functionality and capabilities
+- **Performance**: Optimizations and efficiency improvements
+- **Testing**: Unit tests and UI tests
+- **Documentation**: Code documentation and user guides
 
-## Additional Resources
+## License
 
-- [Official ArXiv API Documentation](https://arxiv.org/help/api)
-- [SwiftUI Guide](https://developer.apple.com/swiftui/)
-- [MVC Architecture Best Practices](https://developer.apple.com/documentation/swiftui/model-data) 
+This project is open source and available under the MIT License.
+
+## Acknowledgments
+
+- **ArxivKit**: The excellent Swift library that powers the arXiv API integration
+- **arXiv**: For providing the comprehensive paper repository
+- **SwiftUI**: Apple's modern UI framework
+- **Open Source Community**: For inspiration and best practices 

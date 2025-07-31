@@ -1,0 +1,15 @@
+{
+  "originHash" : "18d59cec191096807781a5ec0473d94095ba5b570986b3d06d9f101f139d7661",
+  "pins" : [
+    {
+      "identity" : "arxivkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ivicamil/ArxivKit.git",
+      "state" : {
+        "revision" : "87daf8b0d78b9ca401b62bde0adf45bcee379018",
+        "version" : "2.1.0"
+      }
+    }
+  ],
+  "version" : 3
+}

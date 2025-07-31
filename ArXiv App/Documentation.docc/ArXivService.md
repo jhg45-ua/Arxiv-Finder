@@ -1,408 +1,219 @@
 # ArXivService
 
-The specialized service for communication with the ArXiv API.
+The `ArXivService` class provides a clean interface for communicating with the arXiv API using the ArxivKit library. This service encapsulates all the complexity of making HTTP requests, parsing XML responses, and handling errors.
 
 ## Overview
 
-``ArXivService`` is the component responsible for all communication with the external ArXiv API. It handles HTTP requests, XML response processing, and data conversion into ``ArXivPaper`` objects. This service encapsulates all the complexity of communication with the ArXiv repository.
+The service uses ArxivKit, a modern Swift library that provides:
+- Type-safe arXiv API queries
+- Automatic XML parsing
+- Built-in error handling
+- Support for all arXiv subjects and categories
+- Async/await support
 
-The class is designed following principles of:
-- **Separation of responsibilities** in the service layer
-- **Modern concurrency** with async/await
-- **Robust error handling** with specific types
-- **Thread-safety** through `@unchecked Sendable`
+## Key Features
 
-## Service Architecture
+- **Multiple Category Support**: Fetch papers from different arXiv categories
+- **Search Functionality**: Search papers by keywords with optional category filtering
+- **Error Handling**: Comprehensive error handling with descriptive messages
+- **Async/Await**: Modern Swift concurrency support
+- **Type Safety**: Strongly typed responses and queries
 
-### 🌐 API Communication
+## Methods
 
-The service manages all interactions with the ArXiv API:
+### Fetching Papers by Category
+
+#### `fetchLatestPapers(count:)`
+Fetches the most recent papers across multiple categories (Computer Science, Statistics, Mathematics).
 
 ```swift
-/// Base URL of the ArXiv API (using HTTPS to comply with ATS)
-private let baseURL = "https://export.arxiv.org/api/query"
-
-/// HTTP session configured for optimized requests
-private let session: URLSession
+let papers = try await arxivService.fetchLatestPapers(count: 10)
 ```
 
-### 🔧 Network Configuration
+#### `fetchComputerSciencePapers(count:)`
+Fetches papers from the Computer Science category.
 
 ```swift
-/// Custom configuration for HTTP requests
-private func configureSession() -> URLSession {
-    let config = URLSessionConfiguration.default
-    config.timeoutIntervalForRequest = 30.0
-    config.timeoutIntervalForResource = 60.0
-    return URLSession(configuration: config)
-}
+let papers = try await arxivService.fetchComputerSciencePapers(count: 10)
 ```
 
-## Main Functionalities
-
-### 📚 Fetching Recent Papers
+#### `fetchMathematicsPapers(count:)`
+Fetches papers from the Mathematics category.
 
 ```swift
-/// Gets the latest papers published on ArXiv
-/// - Parameter count: Number of papers to fetch (default 10)
-/// - Returns: Array of ArXiv papers
-/// - Throws: Error if request or parsing fails
-nonisolated func fetchLatestPapers(count: Int = 10) async throws -> [ArXivPaper]
+let papers = try await arxivService.fetchMathematicsPapers(count: 10)
 ```
 
-**Detailed implementation:**
+#### `fetchPhysicsPapers(count:)`
+Fetches papers from the Physics category.
 
 ```swift
-func fetchLatestPapers(count: Int = 10) async throws -> [ArXivPaper] {
-    // Build URL with optimized parameters
-    let query = "cat:cs.*+OR+cat:stat.*+OR+cat:math.*"
-    let urlString = "\(baseURL)?search_query=\(query)&start=0&max_results=\(count)&sortBy=lastUpdatedDate&sortOrder=descending"
+let papers = try await arxivService.fetchPhysicsPapers(count: 10)
+```
+
+#### `fetchQuantitativeBiologyPapers(count:)`
+Fetches papers from the Quantitative Biology category.
+
+```swift
+let papers = try await arxivService.fetchQuantitativeBiologyPapers(count: 10)
+```
+
+#### `fetchQuantitativeFinancePapers(count:)`
+Fetches papers from the Quantitative Finance category.
+
+```swift
+let papers = try await arxivService.fetchQuantitativeFinancePapers(count: 10)
+```
+
+#### `fetchStatisticsPapers(count:)`
+Fetches papers from the Statistics category.
+
+```swift
+let papers = try await arxivService.fetchStatisticsPapers(count: 10)
+```
+
+#### `fetchElectricalEngineeringPapers(count:)`
+Fetches papers from the Electrical Engineering and Systems Science category.
+
+```swift
+let papers = try await arxivService.fetchElectricalEngineeringPapers(count: 10)
+```
+
+#### `fetchEconomicsPapers(count:)`
+Fetches papers from the Economics category.
+
+```swift
+let papers = try await arxivService.fetchEconomicsPapers(count: 10)
+```
+
+### Search Functionality
+
+#### `searchPapers(query:count:category:)`
+Searches for papers using keywords with optional category filtering.
+
+```swift
+// Search for papers about "machine learning"
+let papers = try await arxivService.searchPapers(
+    query: "machine learning", 
+    count: 20
+)
+
+// Search for papers about "neural networks" in Computer Science
+let papers = try await arxivService.searchPapers(
+    query: "neural networks", 
+    count: 20, 
+    category: "cs"
+)
+```
+
+### Fallback Methods
+
+#### `fetchRecentPapers(count:)`
+Alternative method for fetching recent papers when the main query doesn't work.
+
+#### `fetchFallbackPapers(count:)`
+Final backup method using a simple and reliable query.
+
+## Error Handling
+
+The service defines custom error types in the `ArXivError` enum:
+
+- `invalidURL`: When the constructed URL is invalid
+- `networkError(String)`: Network-related errors with descriptive messages
+- `parsingError(String)`: Errors during data parsing
+
+All errors provide localized descriptions for user-friendly error messages.
+
+## Implementation Details
+
+### ArxivKit Integration
+
+The service leverages ArxivKit's powerful query system:
+
+```swift
+// Example: Creating a query for Computer Science papers
+let query = subject(ComputerScience.all)
+let request = query
+    .itemsPerPage(count)
+    .sortingOrder(ArxivRequestSpecification.SortingOrder.descending)
+    .sorted(by: ArxivRequestSpecification.SortingCriterion.lastUpdateDate)
+
+let response = try await request.fetch(using: URLSession.shared)
+```
+
+### Data Conversion
+
+The service converts ArxivKit's `ArxivEntry` objects to the app's `ArXivPaper` model:
+
+```swift
+private func convertToArXivPaper(from entry: ArxivKit.ArxivEntry) -> ArXivPaper {
+    let authorsString = entry.authors.map { $0.name }.joined(separator: ", ")
+    let categoriesString = entry.categories.joined(separator: ", ")
     
-    guard let url = URL(string: urlString) else {
-        throw ArXivError.invalidURL
-    }
-    
-    // Execute HTTP request
-    let (data, response) = try await session.data(from: url)
-    
-    // Validate response
-    guard let httpResponse = response as? HTTPURLResponse,
-          httpResponse.statusCode == 200 else {
-        throw ArXivError.networkError
-    }
-    
-    // Parse XML and convert to ArXivPaper objects
-    return try parseXMLResponse(data)
-}
-```
-
-### 🏷️ Search by Categories
-
-```swift
-/// Gets papers from a specific category
-/// - Parameter category: ArXiv category (e.g.: "cs.AI", "math.CO")
-/// - Returns: Array of papers from the specified category
-func fetchPapersByCategory(_ category: String) async throws -> [ArXivPaper] {
-    let query = "cat:\(category)"
-    return try await performSearch(query: query)
-}
-```
-
-### 🔬 Category-Specific Methods
-
-The application includes specialized methods for each main category:
-
-```swift
-/// Gets Computer Science papers
-func fetchComputerSciencePapers() async throws -> [ArXivPaper] {
-    return try await fetchPapersByCategory("cs.*")
-}
-
-/// Gets Mathematics papers
-func fetchMathematicsPapers() async throws -> [ArXivPaper] {
-    return try await fetchPapersByCategory("math.*")
-}
-
-/// Gets Physics papers
-func fetchPhysicsPapers() async throws -> [ArXivPaper] {
-    return try await fetchPapersByCategory("physics.*")
-}
-
-/// Gets Quantitative Biology papers
-func fetchQuantitativeBiologyPapers() async throws -> [ArXivPaper] {
-    return try await fetchPapersByCategory("q-bio.*")
-}
-
-/// Gets Quantitative Finance papers
-func fetchQuantitativeFinancePapers() async throws -> [ArXivPaper] {
-    return try await fetchPapersByCategory("q-fin.*")
-}
-
-/// Gets Statistics papers
-func fetchStatisticsPapers() async throws -> [ArXivPaper] {
-    return try await fetchPapersByCategory("stat.*")
-}
-
-/// Gets Electrical Engineering and Systems Science papers
-func fetchElectricalEngineeringPapers() async throws -> [ArXivPaper] {
-    return try await fetchPapersByCategory("eess.*")
-}
-
-/// Gets Economics papers
-func fetchEconomicsPapers() async throws -> [ArXivPaper] {
-    return try await fetchPapersByCategory("econ.*")
-}
-```
-
-**Supported Categories:**
-- **Computer Science** (`cs.*`)
-- **Mathematics** (`math.*`)
-- **Physics** (`physics.*`)
-- **Quantitative Biology** (`q-bio.*`)
-- **Quantitative Finance** (`q-fin.*`)
-- **Statistics** (`stat.*`)
-- **Electrical Engineering** (`eess.*`)
-- **Economics** (`econ.*`)
-
-### 🔍 Advanced Search
-
-```swift
-/// Searches papers by specific terms
-/// - Parameter query: Search terms
-/// - Parameter maxResults: Maximum number of results
-/// - Returns: Array of papers matching the search
-func searchPapers(query: String, maxResults: Int = 20) async throws -> [ArXivPaper] {
-    // Encode the query for URL
-    let encodedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-    
-    let searchQuery = "all:\(encodedQuery)"
-    return try await performSearch(query: searchQuery, maxResults: maxResults)
-}
-```
-
-## XML Data Processing
-
-### 🔄 Response Parsing
-
-The service uses ``ArXivSimpleParser`` to process XML responses:
-
-```swift
-/// Parses the XML response from ArXiv
-/// - Parameter data: XML response data
-/// - Returns: Array of parsed papers
-private func parseXMLResponse(_ data: Data) throws -> [ArXivPaper] {
-    let parser = ArXivSimpleParser()
-    return try parser.parse(data)
-}
-```
-
-### 📊 Data Transformation
-
-```swift
-/// Converts an XML element into an ArXivPaper object
-private func transformXMLToArXivPaper(_ element: XMLElement) -> ArXivPaper {
     return ArXivPaper(
-        id: extractID(from: element),
-        title: extractTitle(from: element),
-        summary: extractSummary(from: element),
-        authors: extractAuthors(from: element),
-        publishedDate: extractPublishDate(from: element),
-        updatedDate: extractUpdateDate(from: element),
-        category: extractCategory(from: element),
-        link: extractLink(from: element)
+        id: entry.id,
+        title: entry.title,
+        summary: entry.summary,
+        authors: authorsString,
+        publishedDate: entry.submissionDate,
+        updatedDate: entry.lastUpdateDate,
+        pdfURL: entry.pdfURL.absoluteString,
+        linkURL: entry.abstractURL.absoluteString,
+        categories: categoriesString,
+        isFavorite: false
     )
 }
 ```
 
-## Error Handling
-
-### 🛡️ Specific Error Types
+## Usage Example
 
 ```swift
-/// Specific errors for the ArXiv service
-enum ArXivError: Error, LocalizedError {
-    case invalidURL
-    case networkError
-    case parseError
-    case noData
-    case rateLimited
+class ArXivController: ObservableObject {
+    private let arxivService = ArXivService()
     
-    var errorDescription: String? {
-        switch self {
-        case .invalidURL:
-            return "Invalid ArXiv URL"
-        case .networkError:
-            return "Connection error with ArXiv"
-        case .parseError:
-            return "Error processing ArXiv response"
-        case .noData:
-            return "No data found"
-        case .rateLimited:
-            return "Request limit exceeded"
-        }
-    }
-}
-```
-
-### 🔄 Automatic Retries
-
-```swift
-/// Executes a request with automatic retries
-private func performRequestWithRetry<T>(
-    _ operation: @escaping () async throws -> T,
-    maxRetries: Int = 3
-) async throws -> T {
-    var lastError: Error?
+    @Published var papers: [ArXivPaper] = []
+    @Published var isLoading = false
+    @Published var errorMessage: String?
     
-    for attempt in 0..<maxRetries {
+    func loadLatestPapers() async {
+        isLoading = true
+        errorMessage = nil
+        
         do {
-            return try await operation()
+            papers = try await arxivService.fetchLatestPapers(count: 20)
         } catch {
-            lastError = error
-            if attempt < maxRetries - 1 {
-                try await Task.sleep(nanoseconds: UInt64(pow(2.0, Double(attempt))) * 1_000_000_000)
-            }
+            errorMessage = error.localizedDescription
         }
+        
+        isLoading = false
     }
     
-    throw lastError ?? ArXivError.networkError
-}
-```
-
-## Performance Optimizations
-
-### 🚀 Request Cache
-
-```swift
-/// Cache to avoid duplicate requests
-private var requestCache: [String: [ArXivPaper]] = [:]
-private let cacheTimeout: TimeInterval = 300 // 5 minutes
-
-/// Gets data from cache or makes a new request
-private func getCachedOrFetch(url: String) async throws -> [ArXivPaper] {
-    if let cached = requestCache[url] {
-        return cached
-    }
-    
-    let papers = try await performRequest(url: url)
-    requestCache[url] = papers
-    return papers
-}
-```
-
-### 📊 Efficient Pagination
-
-```swift
-/// Gets papers with pagination
-/// - Parameters:
-///   - query: Search query
-///   - start: Start index
-///   - maxResults: Maximum number of results per page
-func fetchPaginatedPapers(
-    query: String,
-    start: Int = 0,
-    maxResults: Int = 20
-) async throws -> [ArXivPaper] {
-    let urlString = "\(baseURL)?search_query=\(query)&start=\(start)&max_results=\(maxResults)"
-    // ... implementation
-}
-```
-
-## Advanced Configuration
-
-### ⚙️ Configuration Parameters
-
-```swift
-/// ArXiv service configuration
-struct ArXivServiceConfig {
-    let baseURL: String = "https://export.arxiv.org/api/query"
-    let timeout: TimeInterval = 30.0
-    let maxCacheSize: Int = 1000
-    let defaultPageSize: Int = 20
-    let maxRetries: Int = 3
-}
-```
-
-### 🔧 Request Customization
-
-```swift
-/// Customize request headers
-private func customizeRequest(_ request: inout URLRequest) {
-    request.setValue("ArXiv-App/1.0", forHTTPHeaderField: "User-Agent")
-    request.setValue("application/atom+xml", forHTTPHeaderField: "Accept")
-}
-```
-
-## Controller Integration
-
-### 🔗 Dependency Injection
-
-```swift
-// In ArXivController
-private let arXivService: ArXivService
-
-init(service: ArXivService = ArXivService()) {
-    self.arXivService = service
-}
-```
-
-### 📱 Usage in Views
-
-```swift
-// Direct use from a view (not recommended)
-struct DirectServiceView: View {
-    @State private var papers: [ArXivPaper] = []
-    private let service = ArXivService()
-    
-    var body: some View {
-        List(papers, id: \.id) { paper in
-            Text(paper.title)
-        }
-        .onAppear {
-            Task {
-                do {
-                    papers = try await service.fetchLatestPapers()
-                } catch {
-                    print("Error: \(error)")
-                }
-            }
-        }
-    }
-}
-```
-
-## Full Usage Example
-
-```swift
-// Full usage example of the service
-class ExampleUsage {
-    private let service = ArXivService()
-    
-    func demonstrateUsage() async {
+    func searchPapers(query: String) async {
+        isLoading = true
+        errorMessage = nil
+        
         do {
-            // Get recent papers
-            let latest = try await service.fetchLatestPapers(count: 10)
-            print("Latest papers: \(latest.count)")
-            
-            // Search by category
-            let aiPapers = try await service.fetchPapersByCategory("cs.AI")
-            print("AI papers: \(aiPapers.count)")
-            
-            // Search by terms
-            let searchResults = try await service.searchPapers(query: "machine learning")
-            print("Search results: \(searchResults.count)")
-            
+            papers = try await arxivService.searchPapers(query: query, count: 20)
         } catch {
-            print("Error: \(error)")
+            errorMessage = error.localizedDescription
         }
+        
+        isLoading = false
     }
 }
 ```
 
-## Best Practices
+## Benefits of Using ArxivKit
 
-### ✅ Implemented Principles
+1. **Simplified Code**: No need to manually construct URLs or parse XML
+2. **Type Safety**: Compile-time checking for query parameters
+3. **Better Error Handling**: Specific error types for different failure scenarios
+4. **Maintained Library**: Regular updates and bug fixes from the community
+5. **Performance**: Optimized XML parsing and network handling
+6. **Extensibility**: Easy to add new query types and features
 
-1. **Single Responsibility**: Only handles communication with ArXiv
-2. **Abstraction**: Hides XML and HTTP complexity
-3. **Reusability**: Reusable methods for different search types
-4. **Robustness**: Complete error and edge case handling
+## Dependencies
 
-### 🔧 Production Configuration
-
-```swift
-/// Optimized configuration for production
-extension ArXivService {
-    static func productionService() -> ArXivService {
-        let config = ArXivServiceConfig()
-        return ArXivService(config: config)
-    }
-}
-```
-
-## Related Resources
-
-- ``ArXivSimpleParser`` - Specialized XML parser
-- ``ArXivPaper`` - Result data model
-- ``ArXivController`` - Controller using the service
-- ``ArXivError`` - Specific service error types 
+- **ArxivKit**: Version 2.1.0 - Provides the core arXiv API functionality
+- **Foundation**: For basic Swift functionality
+- **SwiftUI**: For integration with the UI layer (via the controller) 

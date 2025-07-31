@@ -27,6 +27,9 @@ struct MainView: View {
     
     /// Selected paper in macOS for NavigationSplitView
     @State private var selectedPaper: ArXivPaper?
+    
+    /// Show settings sheet in iOS
+    @State private var showingSettings = false
 
     /// Defines the visual structure of the main view
     var body: some View {
@@ -90,6 +93,7 @@ struct MainView: View {
                     papers: controller.filteredPapers,
                     isLoading: controller.isLoading,
                     errorMessage: .constant(controller.errorMessage),
+                    controller: controller,
                     loadLatestPapers: { await controller.loadLatestPapers() },
                     selectedPaper: $selectedPaper
                 )
@@ -133,30 +137,74 @@ struct MainView: View {
         #else
         // iOS design with NavigationStack
         NavigationStack {
-            PapersListView(
-                papers: controller.filteredPapers,
-                isLoading: controller.isLoading,
-                errorMessage: .constant(controller.errorMessage),
-                controller: controller,
-                loadLatestPapers: { await controller.loadLatestPapers() },
-                loadComputerSciencePapers: { await controller.loadComputerSciencePapers() },
-                loadMathematicsPapers: { await controller.loadMathematicsPapers() },
-                loadPhysicsPapers: { await controller.loadPhysicsPapers() },
-                loadQuantitativeBiologyPapers: { await controller.loadQuantitativeBiologyPapers() },
-                loadQuantitativeFinancePapers: { await controller.loadQuantitativeFinancePapers() },
-                loadStatisticsPapers: { await controller.loadStatisticsPapers() },
-                loadElectricalEngineeringPapers: { await controller.loadElectricalEngineeringPapers() },
-                loadEconomicsPapers: { await controller.loadEconomicsPapers() }
-            )
-            .navigationTitle("ArXiv Papers")
-            .onAppear {
-                // Configure the model context in the controller
-                controller.modelContext = modelContext
+            if controller.currentCategory == "search" {
+                SearchResultsView(controller: controller, selectedPaper: .constant(nil))
+                    .navigationTitle("Search Papers")
+                    .navigationBarTitleDisplayMode(.large)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button("Back") {
+                                controller.currentCategory = "latest"
+                            }
+                        }
+                    }
+            } else {
+                PapersListView(
+                    papers: controller.filteredPapers,
+                    isLoading: controller.isLoading,
+                    errorMessage: .constant(controller.errorMessage),
+                    controller: controller,
+                    loadLatestPapers: { await controller.loadLatestPapers() },
+                    loadComputerSciencePapers: { await controller.loadComputerSciencePapers() },
+                    loadMathematicsPapers: { await controller.loadMathematicsPapers() },
+                    loadPhysicsPapers: { await controller.loadPhysicsPapers() },
+                    loadQuantitativeBiologyPapers: { await controller.loadQuantitativeBiologyPapers() },
+                    loadQuantitativeFinancePapers: { await controller.loadQuantitativeFinancePapers() },
+                    loadStatisticsPapers: { await controller.loadStatisticsPapers() },
+                    loadElectricalEngineeringPapers: { await controller.loadElectricalEngineeringPapers() },
+                    loadEconomicsPapers: { await controller.loadEconomicsPapers() }
+                )
+                .navigationTitle("ArXiv Papers")
+                .toolbar {
+                    ToolbarItemGroup(placement: .navigationBarTrailing) {
+                        // Search button
+                        Button(action: {
+                            controller.currentCategory = "search"
+                        }) {
+                            Image(systemName: "magnifyingglass")
+                        }
+                        
+                        // Favorites button
+                        Button(action: {
+                            Task {
+                                controller.currentCategory = "favorites"
+                                await controller.loadFavoritePapers()
+                            }
+                        }) {
+                            Image(systemName: "heart")
+                        }
+                        .foregroundColor(controller.currentCategory == "favorites" ? .red : .primary)
+                        
+                        // Settings button
+                        Button(action: {
+                            showingSettings = true
+                        }) {
+                            Image(systemName: "gearshape")
+                        }
+                    }
+                }
+                .onAppear {
+                    // Configure the model context in the controller
+                    controller.modelContext = modelContext
+                }
+                .task {
+                    // Initial load using default settings
+                    await controller.loadPapersWithSettings()
+                }
             }
-            .task {
-                // Initial load using default settings
-                await controller.loadPapersWithSettings()
-            }
+        }
+        .sheet(isPresented: $showingSettings) {
+            SettingsView()
         }
         #endif
     }

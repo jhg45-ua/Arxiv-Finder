@@ -476,3 +476,243 @@ struct SettingsView: View {
 }
 
 #endif
+
+#if os(iOS)
+struct SettingsView: View {
+    
+    // MARK: - Settings Properties
+    @AppStorage("refreshInterval") private var refreshInterval = 30
+    @AppStorage("maxPapers") private var maxPapers = 10
+    @AppStorage("defaultCategory") private var defaultCategory = "latest"
+    @AppStorage("autoRefresh") private var autoRefresh = false
+    @AppStorage("showNotifications") private var showNotifications = true
+    @AppStorage("compactMode") private var compactMode = false
+    @AppStorage("showPreview") private var showPreview = true
+    @AppStorage("fontSize") private var fontSize = 14.0
+    
+    // MARK: - State Properties
+    @State private var isTestingConnection = false
+    @State private var connectionTestResult = ""
+    @State private var showingConnectionAlert = false
+    @State private var showingResetAlert = false
+    @Environment(\.dismiss) private var dismiss
+    
+    var body: some View {
+        NavigationView {
+            List {
+                // General Settings Section
+                Section("General") {
+                    HStack {
+                        Text("Maximum papers")
+                        Spacer()
+                        Stepper(value: $maxPapers, in: 5...50, step: 5) {
+                            Text("\(maxPapers)")
+                        }
+                    }
+                    
+                    HStack {
+                        Text("Default category")
+                        Spacer()
+                        Picker("Category", selection: $defaultCategory) {
+                            Text("Latest").tag("latest")
+                            Text("Computer Science").tag("cs")
+                            Text("Mathematics").tag("math")
+                            Text("Physics").tag("physics")
+                            Text("Quantitative Biology").tag("q-bio")
+                            Text("Quantitative Finance").tag("q-fin")
+                            Text("Statistics").tag("stat")
+                            Text("Electrical Engineering").tag("eess")
+                            Text("Economics").tag("econ")
+                        }
+                        .pickerStyle(MenuPickerStyle())
+                    }
+                }
+                
+                // Update Settings Section
+                Section("Update") {
+                    Toggle("Automatic update", isOn: $autoRefresh)
+                    
+                    if autoRefresh {
+                        HStack {
+                            Text("Interval")
+                            Spacer()
+                            Picker("Interval", selection: $refreshInterval) {
+                                Text("5 min").tag(5)
+                                Text("15 min").tag(15)
+                                Text("30 min").tag(30)
+                                Text("60 min").tag(60)
+                                Text("120 min").tag(120)
+                            }
+                            .pickerStyle(MenuPickerStyle())
+                        }
+                    }
+                }
+                
+                // Interface Settings Section
+                Section("Interface") {
+                    Toggle("Compact mode", isOn: $compactMode)
+                    Toggle("Show preview", isOn: $showPreview)
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Text("Font size")
+                            Spacer()
+                            Text("\(Int(fontSize))pt")
+                                .foregroundColor(.blue)
+                        }
+                        
+                        Slider(value: $fontSize, in: 10...20, step: 1)
+                            .tint(.blue)
+                    }
+                }
+                
+                // Notifications Section
+                Section("Notifications") {
+                    Toggle("Show notifications", isOn: $showNotifications)
+                    
+                    if showNotifications {
+                        Button("Test Notification") {
+                            testNotification()
+                        }
+                        .foregroundColor(.blue)
+                    }
+                }
+                
+                // About Section
+                Section("About") {
+                    HStack {
+                        Text("Version")
+                        Spacer()
+                        Text("1.0.0")
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    HStack {
+                        Text("Developer")
+                        Spacer()
+                        Text("Julián Hinojosa Gil")
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    Button("Test Connection") {
+                        testConnection()
+                    }
+                    .foregroundColor(.blue)
+                    .disabled(isTestingConnection)
+                }
+                
+                // Actions Section
+                Section {
+                    Button("Reset Settings") {
+                        showingResetAlert = true
+                    }
+                    .foregroundColor(.red)
+                }
+            }
+            .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+        .alert("Connection Result", isPresented: $showingConnectionAlert) {
+            Button("OK") { }
+        } message: {
+            Text(connectionTestResult)
+        }
+        .alert("Reset Settings", isPresented: $showingResetAlert) {
+            Button("Reset", role: .destructive) {
+                resetSettings()
+            }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Are you sure you want to reset all settings?")
+        }
+    }
+    
+    // MARK: - Helper Methods
+    
+    /// Request notification permissions
+    private func requestNotificationPermission() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+            DispatchQueue.main.async {
+                if !granted {
+                    self.showNotifications = false
+                }
+            }
+        }
+    }
+    
+    /// Send a test notification
+    private func testNotification() {
+        let content = UNMutableNotificationContent()
+        content.title = "ArXiv App - Test"
+        content.body = "Notifications are working correctly."
+        content.sound = .default
+        
+        let request = UNNotificationRequest(
+            identifier: "test-notification",
+            content: content,
+            trigger: nil
+        )
+        
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Error sending notification: \(error)")
+            }
+        }
+    }
+    
+    /// Test the connection with ArXiv
+    private func testConnection() {
+        isTestingConnection = true
+        
+        Task {
+            do {
+                let url = URL(string: "https://export.arxiv.org/api/query?search_query=all:test&start=0&max_results=1")!
+                let (_, response) = try await URLSession.shared.data(from: url)
+                
+                DispatchQueue.main.async {
+                    if let httpResponse = response as? HTTPURLResponse {
+                        if httpResponse.statusCode == 200 {
+                            self.connectionTestResult = "✅ Successful connection"
+                        } else {
+                            self.connectionTestResult = "❌ HTTP Error: \(httpResponse.statusCode)"
+                        }
+                    }
+                    self.isTestingConnection = false
+                    self.showingConnectionAlert = true
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.connectionTestResult = "❌ Error: \(error.localizedDescription)"
+                    self.isTestingConnection = false
+                    self.showingConnectionAlert = true
+                }
+            }
+        }
+    }
+    
+    /// Reset all settings to their default values
+    private func resetSettings() {
+        refreshInterval = 30
+        maxPapers = 10
+        defaultCategory = "latest"
+        autoRefresh = false
+        showNotifications = true
+        compactMode = false
+        showPreview = true
+        fontSize = 14.0
+        
+        // Notify changes
+        NotificationCenter.default.post(
+            name: .settingsChanged,
+            object: nil
+        )
+    }
+}
+#endif
