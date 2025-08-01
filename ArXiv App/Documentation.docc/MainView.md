@@ -1,6 +1,6 @@
 # MainView
 
-The main view of the ArXiv application implementing the MVC pattern.
+The main view of the ArXiv Finder application implementing the MVC pattern.
 
 ## Overview
 

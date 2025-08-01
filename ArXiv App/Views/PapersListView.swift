@@ -37,29 +37,8 @@ struct PapersListView: View {
     /// Function to load the latest papers
     let loadLatestPapers: () async -> Void
     
-    /// Optional function to load Computer Science papers (iOS only)
-    let loadComputerSciencePapers: (() async -> Void)?
-    
-    /// Optional function to load Mathematics papers (iOS only)
-    let loadMathematicsPapers: (() async -> Void)?
-    
-    /// Optional function to load Physics papers (iOS only)
-    let loadPhysicsPapers: (() async -> Void)?
-    
-    /// Optional function to load Quantitative Biology papers (iOS only)
-    let loadQuantitativeBiologyPapers: (() async -> Void)?
-    
-    /// Optional function to load Quantitative Finance papers (iOS only)
-    let loadQuantitativeFinancePapers: (() async -> Void)?
-    
-    /// Optional function to load Statistics papers (iOS only)
-    let loadStatisticsPapers: (() async -> Void)?
-    
-    /// Optional function to load Electrical Engineering papers (iOS only)
-    let loadElectricalEngineeringPapers: (() async -> Void)?
-    
-    /// Optional function to load Economics papers (iOS only)
-    let loadEconomicsPapers: (() async -> Void)?
+    /// Dictionary of category loading functions for iOS
+    let categoryLoaders: [String: () async -> Void]?
     
     /// Internal state to control automatic reload
     @State private var shouldRefreshOnAppear = false
@@ -78,28 +57,14 @@ struct PapersListView: View {
     ///   - errorMessage: Binding for error messages
     ///   - controller: Optional controller to handle ArXiv operations
     ///   - loadLatestPapers: Function to load latest papers
-    ///   - loadComputerSciencePapers: Optional function to load CS papers
-    ///   - loadMathematicsPapers: Optional function to load Math papers
-    ///   - loadPhysicsPapers: Optional function to load Physics papers
-    ///   - loadQuantitativeBiologyPapers: Optional function to load Quantitative Biology papers
-    ///   - loadQuantitativeFinancePapers: Optional function to load Quantitative Finance papers
-    ///   - loadStatisticsPapers: Optional function to load Statistics papers
-    ///   - loadElectricalEngineeringPapers: Optional function to load Electrical Engineering papers
-    ///   - loadEconomicsPapers: Optional function to load Economics papers
-    init(papers: [ArXivPaper], isLoading: Bool, errorMessage: Binding<String?>, controller: ArXivController? = nil, loadLatestPapers: @escaping () async -> Void, loadComputerSciencePapers: (() async -> Void)? = nil, loadMathematicsPapers: (() async -> Void)? = nil, loadPhysicsPapers: (() async -> Void)? = nil, loadQuantitativeBiologyPapers: (() async -> Void)? = nil, loadQuantitativeFinancePapers: (() async -> Void)? = nil, loadStatisticsPapers: (() async -> Void)? = nil, loadElectricalEngineeringPapers: (() async -> Void)? = nil, loadEconomicsPapers: (() async -> Void)? = nil) {
+    ///   - categoryLoaders: Dictionary of category loading functions
+    init(papers: [ArXivPaper], isLoading: Bool, errorMessage: Binding<String?>, controller: ArXivController? = nil, loadLatestPapers: @escaping () async -> Void, categoryLoaders: [String: () async -> Void]? = nil) {
         self.papers = papers
         self.isLoading = isLoading
         self._errorMessage = errorMessage
         self.controller = controller
         self.loadLatestPapers = loadLatestPapers
-        self.loadComputerSciencePapers = loadComputerSciencePapers
-        self.loadMathematicsPapers = loadMathematicsPapers
-        self.loadPhysicsPapers = loadPhysicsPapers
-        self.loadQuantitativeBiologyPapers = loadQuantitativeBiologyPapers
-        self.loadQuantitativeFinancePapers = loadQuantitativeFinancePapers
-        self.loadStatisticsPapers = loadStatisticsPapers
-        self.loadElectricalEngineeringPapers = loadElectricalEngineeringPapers
-        self.loadEconomicsPapers = loadEconomicsPapers
+        self.categoryLoaders = categoryLoaders
         self._selectedPaper = .constant(nil)
     }
     
@@ -118,14 +83,7 @@ struct PapersListView: View {
         self._errorMessage = errorMessage
         self.controller = controller
         self.loadLatestPapers = loadLatestPapers
-        self.loadComputerSciencePapers = nil
-        self.loadMathematicsPapers = nil
-        self.loadPhysicsPapers = nil
-        self.loadQuantitativeBiologyPapers = nil
-        self.loadQuantitativeFinancePapers = nil
-        self.loadStatisticsPapers = nil
-        self.loadElectricalEngineeringPapers = nil
-        self.loadEconomicsPapers = nil
+        self.categoryLoaders = nil
         self._selectedPaper = selectedPaper
     }
     
@@ -146,6 +104,9 @@ struct PapersListView: View {
                         .foregroundColor(.secondary)
                 }
                 .padding()
+                #if os(macOS)
+                .frame(minWidth: 350)
+                #endif
             } else if let error = errorMessage {
                 // Error message when there are connection problems
                 ContentUnavailableView(
@@ -169,6 +130,9 @@ struct PapersListView: View {
                     }
                     .padding()
                 }
+                #if os(macOS)
+                .frame(minWidth: 350)
+                #endif
             } else if papers.isEmpty {
                 // Message when there are no papers available but no error
                 ContentUnavailableView(
@@ -183,8 +147,11 @@ struct PapersListView: View {
                         }
                     }
                     .buttonStyle(.borderedProminent)
-                    .padding()
+                    .padding(5)
                 }
+                #if os(macOS)
+                .frame(minWidth: 350)
+                #endif
             } else if controller?.isSearchActive == true && papers.isEmpty {
                 // No search results
                 ContentUnavailableView(
@@ -206,6 +173,9 @@ struct PapersListView: View {
                     }
                     .padding()
                 }
+                #if os(macOS)
+                .frame(minWidth: 350)
+                #endif
             } else {
                 // List of ArXiv papers
                 #if os(macOS)
@@ -214,7 +184,7 @@ struct PapersListView: View {
                         .tag(paper)
                 }
                 .listStyle(PlainListStyle())
-                .frame(minWidth: 450)
+                .frame(minWidth: 350)
                 #else
                 List(papers, id: \.id) { paper in
                     NavigationLink(destination: PaperDetailView(paper: paper, controller: controller, onBackToList: nil)) {
@@ -339,40 +309,10 @@ struct PapersListView: View {
                 
                 Button(action: {
                     Task {
-                        switch currentCategory {
-                        case "cs":
-                            if let loadCS = loadComputerSciencePapers {
-                                await loadCS()
-                            }
-                        case "math":
-                            if let loadMath = loadMathematicsPapers {
-                                await loadMath()
-                            }
-                        case "physics":
-                            if let loadPhysics = loadPhysicsPapers {
-                                await loadPhysics()
-                            }
-                        case "q-bio":
-                            if let loadBio = loadQuantitativeBiologyPapers {
-                                await loadBio()
-                            }
-                        case "q-fin":
-                            if let loadFin = loadQuantitativeFinancePapers {
-                                await loadFin()
-                            }
-                        case "stat":
-                            if let loadStats = loadStatisticsPapers {
-                                await loadStats()
-                            }
-                        case "eess":
-                            if let loadEE = loadElectricalEngineeringPapers {
-                                await loadEE()
-                            }
-                        case "econ":
-                            if let loadEcon = loadEconomicsPapers {
-                                await loadEcon()
-                            }
-                        default:
+                        if let loaders = categoryLoaders,
+                           let loader = loaders[currentCategory] {
+                            await loader()
+                        } else {
                             await loadLatestPapers()
                         }
                     }
@@ -405,28 +345,10 @@ struct PapersListView: View {
 #Preview {
     PapersListView(
         papers: [
-            ArXivPaper(
-                id: "2025.0001",
-                title: "Example of Paper 1",
-                summary: "This is an example summary",
-                authors: "John Doe",
-                publishedDate: Date(),
-                updatedDate: Date(),
-                pdfURL: "https://arxiv.org/pdf/2025.0001.pdf",
-                linkURL: "https://arxiv.org/abs/2025.0001",
-                categories: "cs.AI"
-            )
+            
         ],
         isLoading: false,
         errorMessage: .constant(nil),
         loadLatestPapers: { },
-        loadComputerSciencePapers: { },
-        loadMathematicsPapers: { },
-        loadPhysicsPapers: { },
-        loadQuantitativeBiologyPapers: { },
-        loadQuantitativeFinancePapers: { },
-        loadStatisticsPapers: { },
-        loadElectricalEngineeringPapers: { },
-        loadEconomicsPapers: { }
     )
 }

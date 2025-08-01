@@ -66,7 +66,7 @@ struct ArXivPaperRow: View {
                         // Publication date
                         Label(paper.publishedDate.formatted(date: .abbreviated, time: .omitted), 
                               systemImage: "calendar")
-                            .font(.system(size: fontSize - 6))
+                            .font(.system(size: fontSize - 5))
                             .foregroundColor(.secondary)
                         
                         // Update date (if exists, is different and not in compact mode)
@@ -75,7 +75,7 @@ struct ArXivPaperRow: View {
                            abs(updatedDate.timeIntervalSince(paper.publishedDate)) > 3600 { // More than 1 hour difference
                             Label("Updated: \(updatedDate.formatted(date: .abbreviated, time: .omitted))", 
                                   systemImage: "arrow.clockwise")
-                                .font(.system(size: fontSize - 8))
+                                .font(.system(size: fontSize - 5))
                                 .foregroundColor(.orange)
                         }
                     }
@@ -88,7 +88,7 @@ struct ArXivPaperRow: View {
                         HStack(spacing: 4) {
                             ForEach(categories.prefix(2), id: \.self) { category in
                                 Text(category)
-                                    .font(.system(size: fontSize - 8))
+                                    .font(.system(size: fontSize - 5))
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 2)
                                     .background(Color.blue.opacity(0.1))
@@ -130,13 +130,13 @@ struct ArXivPaperRow: View {
             title: "Example of ArXiv paper",
             summary: "This is an example summary of a scientific paper that shows how it would look in the application.",
             authors: "John Doe, Jane Smith",
-            publishedDate: Date(),
+            publishedDate: Calendar.current.date(byAdding: .day, value: -7, to: Date()) ?? Date(),
             updatedDate: Date(),
             pdfURL: "https://arxiv.org/pdf/2025.0001.pdf",
             linkURL: "https://arxiv.org/abs/2025.0001",
             categories: "cs.AI cs.LG"
         ),
-        controller: nil
+        controller: ArXivController()
     )
     .padding()
 }

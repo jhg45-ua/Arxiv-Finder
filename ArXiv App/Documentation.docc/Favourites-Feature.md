@@ -1,6 +1,6 @@
 # Favorites Functionality
 
-Complete documentation of the favorites functionality in ArXiv App.
+Complete documentation of the favorites functionality in ArXiv Finder.
 
 ## 🌟 Overview
 

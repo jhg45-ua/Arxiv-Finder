@@ -1,10 +1,10 @@
-# ArXiv App
+# ArXiv Finder
 
 A multiplatform application (iOS and macOS) for exploring and managing scientific papers from ArXiv.
 
 ## 📋 Description
 
-ArXiv App allows users to search, explore, and save scientific papers from ArXiv with a modern and native interface. The application offers search functionalities, organization by categories, and local storage for offline access.
+ArXiv Finder allows users to search, explore, and save scientific papers from ArXiv with a modern and native interface. The application offers search functionalities, organization by categories, and local storage for offline access.
 
 ## ✨ Features
 
@@ -70,12 +70,12 @@ To access documentation:
 1. **Clone the repository**:
    ```bash
    git clone <REPOSITORY_URL>
-   cd "ArXiv App"
+   cd "ArXiv Finder"
    ```
 
 2. **Open the project**:
    ```bash
-   open "ArXiv App.xcodeproj"
+   open "ArXiv Finder.xcodeproj"
    ```
 
 3. **Configure the project**:
@@ -124,8 +124,8 @@ To access documentation:
 ## 📁 Estructura del Proyecto
 
 ```
-ArXiv App/
-├── ArXiv_AppApp.swift          # Punto de entrada principal
+ArXiv Finder/
+├── ArXiv_FinderApp.swift          # Punto de entrada principal
 ├── Models/
 │   └── ArXivPaper.swift        # Modelo de datos
 ├── Views/

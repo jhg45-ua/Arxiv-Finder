@@ -10,7 +10,7 @@ import SwiftUI
 import SwiftData
 import UserNotifications
 
-/// Controller that handles the business logic of the ArXiv application
+/// Controller that handles the business logic of the ArXiv Finder application
 /// Acts as intermediary between models (data) and views (UI)
 @MainActor
 final class ArXivController: ObservableObject {
@@ -230,7 +230,10 @@ final class ArXivController: ObservableObject {
                 category: category.isEmpty ? nil : category
             )
             
-            searchResults = results
+            // Synchronize favorite state for search results
+            var synchronizedResults = results
+            synchronizeFavoriteState(for: &synchronizedResults)
+            searchResults = synchronizedResults
             
             // Asegura que la animación de carga dure al menos 1 segundo
             await ensureMinimumLoadingTime(startTime: startTime)
@@ -269,7 +272,10 @@ final class ArXivController: ObservableObject {
         do {
             let results = try await arxivService.enhancedSearch(query: searchQuery, count: maxPapers)
             
-            searchResults = results
+            // Synchronize favorite state for enhanced search results
+            var synchronizedResults = results
+            synchronizeFavoriteState(for: &synchronizedResults)
+            searchResults = synchronizedResults
             
             await ensureMinimumLoadingTime(startTime: startTime)
             
@@ -353,63 +359,38 @@ final class ArXivController: ObservableObject {
     /// - Parameter category: Category to fetch papers from
     /// - Returns: Array of papers from the category
     private func fetchPapersForCategory(_ category: String) async throws -> [ArXivPaper] {
-        switch category {
-        case "cs":
-            return try await arxivService.fetchComputerSciencePapers(count: maxPapers)
-        case "math":
-            return try await arxivService.fetchMathematicsPapers(count: maxPapers)
-        case "physics":
-            return try await arxivService.fetchPhysicsPapers(count: maxPapers)
-        case "q-bio":
-            return try await arxivService.fetchQuantitativeBiologyPapers(count: maxPapers)
-        case "q-fin":
-            return try await arxivService.fetchQuantitativeFinancePapers(count: maxPapers)
-        case "stat":
-            return try await arxivService.fetchStatisticsPapers(count: maxPapers)
-        case "eess":
-            return try await arxivService.fetchElectricalEngineeringPapers(count: maxPapers)
-        case "econ":
-            return try await arxivService.fetchEconomicsPapers(count: maxPapers)
-        default: // "latest"
+        guard let arxivCategory = ArXivCategory.allCases.first(where: { $0.identifier == category }) else {
             return try await arxivService.fetchLatestPapers(count: maxPapers)
         }
+        return try await arxivService.fetchPapers(for: arxivCategory, count: maxPapers)
     }
     
     /// Updates the papers according to the category
     private func updatePapers(_ papers: [ArXivPaper], for category: String) {
+        var papersToUpdate = papers
+        
+        // Synchronize favorite state before updating
+        synchronizeFavoriteState(for: &papersToUpdate)
+        
         switch category {
         case "cs":
-            csPapers = papers
+            csPapers = papersToUpdate
         case "math":
-            mathPapers = papers
+            mathPapers = papersToUpdate
         case "physics":
-            physicsPapers = papers
+            physicsPapers = papersToUpdate
         case "q-bio":
-            quantitativeBiologyPapers = papers
+            quantitativeBiologyPapers = papersToUpdate
         case "q-fin":
-            quantitativeFinancePapers = papers
+            quantitativeFinancePapers = papersToUpdate
         case "stat":
-            statisticsPapers = papers
+            statisticsPapers = papersToUpdate
         case "eess":
-            electricalEngineeringPapers = papers
+            electricalEngineeringPapers = papersToUpdate
         case "econ":
-            economicsPapers = papers
+            economicsPapers = papersToUpdate
         default: // "latest"
-            latestPapers = papers
-        }
-        
-        // Save papers to SwiftData if available
-        if let modelContext = modelContext {
-            for paper in papers {
-                modelContext.insert(paper)
-            }
-            
-            do {
-                try modelContext.save()
-                print("✅ Controller: Saved \(papers.count) papers to SwiftData for category: \(category)")
-            } catch {
-                print("❌ Controller: Error saving papers to SwiftData: \(error)")
-            }
+            latestPapers = papersToUpdate
         }
     }
     
@@ -512,7 +493,7 @@ final class ArXivController: ObservableObject {
     /// Shows an automatic update notification
     private func showAutoRefreshNotification() {
         let content = UNMutableNotificationContent()
-        content.title = "ArXiv App"
+                        content.title = "ArXiv Finder"
         content.body = "Papers actualizados automáticamente"
         content.sound = .default
         
@@ -617,34 +598,34 @@ final class ArXivController: ObservableObject {
         currentCategory = "favorites"
         isLoading = true
         
+        // Clean up duplicates before loading
+        cleanupDuplicateFavorites()
+        
         do {
             if let modelContext = modelContext {
                 // Load from SwiftData
                 let descriptor = FetchDescriptor<ArXivPaper>(predicate: #Predicate<ArXivPaper> { $0.isFavorite == true })
                 let favoriteResults = try modelContext.fetch(descriptor)
-                favoritePapers = favoriteResults.sorted { $0.favoritedDate ?? Date.distantPast > $1.favoritedDate ?? Date.distantPast }
-                print("✅ Controller: Loaded \(favoritePapers.count) favorite papers from SwiftData")
-                print("📋 Favorite papers: \(favoritePapers.map { $0.title })")
                 
-                // Also check if any papers from search results are favorites
-                let searchFavorites = searchResults.filter { $0.isFavorite }
-                for searchPaper in searchFavorites {
-                    if !favoritePapers.contains(where: { $0.id == searchPaper.id }) {
-                        favoritePapers.append(searchPaper)
-                        print("✅ Controller: Added search paper to favorites: \(searchPaper.title)")
+                // Remove duplicates and sort by favorited date
+                var uniqueFavorites: [ArXivPaper] = []
+                var seenIDs: Set<String> = []
+                
+                for paper in favoriteResults {
+                    if !seenIDs.contains(paper.id) {
+                        uniqueFavorites.append(paper)
+                        seenIDs.insert(paper.id)
                     }
                 }
                 
-                // Re-sort after adding search papers
-                favoritePapers.sort { $0.favoritedDate ?? Date.distantPast > $1.favoritedDate ?? Date.distantPast }
-                print("✅ Controller: Final favorite papers count: \(favoritePapers.count)")
+                favoritePapers = uniqueFavorites.sorted { $0.favoritedDate ?? Date.distantPast > $1.favoritedDate ?? Date.distantPast }
+                print("✅ Controller: Loaded \(favoritePapers.count) favorite papers from SwiftData")
                 
             } else {
                 // Fallback: load from memory
                 favoritePapers = getAllPapers().filter { $0.isFavorite }
                     .sorted { $0.favoritedDate ?? Date.distantPast > $1.favoritedDate ?? Date.distantPast }
                 print("✅ Controller: Loaded \(favoritePapers.count) favorite papers from memory")
-                print("📋 Favorite papers: \(favoritePapers.map { $0.title })")
             }
         } catch {
             print("❌ Controller: Error loading favorites: \(error)")
@@ -652,8 +633,6 @@ final class ArXivController: ObservableObject {
         }
         
         isLoading = false
-        print("🎯 Controller: Current category is now: \(currentCategory)")
-        print("🎯 Controller: Filtered papers count: \(filteredPapers.count)")
     }
     
     /// Toggles the favorite state of a paper
@@ -661,95 +640,40 @@ final class ArXivController: ObservableObject {
     func toggleFavorite(for paper: ArXivPaper) {
         print("🚀 Controller: Toggling favorite for paper: \(paper.title)")
         
-        // Check if paper already exists in SwiftData
-        if let modelContext = modelContext {
-            do {
-                // Fetch all papers and find the one with matching ID
-                let descriptor = FetchDescriptor<ArXivPaper>()
-                let allPapers = try modelContext.fetch(descriptor)
-                let existingPaper = allPapers.first { $0.id == paper.id }
-                
-                let paperToUpdate: ArXivPaper
-                if let existingPaper = existingPaper {
-                    // Use existing paper from SwiftData
-                    paperToUpdate = existingPaper
-                    print("✅ Controller: Found existing paper in SwiftData")
-                } else {
-                    // Insert new paper into SwiftData
-                    modelContext.insert(paper)
-                    paperToUpdate = paper
-                    print("✅ Controller: Inserted new paper into SwiftData")
-                }
-                
-                // Update the paper's favorite state
-                let newFavoriteState = !paperToUpdate.isFavorite
-                paperToUpdate.setFavorite(newFavoriteState)
-                
-                // Also update the original paper object for UI consistency
-                paper.setFavorite(newFavoriteState)
-                
-                try modelContext.save()
-                print("✅ Controller: Paper favorite status saved to SwiftData")
-                
-                // Update the favorite list
-                if newFavoriteState {
-                    // Add to favorites if not already in the list
-                    if !favoritePapers.contains(where: { $0.id == paperToUpdate.id }) {
-                        favoritePapers.append(paperToUpdate)
-                        favoritePapers.sort { $0.favoritedDate ?? Date.distantPast > $1.favoritedDate ?? Date.distantPast }
-                        print("✅ Controller: Added paper to favorites list. Total favorites: \(favoritePapers.count)")
-                    }
-                } else {
-                    // Remove from favorites
-                    favoritePapers.removeAll { $0.id == paperToUpdate.id }
-                    print("✅ Controller: Removed paper from favorites list. Total favorites: \(favoritePapers.count)")
-                }
-                
-                // Update in all other category lists
-                updatePaperInAllCategories(paperToUpdate)
-                
-                print("✅ Controller: Paper favorite status updated to: \(newFavoriteState)")
-                print("📋 Current favorites: \(favoritePapers.map { $0.title })")
-                
-            } catch {
-                print("❌ Controller: Error managing paper in SwiftData: \(error)")
-                // Fallback to the old method
-                fallbackToggleFavorite(for: paper)
-            }
-        } else {
-            // No SwiftData available, use fallback
-            fallbackToggleFavorite(for: paper)
-        }
-    }
-    
-    /// Fallback method for toggling favorites when SwiftData is not available
-    private func fallbackToggleFavorite(for paper: ArXivPaper) {
-        print("🔄 Controller: Using fallback method for paper: \(paper.title)")
-        
         // Update the paper's favorite state
         let newFavoriteState = !paper.isFavorite
         paper.setFavorite(newFavoriteState)
         
+        // Save to SwiftData if available
+        if let modelContext = modelContext {
+            // Ensure paper is in SwiftData
+            modelContext.insert(paper)
+            
+            do {
+                try modelContext.save()
+                print("✅ Controller: Paper favorite status saved to SwiftData")
+            } catch {
+                print("❌ Controller: Error saving to SwiftData: \(error)")
+            }
+        }
+        
         // Update the favorite list
         if newFavoriteState {
-            // Add to favorites if not already in the list
             if !favoritePapers.contains(where: { $0.id == paper.id }) {
                 favoritePapers.append(paper)
                 favoritePapers.sort { $0.favoritedDate ?? Date.distantPast > $1.favoritedDate ?? Date.distantPast }
-                print("✅ Controller: Added paper to favorites list. Total favorites: \(favoritePapers.count)")
+                print("✅ Controller: Added paper to favorites. Total: \(favoritePapers.count)")
             }
         } else {
-            // Remove from favorites
             favoritePapers.removeAll { $0.id == paper.id }
-            print("✅ Controller: Removed paper from favorites list. Total favorites: \(favoritePapers.count)")
+            print("✅ Controller: Removed paper from favorites. Total: \(favoritePapers.count)")
         }
         
         // Update in all other category lists
         updatePaperInAllCategories(paper)
-        
-        print("✅ Controller: Paper favorite status updated to: \(newFavoriteState)")
-        print("📋 Current favorites: \(favoritePapers.map { $0.title })")
     }
+    
+
     
     /// Updates a paper in all categories where it appears
     private func updatePaperInAllCategories(_ paper: ArXivPaper) {
@@ -783,6 +707,24 @@ final class ArXivController: ObservableObject {
         }
     }
     
+    /// Synchronizes the favorite state of papers with SwiftData
+    /// This ensures that papers loaded from API have the correct favorite state
+    private func synchronizeFavoriteState(for papers: inout [ArXivPaper]) {
+        guard modelContext != nil else { return }
+        
+        // Get all favorite papers from SwiftData
+        let favoriteIDs = Set(favoritePapers.map { $0.id })
+        
+        // Update each paper's favorite state
+        for i in 0..<papers.count {
+            let isFavorite = favoriteIDs.contains(papers[i].id)
+            if papers[i].isFavorite != isFavorite {
+                papers[i].setFavorite(isFavorite)
+                print("🔄 Controller: Synchronized favorite state for paper: \(papers[i].title) - isFavorite: \(isFavorite)")
+            }
+        }
+    }
+    
     /// Gets all papers from all categories (helper method)
     private func getAllPapers() -> [ArXivPaper] {
         var allPapers: [ArXivPaper] = []
@@ -809,6 +751,37 @@ final class ArXivController: ObservableObject {
         
         return uniquePapers
     }
+    
+    /// Simple cleanup of duplicate favorites
+    private func cleanupDuplicateFavorites() {
+        guard let modelContext = modelContext else { return }
+        
+        do {
+            let descriptor = FetchDescriptor<ArXivPaper>(predicate: #Predicate<ArXivPaper> { $0.isFavorite == true })
+            let favorites = try modelContext.fetch(descriptor)
+            
+            var seenIDs: Set<String> = []
+            var duplicates: [ArXivPaper] = []
+            
+            for paper in favorites {
+                if seenIDs.contains(paper.id) {
+                    duplicates.append(paper)
+                } else {
+                    seenIDs.insert(paper.id)
+                }
+            }
+            
+            if !duplicates.isEmpty {
+                for paper in duplicates {
+                    modelContext.delete(paper)
+                }
+                try modelContext.save()
+                print("🧹 Controller: Removed \(duplicates.count) duplicate favorites")
+            }
+        } catch {
+            print("❌ Controller: Error cleaning favorites: \(error)")
+        }
+    }
 }
 
 // MARK: - Notification Names Extension
@@ -817,3 +790,5 @@ extension Notification.Name {
     static let interfaceSettingsChanged = Notification.Name("interfaceSettingsChanged")
     static let settingsReset = Notification.Name("settingsReset")
 }
+
+

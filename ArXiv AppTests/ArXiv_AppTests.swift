@@ -8,7 +8,7 @@
 import Testing
 @testable import ArXiv_App
 
-/// Suite de pruebas unitarias para la aplicación ArXiv App
+/// Suite de pruebas unitarias para la aplicación ArXiv Finder
 /// Utiliza el nuevo framework Testing de Swift para validar la funcionalidad de la aplicación
 /// @testable import permite acceder a elementos internos de la aplicación para testing
 struct ArXiv_AppTests {

@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-/// Main view of the ArXiv App application following the MVC pattern
+/// Main view of the ArXiv Finder application following the MVC pattern
 /// Provides an adaptive interface that works on both iOS and macOS
 ///
 /// On iOS uses NavigationStack for hierarchical navigation

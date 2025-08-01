@@ -7,7 +7,7 @@
 
 import XCTest
 
-/// Suite específica de pruebas para el lanzamiento de la aplicación ArXiv App
+/// Suite específica de pruebas para el lanzamiento de la aplicación ArXiv Finder
 /// Se enfoca en validar que la aplicación se inicie correctamente y capture evidencia visual
 /// Estas pruebas son especialmente útiles para detectar problemas críticos de startup
 final class ArXiv_AppUITestsLaunchTests: XCTestCase {
@@ -37,7 +37,7 @@ final class ArXiv_AppUITestsLaunchTests: XCTestCase {
 
         // Inserta pasos aquí para realizar después del lanzamiento de la app pero antes de tomar la captura de pantalla,
         // como iniciar sesión en una cuenta de prueba o navegar a algún lugar en la app
-        // TODO: Agregar validaciones específicas del estado inicial de ArXiv App
+        // TODO: Agregar validaciones específicas del estado inicial de ArXiv Finder
 
         // Captura una captura de pantalla de la pantalla de lanzamiento para evidencia
         let attachment = XCTAttachment(screenshot: app.screenshot())

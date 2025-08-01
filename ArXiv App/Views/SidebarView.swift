@@ -258,5 +258,5 @@ struct SidebarView: View {
         onFavoritesSelected: { },
         onSearchSelected: { }
     )
-    .frame(width: 320, height: 500)
+    .frame(width: 320, height: 600)
 }

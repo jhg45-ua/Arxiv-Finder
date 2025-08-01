@@ -1,10 +1,10 @@
 # MVC Architecture
 
-The Model-View-Controller architecture implemented in ArXiv App.
+The Model-View-Controller architecture implemented in ArXiv Finder.
 
 ## 🏗️ Architecture Overview
 
-ArXiv App implements a modern **Model-View-Controller (MVC)** architecture adapted for SwiftUI, combining the benefits of traditional separation of responsibilities with SwiftUI's native reactivity.
+ArXiv Finder implements a modern **Model-View-Controller (MVC)** architecture adapted for SwiftUI, combining the benefits of traditional separation of responsibilities with SwiftUI's native reactivity.
 
 This architecture provides:
 - **Clear separation of responsibilities**
@@ -40,7 +40,7 @@ Each layer has specific and well-defined responsibilities:
 ## 📁 Project Structure
 
 ```
-ArXiv App/
+ArXiv Finder/
 ├── Models/                    # 📊 Data models (M in MVC)
 │   └── ArXivPaper.swift      # Main paper model
 ├── Views/                     # 🖥️ Interface views (V in MVC)
@@ -499,4 +499,4 @@ struct ArXivDesignSystem {
 
 ---
 
-*This MVC architecture provides a solid foundation for the future growth and maintenance of ArXiv App, adapting to changing needs while maintaining code clarity and simplicity.* 
+*This MVC architecture provides a solid foundation for the future growth and maintenance of ArXiv Finder, adapting to changing needs while maintaining code clarity and simplicity.* 

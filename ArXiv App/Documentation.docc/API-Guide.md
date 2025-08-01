@@ -4,7 +4,7 @@ Complete documentation of ArXiv API integration.
 
 ## 🌐 API Overview
 
-ArXiv provides a public RESTful API for accessing scientific paper metadata. This guide documents how ArXiv App interacts with this API to retrieve, search, and process academic papers.
+ArXiv provides a public RESTful API for accessing scientific paper metadata. This guide documents how ArXiv Finder interacts with this API to retrieve, search, and process academic papers.
 
 The API uses:
 - **Protocol**: HTTPS for security

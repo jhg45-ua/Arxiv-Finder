@@ -8,43 +8,112 @@
 import Foundation
 import ArxivKit
 
-/// Service responsible for communicating with the ArXiv API using ArxivKit
-/// Provides a clean interface for fetching papers from different categories
-final class ArXivService: @unchecked Sendable {
+/// Enumeration of ArXiv categories with their corresponding queries
+enum ArXivCategory: CaseIterable {
+    case latest
+    case computerScience
+    case mathematics
+    case physics
+    case quantitativeBiology
+    case quantitativeFinance
+    case statistics
+    case electricalEngineering
+    case economics
     
-    /// Gets the latest papers published on ArXiv
-    /// - Parameter count: Number of papers to fetch (default 10)
-    /// - Returns: Array of ArXiv papers
-    /// - Throws: Error if request or parsing fails
-    nonisolated func fetchLatestPapers(count: Int = 10) async throws -> [ArXivPaper] {
-        print("🌐 Fetching latest papers using ArxivKit...")
-        
-        do {
-            // Search across multiple categories to get the most recent papers
-            let query = any {
+    var name: String {
+        switch self {
+        case .latest: return "Latest"
+        case .computerScience: return "Computer Science"
+        case .mathematics: return "Mathematics"
+        case .physics: return "Physics"
+        case .quantitativeBiology: return "Quantitative Biology"
+        case .quantitativeFinance: return "Quantitative Finance"
+        case .statistics: return "Statistics"
+        case .electricalEngineering: return "Electrical Engineering"
+        case .economics: return "Economics"
+        }
+    }
+    
+    var query: ArxivQuery {
+        switch self {
+        case .latest:
+            return any {
                 subject(ComputerScience.all)
                 subject(Statistics.all)
                 subject(Mathematics.all)
             }
-            
+        case .computerScience:
+            return subject(ComputerScience.all)
+        case .mathematics:
+            return subject(Mathematics.all)
+        case .physics:
+            return subject(Physics.all)
+        case .quantitativeBiology:
+            return subject(QuantitativeBiology.all)
+        case .quantitativeFinance:
+            return subject(QuantitativeFinance.all)
+        case .statistics:
+            return subject(Statistics.all)
+        case .electricalEngineering:
+            return subject(ElectricalEngineeringAndSystemsScience.all)
+        case .economics:
+            return subject(Economy.all)
+        }
+    }
+    
+    var identifier: String {
+        switch self {
+        case .latest: return "latest"
+        case .computerScience: return "cs"
+        case .mathematics: return "math"
+        case .physics: return "physics"
+        case .quantitativeBiology: return "q-bio"
+        case .quantitativeFinance: return "q-fin"
+        case .statistics: return "stat"
+        case .electricalEngineering: return "eess"
+        case .economics: return "econ"
+        }
+    }
+}
+
+/// Service responsible for communicating with the ArXiv API using ArxivKit
+/// Provides a clean interface for fetching papers from different categories
+final class ArXivService: @unchecked Sendable {
+    
+    /// Generic method to fetch papers by category
+    /// - Parameters:
+    ///   - category: The category to fetch papers from
+    ///   - count: Number of papers to fetch (default 10)
+    /// - Returns: Array of ArXiv papers
+    /// - Throws: Error if request or parsing fails
+    nonisolated func fetchPapers(for category: ArXivCategory, count: Int = 10) async throws -> [ArXivPaper] {
+        print("🌐 Fetching \(category.name) papers using ArxivKit...")
+        
+        do {
+            let query = category.query
             let request = query
                 .itemsPerPage(count)
                 .sortingOrder(ArxivRequestSpecification.SortingOrder.descending)
                 .sorted(by: ArxivRequestSpecification.SortingCriterion.lastUpdateDate)
             
             let response = try await request.fetch(using: URLSession.shared)
+            let papers = response.entries.map { convertToArXivPaper(from: $0) }
             
-            let papers = response.entries.map { entry in
-                convertToArXivPaper(from: entry)
-            }
-            
-            print("✅ Successfully fetched \(papers.count) latest papers using ArxivKit")
+            print("✅ Successfully fetched \(papers.count) \(category.name) papers")
             return papers
             
         } catch {
-            print("❌ Error fetching latest papers: \(error.localizedDescription)")
+            print("❌ Error fetching \(category.name) papers: \(error.localizedDescription)")
             throw ArXivError.networkError(error.localizedDescription)
         }
+    }
+    
+    /// Gets the latest papers published on ArXiv
+    /// - Parameter count: Number of papers to fetch (default 10)
+    /// - Returns: Array of ArXiv papers
+    /// - Throws: Error if request or parsing fails
+    nonisolated func fetchLatestPapers(count: Int = 10) async throws -> [ArXivPaper] {
+        return try await fetchPapers(for: .latest, count: count)
     }
     
     /// Gets Computer Science papers from ArXiv
@@ -52,28 +121,7 @@ final class ArXivService: @unchecked Sendable {
     /// - Returns: Array of Computer Science papers
     /// - Throws: Error if request or parsing fails
     nonisolated func fetchComputerSciencePapers(count: Int = 10) async throws -> [ArXivPaper] {
-        print("🌐 Fetching Computer Science papers using ArxivKit...")
-        
-        do {
-            let query = subject(ComputerScience.all)
-            let request = query
-                .itemsPerPage(count)
-                .sortingOrder(ArxivRequestSpecification.SortingOrder.descending)
-                .sorted(by: ArxivRequestSpecification.SortingCriterion.lastUpdateDate)
-            
-            let response = try await request.fetch(using: URLSession.shared)
-            
-            let papers = response.entries.map { entry in
-                convertToArXivPaper(from: entry)
-            }
-            
-            print("✅ Successfully fetched \(papers.count) Computer Science papers using ArxivKit")
-            return papers
-            
-        } catch {
-            print("❌ Error fetching Computer Science papers: \(error.localizedDescription)")
-            throw ArXivError.networkError(error.localizedDescription)
-        }
+        return try await fetchPapers(for: .computerScience, count: count)
     }
     
     /// Gets papers from Mathematics from ArXiv
@@ -81,28 +129,7 @@ final class ArXivService: @unchecked Sendable {
     /// - Returns: Array of papers from Mathematics
     /// - Throws: Error if the request or parsing fails
     nonisolated func fetchMathematicsPapers(count: Int = 10) async throws -> [ArXivPaper] {
-        print("🌐 Fetching Mathematics papers using ArxivKit...")
-        
-        do {
-            let query = subject(Mathematics.all)
-            let request = query
-                .itemsPerPage(count)
-                .sortingOrder(ArxivRequestSpecification.SortingOrder.descending)
-                .sorted(by: ArxivRequestSpecification.SortingCriterion.lastUpdateDate)
-            
-            let response = try await request.fetch(using: URLSession.shared)
-            
-            let papers = response.entries.map { entry in
-                convertToArXivPaper(from: entry)
-            }
-            
-            print("✅ Successfully fetched \(papers.count) Mathematics papers using ArxivKit")
-            return papers
-            
-        } catch {
-            print("❌ Error fetching Mathematics papers: \(error.localizedDescription)")
-            throw ArXivError.networkError(error.localizedDescription)
-        }
+        return try await fetchPapers(for: .mathematics, count: count)
     }
     
     /// Gets papers from Physics from ArXiv
@@ -110,28 +137,7 @@ final class ArXivService: @unchecked Sendable {
     /// - Returns: Array of papers from Physics
     /// - Throws: Error if the request or parsing fails
     nonisolated func fetchPhysicsPapers(count: Int = 10) async throws -> [ArXivPaper] {
-        print("🌐 Fetching Physics papers using ArxivKit...")
-        
-        do {
-            let query = subject(Physics.all)
-            let request = query
-                .itemsPerPage(count)
-                .sortingOrder(ArxivRequestSpecification.SortingOrder.descending)
-                .sorted(by: ArxivRequestSpecification.SortingCriterion.lastUpdateDate)
-            
-            let response = try await request.fetch(using: URLSession.shared)
-            
-            let papers = response.entries.map { entry in
-                convertToArXivPaper(from: entry)
-            }
-            
-            print("✅ Successfully fetched \(papers.count) Physics papers using ArxivKit")
-            return papers
-            
-        } catch {
-            print("❌ Error fetching Physics papers: \(error.localizedDescription)")
-            throw ArXivError.networkError(error.localizedDescription)
-        }
+        return try await fetchPapers(for: .physics, count: count)
     }
     
     /// Gets papers from Quantitative Biology from ArXiv
@@ -139,28 +145,7 @@ final class ArXivService: @unchecked Sendable {
     /// - Returns: Array of papers from Quantitative Biology
     /// - Throws: Error if the request or parsing fails
     nonisolated func fetchQuantitativeBiologyPapers(count: Int = 10) async throws -> [ArXivPaper] {
-        print("🌐 Fetching Quantitative Biology papers using ArxivKit...")
-        
-        do {
-            let query = subject(QuantitativeBiology.all)
-            let request = query
-                .itemsPerPage(count)
-                .sortingOrder(ArxivRequestSpecification.SortingOrder.descending)
-                .sorted(by: ArxivRequestSpecification.SortingCriterion.lastUpdateDate)
-            
-            let response = try await request.fetch(using: URLSession.shared)
-            
-            let papers = response.entries.map { entry in
-                convertToArXivPaper(from: entry)
-            }
-            
-            print("✅ Successfully fetched \(papers.count) Quantitative Biology papers using ArxivKit")
-            return papers
-            
-        } catch {
-            print("❌ Error fetching Quantitative Biology papers: \(error.localizedDescription)")
-            throw ArXivError.networkError(error.localizedDescription)
-        }
+        return try await fetchPapers(for: .quantitativeBiology, count: count)
     }
     
     /// Gets papers from Quantitative Finance from ArXiv
@@ -168,28 +153,7 @@ final class ArXivService: @unchecked Sendable {
     /// - Returns: Array of papers from Quantitative Finance
     /// - Throws: Error if the request or parsing fails
     nonisolated func fetchQuantitativeFinancePapers(count: Int = 10) async throws -> [ArXivPaper] {
-        print("🌐 Fetching Quantitative Finance papers using ArxivKit...")
-        
-        do {
-            let query = subject(QuantitativeFinance.all)
-            let request = query
-                .itemsPerPage(count)
-                .sortingOrder(ArxivRequestSpecification.SortingOrder.descending)
-                .sorted(by: ArxivRequestSpecification.SortingCriterion.lastUpdateDate)
-            
-            let response = try await request.fetch(using: URLSession.shared)
-            
-            let papers = response.entries.map { entry in
-                convertToArXivPaper(from: entry)
-            }
-            
-            print("✅ Successfully fetched \(papers.count) Quantitative Finance papers using ArxivKit")
-            return papers
-            
-        } catch {
-            print("❌ Error fetching Quantitative Finance papers: \(error.localizedDescription)")
-            throw ArXivError.networkError(error.localizedDescription)
-        }
+        return try await fetchPapers(for: .quantitativeFinance, count: count)
     }
     
     /// Gets papers from Statistics from ArXiv
@@ -197,28 +161,7 @@ final class ArXivService: @unchecked Sendable {
     /// - Returns: Array of papers from Statistics
     /// - Throws: Error if the request or parsing fails
     nonisolated func fetchStatisticsPapers(count: Int = 10) async throws -> [ArXivPaper] {
-        print("🌐 Fetching Statistics papers using ArxivKit...")
-        
-        do {
-            let query = subject(Statistics.all)
-            let request = query
-                .itemsPerPage(count)
-                .sortingOrder(ArxivRequestSpecification.SortingOrder.descending)
-                .sorted(by: ArxivRequestSpecification.SortingCriterion.lastUpdateDate)
-            
-            let response = try await request.fetch(using: URLSession.shared)
-            
-            let papers = response.entries.map { entry in
-                convertToArXivPaper(from: entry)
-            }
-            
-            print("✅ Successfully fetched \(papers.count) Statistics papers using ArxivKit")
-            return papers
-            
-        } catch {
-            print("❌ Error fetching Statistics papers: \(error.localizedDescription)")
-            throw ArXivError.networkError(error.localizedDescription)
-        }
+        return try await fetchPapers(for: .statistics, count: count)
     }
     
     /// Gets papers from Electrical Engineering and Systems Science from ArXiv
@@ -226,28 +169,7 @@ final class ArXivService: @unchecked Sendable {
     /// - Returns: Array of papers from Electrical Engineering and Systems Science
     /// - Throws: Error if the request or parsing fails
     nonisolated func fetchElectricalEngineeringPapers(count: Int = 10) async throws -> [ArXivPaper] {
-        print("🌐 Fetching Electrical Engineering papers using ArxivKit...")
-        
-        do {
-            let query = subject(ElectricalEngineeringAndSystemsScience.all)
-            let request = query
-                .itemsPerPage(count)
-                .sortingOrder(ArxivRequestSpecification.SortingOrder.descending)
-                .sorted(by: ArxivRequestSpecification.SortingCriterion.lastUpdateDate)
-            
-            let response = try await request.fetch(using: URLSession.shared)
-            
-            let papers = response.entries.map { entry in
-                convertToArXivPaper(from: entry)
-            }
-            
-            print("✅ Successfully fetched \(papers.count) Electrical Engineering papers using ArxivKit")
-            return papers
-            
-        } catch {
-            print("❌ Error fetching Electrical Engineering papers: \(error.localizedDescription)")
-            throw ArXivError.networkError(error.localizedDescription)
-        }
+        return try await fetchPapers(for: .electricalEngineering, count: count)
     }
     
     /// Gets papers from Economics from ArXiv
@@ -255,28 +177,7 @@ final class ArXivService: @unchecked Sendable {
     /// - Returns: Array of papers from Economics
     /// - Throws: Error if the request or parsing fails
     nonisolated func fetchEconomicsPapers(count: Int = 10) async throws -> [ArXivPaper] {
-        print("🌐 Fetching Economics papers using ArxivKit...")
-        
-        do {
-            let query = subject(Economy.all)
-            let request = query
-                .itemsPerPage(count)
-                .sortingOrder(ArxivRequestSpecification.SortingOrder.descending)
-                .sorted(by: ArxivRequestSpecification.SortingCriterion.lastUpdateDate)
-            
-            let response = try await request.fetch(using: URLSession.shared)
-            
-            let papers = response.entries.map { entry in
-                convertToArXivPaper(from: entry)
-            }
-            
-            print("✅ Successfully fetched \(papers.count) Economics papers using ArxivKit")
-            return papers
-            
-        } catch {
-            print("❌ Error fetching Economics papers: \(error.localizedDescription)")
-            throw ArXivError.networkError(error.localizedDescription)
-        }
+        return try await fetchPapers(for: .economics, count: count)
     }
     
     /// Search papers in ArXiv using search terms

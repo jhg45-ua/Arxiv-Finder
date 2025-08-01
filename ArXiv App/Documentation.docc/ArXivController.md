@@ -1,6 +1,6 @@
 # ArXivController
 
-The main controller that handles the business logic of the ArXiv application.
+The main controller that handles the business logic of the ArXiv Finder application.
 
 ## Overview
 

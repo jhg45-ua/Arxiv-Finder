@@ -188,7 +188,7 @@ func loadPapers() async {
 
 ### **Setup**
 1. Clone the repository
-2. Open `ArXiv App.xcodeproj` in Xcode
+2. Open `ArXiv Finder.xcodeproj` in Xcode
 3. Build and run on simulator or device
 
 ### **Dependencies**

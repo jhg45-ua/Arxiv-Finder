@@ -1,6 +1,6 @@
 //
-//  ArXiv_AppApp.swift
-//  ArXiv App
+//  ArXiv_Finder.swift
+//  ArXiv Finder
 //
 //  Created by Julián Hinojosa Gil on 2/7/25.
 //
@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 /**
- * ARXIV APP APPLICATION ARCHITECTURE
+ * ARXIV FINDER APPLICATION ARCHITECTURE
  * =====================================
  * 
  * This application follows the Model-View-Controller (MVC) pattern:
@@ -39,7 +39,7 @@ import SwiftData
  * - Concurrency: async/await with @MainActor for UI updates
  */
 
-/// Main entry point of the ArXiv App application
+/// Main entry point of the ArXiv Finder application
 /// Configures the application, data persistence and platform-specific UI
 /// 
 /// Responsibilities:
@@ -48,7 +48,7 @@ import SwiftData
 /// - Data model injection into SwiftUI environment
 /// - Specific window configuration (macOS: size, style; iOS: basic group)
 @main
-struct ArXiv_AppApp: App {
+struct ArXiv_Finder: App {
     /// Shared model container that manages application persistence
     /// Configured with SwiftData to handle local storage of ArXiv papers
     var sharedModelContainer: ModelContainer = {
@@ -64,7 +64,35 @@ struct ArXiv_AppApp: App {
             // Try to create the model container with the specified configuration
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
-            // If container creation fails, terminate the application with a fatal error
+            print("❌ SwiftData Error: \(error)")
+            
+            // If the error is related to migration issues, try to delete the store and recreate
+            if error.localizedDescription.contains("migration") || 
+               error.localizedDescription.contains("constraint violation") ||
+               error.localizedDescription.contains("loadIssueModelContainer") {
+                
+                print("🔄 Attempting to recover from SwiftData migration error...")
+                
+                // Try to delete the existing store files
+                let storeURL = URL.applicationSupportDirectory.appending(path: "default.store")
+                try? FileManager.default.removeItem(at: storeURL)
+                try? FileManager.default.removeItem(at: storeURL.appendingPathExtension("shm"))
+                try? FileManager.default.removeItem(at: storeURL.appendingPathExtension("wal"))
+                
+                print("🗑️ Deleted existing store files")
+                
+                // Try to create a new container
+                do {
+                    let newContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+                    print("✅ Successfully created new ModelContainer after recovery")
+                    return newContainer
+                } catch {
+                    print("❌ Failed to create new container after recovery: \(error)")
+                    fatalError("Could not create ModelContainer even after recovery attempt: \(error)")
+                }
+            }
+            
+            // For other errors, terminate the application
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
@@ -99,4 +127,4 @@ struct ArXiv_AppApp: App {
         .modelContainer(sharedModelContainer)
         #endif
     }
-}
+} 

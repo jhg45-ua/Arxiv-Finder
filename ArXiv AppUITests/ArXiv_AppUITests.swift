@@ -7,7 +7,7 @@
 
 import XCTest
 
-/// Suite de pruebas de interfaz de usuario para la aplicación ArXiv App
+/// Suite de pruebas de interfaz de usuario para la aplicación ArXiv Finder
 /// Utiliza XCTest para automatizar interacciones con la UI y validar comportamientos
 /// Las pruebas UI simulan acciones del usuario como toques, deslizamientos y navegación
 final class ArXiv_AppUITests: XCTestCase {

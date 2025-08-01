@@ -13,7 +13,7 @@ import SwiftData
 @Model
 final class ArXivPaper: @unchecked Sendable {
     /// Unique identifier of the paper in ArXiv (e.g.: "2023.12345v1")
-    var id: String
+    @Attribute(.unique) var id: String
     
     /// Complete title of the scientific paper
     var title: String
