@@ -8,6 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		3C43B2FA2E3C08310076B53E /* ArxivKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3C43B2F92E3C08310076B53E /* ArxivKit */; };
+		3CDB14082E412E3E00E718D1 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CDB14022E412E3E00E718D1 /* SidebarView.swift */; };
+		3CDB14092E412E3E00E718D1 /* ArXivPaperRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CDB13FC2E412E3E00E718D1 /* ArXivPaperRow.swift */; };
+		3CDB140A2E412E3E00E718D1 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CDB13FD2E412E3E00E718D1 /* MainView.swift */; };
+		3CDB140B2E412E3E00E718D1 /* PapersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CDB13FF2E412E3E00E718D1 /* PapersListView.swift */; };
+		3CDB140C2E412E3E00E718D1 /* ArXivService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CDB13FA2E412E3E00E718D1 /* ArXivService.swift */; };
+		3CDB140D2E412E3E00E718D1 /* ArXivController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CDB13F62E412E3E00E718D1 /* ArXivController.swift */; };
+		3CDB140E2E412E3E00E718D1 /* SearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CDB14002E412E3E00E718D1 /* SearchResultsView.swift */; };
+		3CDB140F2E412E3E00E718D1 /* ArXivPaper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CDB13F82E412E3E00E718D1 /* ArXivPaper.swift */; };
+		3CDB14102E412E3E00E718D1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CDB14012E412E3E00E718D1 /* SettingsView.swift */; };
+		3CDB14112E412E3E00E718D1 /* ArXiv_Finder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CDB14042E412E3E00E718D1 /* ArXiv_Finder.swift */; };
+		3CDB14122E412E3E00E718D1 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = 3CDB14062E412E3E00E718D1 /* Documentation.docc */; };
+		3CDB14132E412E3E00E718D1 /* PaperDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CDB13FE2E412E3E00E718D1 /* PaperDetailView.swift */; };
+		3CDB14142E412E3E00E718D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3CDB14052E412E3E00E718D1 /* Assets.xcassets */; };
+		3CDB14172E412E4700E718D1 /* ArXiv_FinderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CDB14152E412E4700E718D1 /* ArXiv_FinderTests.swift */; };
+		3CDB141B2E412E5200E718D1 /* ArXiv_FinderUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CDB14192E412E5200E718D1 /* ArXiv_FinderUITestsLaunchTests.swift */; };
+		3CDB141C2E412E5200E718D1 /* ArXiv_FinderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CDB14182E412E5200E718D1 /* ArXiv_FinderUITests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,28 +44,26 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3CDB13F62E412E3E00E718D1 /* ArXivController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArXivController.swift; sourceTree = "<group>"; };
+		3CDB13F82E412E3E00E718D1 /* ArXivPaper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArXivPaper.swift; sourceTree = "<group>"; };
+		3CDB13FA2E412E3E00E718D1 /* ArXivService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArXivService.swift; sourceTree = "<group>"; };
+		3CDB13FC2E412E3E00E718D1 /* ArXivPaperRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArXivPaperRow.swift; sourceTree = "<group>"; };
+		3CDB13FD2E412E3E00E718D1 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		3CDB13FE2E412E3E00E718D1 /* PaperDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperDetailView.swift; sourceTree = "<group>"; };
+		3CDB13FF2E412E3E00E718D1 /* PapersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PapersListView.swift; sourceTree = "<group>"; };
+		3CDB14002E412E3E00E718D1 /* SearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsView.swift; sourceTree = "<group>"; };
+		3CDB14012E412E3E00E718D1 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		3CDB14022E412E3E00E718D1 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		3CDB14042E412E3E00E718D1 /* ArXiv_Finder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArXiv_Finder.swift; sourceTree = "<group>"; };
+		3CDB14052E412E3E00E718D1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3CDB14062E412E3E00E718D1 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
+		3CDB14152E412E4700E718D1 /* ArXiv_FinderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArXiv_FinderTests.swift; sourceTree = "<group>"; };
+		3CDB14182E412E5200E718D1 /* ArXiv_FinderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArXiv_FinderUITests.swift; sourceTree = "<group>"; };
+		3CDB14192E412E5200E718D1 /* ArXiv_FinderUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArXiv_FinderUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		3CE7E8C02E154BAE000C88B6 /* ArXiv Finder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ArXiv Finder.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3CE7E8CF2E154BAF000C88B6 /* ArXiv FinderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ArXiv FinderTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3CE7E8D92E154BAF000C88B6 /* ArXiv FinderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ArXiv FinderUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		3CE7E8C22E154BAE000C88B6 /* ArXiv App */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "ArXiv App";
-			sourceTree = "<group>";
-		};
-		3CE7E8D22E154BAF000C88B6 /* ArXiv AppTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "ArXiv AppTests";
-			sourceTree = "<group>";
-		};
-		3CE7E8DC2E154BAF000C88B6 /* ArXiv AppUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "ArXiv AppUITests";
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		3CE7E8BD2E154BAE000C88B6 /* Frameworks */ = {
@@ -77,12 +91,81 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3CDB13F72E412E3E00E718D1 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				3CDB13F62E412E3E00E718D1 /* ArXivController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		3CDB13F92E412E3E00E718D1 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				3CDB13F82E412E3E00E718D1 /* ArXivPaper.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		3CDB13FB2E412E3E00E718D1 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				3CDB13FA2E412E3E00E718D1 /* ArXivService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		3CDB14032E412E3E00E718D1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3CDB13FC2E412E3E00E718D1 /* ArXivPaperRow.swift */,
+				3CDB13FD2E412E3E00E718D1 /* MainView.swift */,
+				3CDB13FE2E412E3E00E718D1 /* PaperDetailView.swift */,
+				3CDB13FF2E412E3E00E718D1 /* PapersListView.swift */,
+				3CDB14002E412E3E00E718D1 /* SearchResultsView.swift */,
+				3CDB14012E412E3E00E718D1 /* SettingsView.swift */,
+				3CDB14022E412E3E00E718D1 /* SidebarView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3CDB14072E412E3E00E718D1 /* ArXiv Finder */ = {
+			isa = PBXGroup;
+			children = (
+				3CDB13F72E412E3E00E718D1 /* Controllers */,
+				3CDB13F92E412E3E00E718D1 /* Models */,
+				3CDB13FB2E412E3E00E718D1 /* Services */,
+				3CDB14032E412E3E00E718D1 /* Views */,
+				3CDB14042E412E3E00E718D1 /* ArXiv_Finder.swift */,
+				3CDB14052E412E3E00E718D1 /* Assets.xcassets */,
+				3CDB14062E412E3E00E718D1 /* Documentation.docc */,
+			);
+			path = "ArXiv Finder";
+			sourceTree = "<group>";
+		};
+		3CDB14162E412E4700E718D1 /* ArXiv FinderTests */ = {
+			isa = PBXGroup;
+			children = (
+				3CDB14152E412E4700E718D1 /* ArXiv_FinderTests.swift */,
+			);
+			path = "ArXiv FinderTests";
+			sourceTree = "<group>";
+		};
+		3CDB141A2E412E5200E718D1 /* ArXiv FinderUITests */ = {
+			isa = PBXGroup;
+			children = (
+				3CDB14182E412E5200E718D1 /* ArXiv_FinderUITests.swift */,
+				3CDB14192E412E5200E718D1 /* ArXiv_FinderUITestsLaunchTests.swift */,
+			);
+			path = "ArXiv FinderUITests";
+			sourceTree = "<group>";
+		};
 		3CE7E8B72E154BAE000C88B6 = {
 			isa = PBXGroup;
 			children = (
-				3CE7E8C22E154BAE000C88B6 /* ArXiv App */,
-				3CE7E8D22E154BAF000C88B6 /* ArXiv AppTests */,
-				3CE7E8DC2E154BAF000C88B6 /* ArXiv AppUITests */,
+				3CDB141A2E412E5200E718D1 /* ArXiv FinderUITests */,
+				3CDB14162E412E4700E718D1 /* ArXiv FinderTests */,
+				3CDB14072E412E3E00E718D1 /* ArXiv Finder */,
 				3CE7E8C12E154BAE000C88B6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -112,9 +195,6 @@
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				3CE7E8C22E154BAE000C88B6 /* ArXiv App */,
-			);
 			name = "ArXiv Finder";
 			packageProductDependencies = (
 				3C43B2F92E3C08310076B53E /* ArxivKit */,
@@ -136,9 +216,6 @@
 			dependencies = (
 				3CE7E8D12E154BAF000C88B6 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				3CE7E8D22E154BAF000C88B6 /* ArXiv AppTests */,
-			);
 			name = "ArXiv FinderTests";
 			packageProductDependencies = (
 			);
@@ -158,9 +235,6 @@
 			);
 			dependencies = (
 				3CE7E8DB2E154BAF000C88B6 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				3CE7E8DC2E154BAF000C88B6 /* ArXiv AppUITests */,
 			);
 			name = "ArXiv FinderUITests";
 			packageProductDependencies = (
@@ -192,7 +266,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 3CE7E8BB2E154BAE000C88B6 /* Build configuration list for PBXProject "ArXiv App" */;
+			buildConfigurationList = 3CE7E8BB2E154BAE000C88B6 /* Build configuration list for PBXProject "ArXiv Finder" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -221,6 +295,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3CDB14142E412E3E00E718D1 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -245,6 +320,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3CDB14082E412E3E00E718D1 /* SidebarView.swift in Sources */,
+				3CDB14092E412E3E00E718D1 /* ArXivPaperRow.swift in Sources */,
+				3CDB140A2E412E3E00E718D1 /* MainView.swift in Sources */,
+				3CDB140B2E412E3E00E718D1 /* PapersListView.swift in Sources */,
+				3CDB140C2E412E3E00E718D1 /* ArXivService.swift in Sources */,
+				3CDB140D2E412E3E00E718D1 /* ArXivController.swift in Sources */,
+				3CDB140E2E412E3E00E718D1 /* SearchResultsView.swift in Sources */,
+				3CDB140F2E412E3E00E718D1 /* ArXivPaper.swift in Sources */,
+				3CDB14102E412E3E00E718D1 /* SettingsView.swift in Sources */,
+				3CDB14112E412E3E00E718D1 /* ArXiv_Finder.swift in Sources */,
+				3CDB14122E412E3E00E718D1 /* Documentation.docc in Sources */,
+				3CDB14132E412E3E00E718D1 /* PaperDetailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,6 +339,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3CDB14172E412E4700E718D1 /* ArXiv_FinderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,6 +347,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3CDB141B2E412E5200E718D1 /* ArXiv_FinderUITestsLaunchTests.swift in Sources */,
+				3CDB141C2E412E5200E718D1 /* ArXiv_FinderUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -550,7 +640,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		3CE7E8BB2E154BAE000C88B6 /* Build configuration list for PBXProject "ArXiv App" */ = {
+		3CE7E8BB2E154BAE000C88B6 /* Build configuration list for PBXProject "ArXiv Finder" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3CE7E8E12E154BAF000C88B6 /* Debug */,
