@@ -6,7 +6,7 @@
 //
 
 import Testing
-@testable import ArXiv_App
+@testable import ArXiv_Finder
 
 /// Suite de pruebas unitarias para la aplicación ArXiv Finder
 /// Utiliza el nuevo framework Testing de Swift para validar la funcionalidad de la aplicación

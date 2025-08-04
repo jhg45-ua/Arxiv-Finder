@@ -53,4 +53,13 @@ final class ArXiv_FinderUITests: XCTestCase {
             XCUIApplication().launch()
         }
     }
+
+    /// Prueba básica para verificar que la vista principal de la aplicación se carga correctamente
+    func testMainViewLoads() {
+        let app = XCUIApplication()
+        app.launch()
+
+        // Verifica que la vista principal esté visible
+        XCTAssertTrue(app.otherElements["MainView"].exists, "La vista principal no se cargó correctamente.")
+    }
 }
