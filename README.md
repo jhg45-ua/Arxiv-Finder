@@ -4,52 +4,58 @@ A multiplatform application (iOS and macOS) for exploring and managing scientifi
 
 ## 📋 Description
 
-ArXiv Finder allows users to search, explore, and save scientific papers from ArXiv with a modern and native interface. The application offers search functionalities, organization by categories, and local storage for offline access.
+ArXiv Finder allows users to search, explore, and save scientific papers from ArXiv with a modern and native interface. The application offers advanced search functionality, category-based browsing, favorites management, and local storage for offline access.
 
 ## ✨ Features
 
-- **Multiplatform**: Works on iOS and macOS with adaptive UI
-- **Advanced search**: Search papers by title, author, keywords, or ID
-- **Categories**: Organize papers by Computer Science, Mathematics, and more
-- **Local storage**: Save papers for offline access with SwiftData
-- **Native interface**: Design optimized for each platform
-- **Notifications**: Alerts for new papers (macOS)
+- **Multiplatform**: Native iOS and macOS apps with adaptive UI
+- **Advanced Search**: Search papers by title, author, keywords, or ArXiv ID with real-time results
+- **Search History**: Remember and reuse previous searches for quick access
+- **Category Browsing**: Explore papers by Computer Science, Mathematics, Physics, and more
+- **Favorites System**: Mark important papers for later reading with persistent storage
+- **Local Storage**: Automatic paper caching for offline access using SwiftData
+- **Native Interface**: Platform-optimized design (NavigationSplitView for macOS, NavigationStack for iOS)
+- **Modern UI**: Clean, responsive interface with proper dark mode support
 
 ## 🛠 Technologies Used
 
 - **SwiftUI**: Modern and declarative UI framework
-- **SwiftData**: Modern data persistence
-- **URLSession**: Communication with the ArXiv API
-- **XML Parser**: Custom parser for ArXiv responses
-- **Async/Await**: Modern Swift concurrency
+- **SwiftData**: Advanced data persistence and modeling
+- **ArXivKit**: Third-party library for robust ArXiv API integration
+- **URLSession**: Networking with comprehensive error handling
+- **Async/Await**: Modern Swift concurrency with @MainActor
+- **Swift Package Manager**: Dependency management
 
 ## 📱 Architecture
 
-The project follows the **Model-View-Controller (MVC)** pattern:
+The project follows the **Model-View-Controller (MVC)** pattern with modern Swift best practices:
 
 ### Models
-- `ArXivPaper`: Data model for scientific papers
+- `ArXivPaper`: SwiftData model for scientific papers with favorites support
 
 ### Views
-- `MainView`: Main view with navigation
-- `SidebarView`: Sidebar for macOS
-- `PapersListView`: Adaptive paper list
-- `PaperDetailView`: Detailed view of papers
-- `SettingsView`: Application settings
+- `MainView`: Main coordinator view with platform-specific navigation
+- `SidebarView`: Sidebar navigation for macOS
+- `PapersListView`: Adaptive paper list with category filtering
+- `SearchResultsView`: Advanced search interface with history
+- `PaperDetailView`: Detailed paper view with sharing capabilities
+- `ArXivPaperRow`: Reusable paper row component
+- `SettingsView`: Application configuration
 
 ### Controllers
-- `ArXivController`: Business logic and state management
+- `ArXivController`: Centralized business logic and state management
 
 ### Services
-- `ArXivService`: Communication with the ArXiv API
-- `ArXivSimpleParser`: Custom XML parser
+- `ArXivService`: ArXiv API communication using ArXivKit with category support
 
 ## 📚 Documentation
 
-For detailed information consult the integrated Xcode documentation:
+For detailed information, consult the integrated Xcode documentation:
 
-- **MVC Architecture**: Check DocC documentation in Xcode for design and pattern details
-- **ArXiv API**: Complete integration documentation available in DocC
+- **MVC Architecture**: Comprehensive DocC documentation for design patterns and implementation details
+- **ArXiv API Integration**: Complete ArXivKit usage documentation available in DocC
+- **Search Functionality**: Advanced search capabilities including history and category filtering
+- **Favorites System**: Complete favorites management documentation
 - **Components**: Detailed documentation of each component available in Xcode Quick Help
 
 To access documentation:
@@ -61,7 +67,7 @@ To access documentation:
 
 ### Requirements
 
-- macOS 14.0+ or iOS 17.0+
+- macOS 14.0+ or iOS 17.6+
 - Xcode 15.0+
 - Swift 5.9+
 
@@ -69,7 +75,7 @@ To access documentation:
 
 1. **Clone the repository**:
    ```bash
-   git clone <REPOSITORY_URL>
+   git clone https://github.com/jhg45-ua/Arxiv-Finder.git
    cd "ArXiv Finder"
    ```
 
@@ -88,90 +94,124 @@ To access documentation:
 
 ## 📖 Usage
 
-### Main Navigation
+### Navigation
 
-- **iOS**: Stack navigation for a fluid mobile experience
-- **macOS**: Split view with sidebar for a complete desktop experience
+- **iOS**: NavigationStack with bottom tab navigation for optimal mobile experience
+- **macOS**: NavigationSplitView with sidebar for comprehensive desktop experience
 
 ### Paper Search
 
-1. Use the search bar to find papers by:
-   - Title
-   - Author
-   - Palabras clave
-   - ID de ArXiv
+1. **Search Interface**: Use the advanced search interface to find papers by:
+   - Title keywords
+   - Author names
+   - Abstract content
+   - ArXiv ID
 
-2. Filtra por categorías:
-   - Computer Science
-   - Mathematics
-   - Physics
-   - Y más...
+2. **Category Filtering**: Browse papers by scientific categories:
+   - Computer Science (cs)
+   - Mathematics (math)
+   - Physics (physics)
+   - Quantitative Biology (q-bio)
+   - Quantitative Finance (q-fin)
+   - Statistics (stat)
+   - Electrical Engineering (eess)
+   - Economics (econ)
 
-### Gestión de Artículos
+3. **Search History**: Quickly access previous searches with the built-in history feature
 
-- **Guardar**: Los artículos se guardan automáticamente para acceso offline
-- **Favoritos**: Marca artículos importantes
-- **Compartir**: Comparte artículos con otros usuarios
+### Paper Management
 
-## 🔧 Configuración
+- **Automatic Saving**: Papers are automatically cached for offline access using SwiftData
+- **Favorites**: Mark important papers with the heart icon for quick access later
+- **Paper Details**: View complete abstracts, author information, and access PDF links
+- **Sharing**: Share papers with other users using the system share sheet
 
-### Ajustes de la Aplicación
+## 🔧 Configuration
 
-- **Categorías predeterminadas**: Configura las categorías que más te interesan
-- **Notificaciones**: Activa alertas para nuevos artículos
-- **Sincronización**: Configura la frecuencia de actualización
+### Application Settings
 
-## 📁 Estructura del Proyecto
+- **Default Categories**: Configure your preferred scientific categories for browsing
+- **Search Preferences**: Customize search behavior and result display
+- **Data Management**: Configure automatic caching and storage preferences
+- **Interface**: Toggle between light and dark modes (follows system preference)
+
+## 📁 Project Structure
 
 ```
 ArXiv Finder/
-├── ArXiv_FinderApp.swift          # Punto de entrada principal
+├── ArXiv_Finder.swift          # Main application entry point
 ├── Models/
-│   └── ArXivPaper.swift        # Modelo de datos
+│   └── ArXivPaper.swift         # SwiftData model with favorites support
 ├── Views/
-│   ├── MainView.swift          # Vista principal
-│   ├── SidebarView.swift       # Barra lateral (macOS)
-│   ├── PapersListView.swift    # Lista de artículos
-│   ├── PaperDetailView.swift   # Detalle de artículo
-│   └── SettingsView.swift      # Configuración
+│   ├── MainView.swift           # Main coordinator view
+│   ├── SidebarView.swift        # Sidebar navigation (macOS)
+│   ├── PapersListView.swift     # Adaptive paper list
+│   ├── SearchResultsView.swift  # Advanced search interface
+│   ├── PaperDetailView.swift    # Detailed paper view
+│   ├── ArXivPaperRow.swift      # Reusable paper row component
+│   └── SettingsView.swift       # Application settings
 ├── Controllers/
-│   └── ArXivController.swift   # Lógica de negocio
+│   └── ArXivController.swift    # Business logic and state management
 ├── Services/
-│   ├── ArXivService.swift      # API de ArXiv
-│   └── ArXivSimpleParser.swift # Parser XML
-└── Assets.xcassets/            # Recursos gráficos
+│   └── ArXivService.swift       # ArXiv API service using ArXivKit
+├── Assets.xcassets/             # App icons and visual resources
+└── Documentation.docc/          # DocC documentation
+    ├── Architecture.md
+    ├── Search-Feature.md
+    ├── Favourites-Feature.md
+    └── API-Guide.md
 ```
 
 ## 🧪 Testing
 
-El proyecto incluye pruebas unitarias y de UI:
+The project includes comprehensive unit and UI tests:
 
 ```bash
-# Ejecutar todas las pruebas
+# Run all tests
 Cmd + U
 
-# Ejecutar pruebas específicas
+# Run specific tests
 Cmd + Control + U
 ```
 
-## 📝 Contribución
+### Test Structure
+- **Unit Tests**: ArXiv_FinderTests.swift - Core functionality testing
+- **UI Tests**: ArXiv_FinderUITests.swift - Interface and user interaction testing
+- **Launch Tests**: Performance and startup testing
 
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+## 📝 Contributing
 
-## 📄 Licencia
+1. Fork the project
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+### Development Guidelines
+- Follow SwiftUI and Swift best practices
+- Write comprehensive documentation
+- Include unit tests for new features
+- Ensure compatibility with both iOS and macOS
 
-## 👨‍💻 Autor
+## 📄 License
+
+This project is licensed under the MIT License. See the `LICENSE` file for more details.
+
+## 👨‍💻 Author
 
 **Julián Hinojosa Gil**
 
-## 🔗 Enlaces Útiles
+## 🔗 Useful Links
 
 - [ArXiv API Documentation](https://arxiv.org/help/api)
+- [ArXivKit Library](https://github.com/ivicamil/ArxivKit)
 - [SwiftUI Documentation](https://developer.apple.com/documentation/swiftui)
 - [SwiftData Documentation](https://developer.apple.com/documentation/swiftdata)
+
+## 📊 App Information
+
+- **Current Version**: 1.1.0
+- **Build**: 32
+- **Minimum iOS**: 17.6+
+- **Minimum macOS**: 14.0+
+- **Bundle ID**: com.jhg.ArXiv-Finder
