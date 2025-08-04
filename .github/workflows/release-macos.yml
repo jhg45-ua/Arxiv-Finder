@@ -44,18 +44,21 @@ jobs:
         rm -rf build/
         mkdir -p build/
         
-        # Build the archive
+        # Build the archive without code signing for CI
         xcodebuild -project "ArXiv Finder.xcodeproj" \
                    -scheme "ArXiv Finder" \
                    -configuration Release \
                    -destination 'platform=macOS' \
                    -derivedDataPath build \
                    -archivePath "build/ArXiv Finder.xcarchive" \
+                   CODE_SIGN_IDENTITY="" \
+                   CODE_SIGNING_REQUIRED=NO \
+                   CODE_SIGNING_ALLOWED=NO \
                    archive
                    
     - name: Export App Bundle
       run: |
-        # Create export options plist
+        # Create export options plist without code signing
         cat > exportOptions.plist << EOF
         <?xml version="1.0" encoding="UTF-8"?>
         <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -66,22 +69,27 @@ jobs:
             <key>teamID</key>
             <string></string>
             <key>signingStyle</key>
-            <string>automatic</string>
+            <string>manual</string>
             <key>stripSwiftSymbols</key>
             <true/>
             <key>uploadBitcode</key>
             <false/>
             <key>uploadSymbols</key>
             <false/>
+            <key>compileBitcode</key>
+            <false/>
         </dict>
         </plist>
         EOF
         
-        # Export the app bundle
+        # Export the app bundle without code signing
         xcodebuild -exportArchive \
                    -archivePath "build/ArXiv Finder.xcarchive" \
                    -exportPath "build/export" \
-                   -exportOptionsPlist exportOptions.plist
+                   -exportOptionsPlist exportOptions.plist \
+                   CODE_SIGN_IDENTITY="" \
+                   CODE_SIGNING_REQUIRED=NO \
+                   CODE_SIGNING_ALLOWED=NO
                    
     - name: Create DMG
       run: |
@@ -120,7 +128,11 @@ jobs:
           ### Installation
           1. Download the DMG file
           2. Open the DMG and drag ArXiv Finder to your Applications folder
-          3. Launch ArXiv Finder from Applications
+          3. **Important**: Since this is a development build, you may need to allow it to run:
+             - Right-click on ArXiv Finder in Applications
+             - Select "Open" from the context menu
+             - Click "Open" in the security dialog
+          4. Launch ArXiv Finder from Applications
           
           ### Requirements
           - macOS 14.0+
@@ -138,6 +150,9 @@ jobs:
           - Uses ArXivKit for robust API integration
           - Modern async/await concurrency
           - Comprehensive error handling
+          
+          ### Note on Code Signing
+          This release is built without code signing for development purposes. Users may need to allow the app to run in System Preferences > Security & Privacy.
           
           ### Support
           For issues and feature requests, please visit the [GitHub repository](https://github.com/jhg45-ua/Arxiv-Finder).
