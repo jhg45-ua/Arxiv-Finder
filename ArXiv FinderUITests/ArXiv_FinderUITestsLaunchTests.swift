@@ -10,7 +10,7 @@ import XCTest
 /// Suite específica de pruebas para el lanzamiento de la aplicación ArXiv Finder
 /// Se enfoca en validar que la aplicación se inicie correctamente y capture evidencia visual
 /// Estas pruebas son especialmente útiles para detectar problemas críticos de startup
-final class ArXiv_AppUITestsLaunchTests: XCTestCase {
+final class ArXiv_FinderUITestsLaunchTests: XCTestCase {
 
     /// Indica que estas pruebas deben ejecutarse para cada configuración de UI objetivo
     /// Esto incluye diferentes orientaciones, tamaños de pantalla, y configuraciones de accesibilidad
