@@ -21,27 +21,7 @@
 		3CDB14122E412E3E00E718D1 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = 3CDB14062E412E3E00E718D1 /* Documentation.docc */; };
 		3CDB14132E412E3E00E718D1 /* PaperDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CDB13FE2E412E3E00E718D1 /* PaperDetailView.swift */; };
 		3CDB14142E412E3E00E718D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3CDB14052E412E3E00E718D1 /* Assets.xcassets */; };
-		3CDB14172E412E4700E718D1 /* ArXiv_FinderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CDB14152E412E4700E718D1 /* ArXiv_FinderTests.swift */; };
-		3CDB141B2E412E5200E718D1 /* ArXiv_FinderUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CDB14192E412E5200E718D1 /* ArXiv_FinderUITestsLaunchTests.swift */; };
-		3CDB141C2E412E5200E718D1 /* ArXiv_FinderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CDB14182E412E5200E718D1 /* ArXiv_FinderUITests.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		3CE7E8D02E154BAF000C88B6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3CE7E8B82E154BAE000C88B6 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 3CE7E8BF2E154BAE000C88B6;
-			remoteInfo = "ArXiv Finder";
-		};
-		3CE7E8DA2E154BAF000C88B6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3CE7E8B82E154BAE000C88B6 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 3CE7E8BF2E154BAE000C88B6;
-			remoteInfo = "ArXiv Finder";
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		3CDB13F62E412E3E00E718D1 /* ArXivController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArXivController.swift; sourceTree = "<group>"; };
@@ -57,12 +37,7 @@
 		3CDB14042E412E3E00E718D1 /* ArXiv_Finder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArXiv_Finder.swift; sourceTree = "<group>"; };
 		3CDB14052E412E3E00E718D1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3CDB14062E412E3E00E718D1 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
-		3CDB14152E412E4700E718D1 /* ArXiv_FinderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArXiv_FinderTests.swift; sourceTree = "<group>"; };
-		3CDB14182E412E5200E718D1 /* ArXiv_FinderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArXiv_FinderUITests.swift; sourceTree = "<group>"; };
-		3CDB14192E412E5200E718D1 /* ArXiv_FinderUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArXiv_FinderUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		3CE7E8C02E154BAE000C88B6 /* ArXiv Finder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ArXiv Finder.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3CE7E8CF2E154BAF000C88B6 /* ArXiv FinderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ArXiv FinderTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3CE7E8D92E154BAF000C88B6 /* ArXiv FinderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ArXiv FinderUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,20 +46,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C43B2FA2E3C08310076B53E /* ArxivKit in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3CE7E8CC2E154BAF000C88B6 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3CE7E8D62E154BAF000C88B6 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,28 +104,9 @@
 			path = "ArXiv Finder";
 			sourceTree = "<group>";
 		};
-		3CDB14162E412E4700E718D1 /* ArXiv FinderTests */ = {
-			isa = PBXGroup;
-			children = (
-				3CDB14152E412E4700E718D1 /* ArXiv_FinderTests.swift */,
-			);
-			path = "ArXiv FinderTests";
-			sourceTree = "<group>";
-		};
-		3CDB141A2E412E5200E718D1 /* ArXiv FinderUITests */ = {
-			isa = PBXGroup;
-			children = (
-				3CDB14182E412E5200E718D1 /* ArXiv_FinderUITests.swift */,
-				3CDB14192E412E5200E718D1 /* ArXiv_FinderUITestsLaunchTests.swift */,
-			);
-			path = "ArXiv FinderUITests";
-			sourceTree = "<group>";
-		};
 		3CE7E8B72E154BAE000C88B6 = {
 			isa = PBXGroup;
 			children = (
-				3CDB141A2E412E5200E718D1 /* ArXiv FinderUITests */,
-				3CDB14162E412E4700E718D1 /* ArXiv FinderTests */,
 				3CDB14072E412E3E00E718D1 /* ArXiv Finder */,
 				3CE7E8C12E154BAE000C88B6 /* Products */,
 			);
@@ -174,8 +116,6 @@
 			isa = PBXGroup;
 			children = (
 				3CE7E8C02E154BAE000C88B6 /* ArXiv Finder.app */,
-				3CE7E8CF2E154BAF000C88B6 /* ArXiv FinderTests.xctest */,
-				3CE7E8D92E154BAF000C88B6 /* ArXiv FinderUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -203,46 +143,6 @@
 			productReference = 3CE7E8C02E154BAE000C88B6 /* ArXiv Finder.app */;
 			productType = "com.apple.product-type.application";
 		};
-		3CE7E8CE2E154BAF000C88B6 /* ArXiv FinderTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 3CE7E8E62E154BAF000C88B6 /* Build configuration list for PBXNativeTarget "ArXiv FinderTests" */;
-			buildPhases = (
-				3CE7E8CB2E154BAF000C88B6 /* Sources */,
-				3CE7E8CC2E154BAF000C88B6 /* Frameworks */,
-				3CE7E8CD2E154BAF000C88B6 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				3CE7E8D12E154BAF000C88B6 /* PBXTargetDependency */,
-			);
-			name = "ArXiv FinderTests";
-			packageProductDependencies = (
-			);
-			productName = "ArXiv FinderTests";
-			productReference = 3CE7E8CF2E154BAF000C88B6 /* ArXiv FinderTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		3CE7E8D82E154BAF000C88B6 /* ArXiv FinderUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 3CE7E8E92E154BAF000C88B6 /* Build configuration list for PBXNativeTarget "ArXiv FinderUITests" */;
-			buildPhases = (
-				3CE7E8D52E154BAF000C88B6 /* Sources */,
-				3CE7E8D62E154BAF000C88B6 /* Frameworks */,
-				3CE7E8D72E154BAF000C88B6 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				3CE7E8DB2E154BAF000C88B6 /* PBXTargetDependency */,
-			);
-			name = "ArXiv FinderUITests";
-			packageProductDependencies = (
-			);
-			productName = "ArXiv FinderUITests";
-			productReference = 3CE7E8D92E154BAF000C88B6 /* ArXiv FinderUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -255,14 +155,6 @@
 				TargetAttributes = {
 					3CE7E8BF2E154BAE000C88B6 = {
 						CreatedOnToolsVersion = 16.4;
-					};
-					3CE7E8CE2E154BAF000C88B6 = {
-						CreatedOnToolsVersion = 16.4;
-						TestTargetID = 3CE7E8BF2E154BAE000C88B6;
-					};
-					3CE7E8D82E154BAF000C88B6 = {
-						CreatedOnToolsVersion = 16.4;
-						TestTargetID = 3CE7E8BF2E154BAE000C88B6;
 					};
 				};
 			};
@@ -284,8 +176,6 @@
 			projectRoot = "";
 			targets = (
 				3CE7E8BF2E154BAE000C88B6 /* ArXiv Finder */,
-				3CE7E8CE2E154BAF000C88B6 /* ArXiv FinderTests */,
-				3CE7E8D82E154BAF000C88B6 /* ArXiv FinderUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -296,20 +186,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3CDB14142E412E3E00E718D1 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3CE7E8CD2E154BAF000C88B6 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3CE7E8D72E154BAF000C88B6 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,37 +211,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3CE7E8CB2E154BAF000C88B6 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3CDB14172E412E4700E718D1 /* ArXiv_FinderTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3CE7E8D52E154BAF000C88B6 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3CDB141B2E412E5200E718D1 /* ArXiv_FinderUITestsLaunchTests.swift in Sources */,
-				3CDB141C2E412E5200E718D1 /* ArXiv_FinderUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		3CE7E8D12E154BAF000C88B6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 3CE7E8BF2E154BAE000C88B6 /* ArXiv Finder */;
-			targetProxy = 3CE7E8D02E154BAF000C88B6 /* PBXContainerItemProxy */;
-		};
-		3CE7E8DB2E154BAF000C88B6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 3CE7E8BF2E154BAE000C88B6 /* ArXiv Finder */;
-			targetProxy = 3CE7E8DA2E154BAF000C88B6 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		3CE7E8E12E154BAF000C88B6 /* Debug */ = {
@@ -563,80 +409,6 @@
 			};
 			name = Release;
 		};
-		3CE7E8E72E154BAF000C88B6 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CNRPT4VS9W;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.jhg.ArXiv-FinderTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ArXiv Finder.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ArXiv Finder";
-			};
-			name = Debug;
-		};
-		3CE7E8E82E154BAF000C88B6 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CNRPT4VS9W;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.jhg.ArXiv-FinderTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ArXiv Finder.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ArXiv Finder";
-			};
-			name = Release;
-		};
-		3CE7E8EA2E154BAF000C88B6 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CNRPT4VS9W;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.jhg.ArXiv-FinderUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "ArXiv Finder";
-			};
-			name = Debug;
-		};
-		3CE7E8EB2E154BAF000C88B6 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CNRPT4VS9W;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.jhg.ArXiv-FinderUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "ArXiv Finder";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -654,24 +426,6 @@
 			buildConfigurations = (
 				3CE7E8E42E154BAF000C88B6 /* Debug */,
 				3CE7E8E52E154BAF000C88B6 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		3CE7E8E62E154BAF000C88B6 /* Build configuration list for PBXNativeTarget "ArXiv FinderTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3CE7E8E72E154BAF000C88B6 /* Debug */,
-				3CE7E8E82E154BAF000C88B6 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		3CE7E8E92E154BAF000C88B6 /* Build configuration list for PBXNativeTarget "ArXiv FinderUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3CE7E8EA2E154BAF000C88B6 /* Debug */,
-				3CE7E8EB2E154BAF000C88B6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
