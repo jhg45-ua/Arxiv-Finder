@@ -344,11 +344,11 @@ struct PapersListView: View {
 
 #Preview {
     PapersListView(
-        papers: [
-            
-        ],
+        papers: [],
         isLoading: false,
         errorMessage: .constant(nil),
+        controller: nil,
         loadLatestPapers: { },
+        categoryLoaders: nil
     )
 }
