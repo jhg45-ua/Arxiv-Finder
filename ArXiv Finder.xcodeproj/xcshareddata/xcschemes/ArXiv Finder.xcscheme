@@ -35,7 +35,7 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3CE7E8CE2E154BAF000C88B6"
+               BlueprintIdentifier = "3C9CB4942E422A7F00EBFC07"
                BuildableName = "ArXiv FinderTests.xctest"
                BlueprintName = "ArXiv FinderTests"
                ReferencedContainer = "container:ArXiv Finder.xcodeproj">
@@ -46,7 +46,7 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3CE7E8D82E154BAF000C88B6"
+               BlueprintIdentifier = "3C733C9D2E42387900333F80"
                BuildableName = "ArXiv FinderUITests.xctest"
                BlueprintName = "ArXiv FinderUITests"
                ReferencedContainer = "container:ArXiv Finder.xcodeproj">

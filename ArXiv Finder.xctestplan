@@ -1,0 +1,37 @@
+{
+  "configurations" : [
+    {
+      "id" : "F3E5D134-E9A2-4FBC-8DBF-7563207F7C98",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:ArXiv Finder.xcodeproj",
+      "identifier" : "3CE7E8BF2E154BAE000C88B6",
+      "name" : "ArXiv Finder"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:ArXiv Finder.xcodeproj",
+        "identifier" : "3C9CB4942E422A7F00EBFC07",
+        "name" : "ArXiv FinderTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:ArXiv Finder.xcodeproj",
+        "identifier" : "3C733C9D2E42387900333F80",
+        "name" : "ArXiv FinderUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

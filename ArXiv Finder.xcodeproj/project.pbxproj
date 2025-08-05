@@ -23,7 +23,27 @@
 		3CDB14142E412E3E00E718D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3CDB14052E412E3E00E718D1 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		3C733CA42E42387900333F80 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3CE7E8B82E154BAE000C88B6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3CE7E8BF2E154BAE000C88B6;
+			remoteInfo = "ArXiv Finder";
+		};
+		3C9CB4992E422A7F00EBFC07 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3CE7E8B82E154BAE000C88B6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3CE7E8BF2E154BAE000C88B6;
+			remoteInfo = "ArXiv Finder";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		3C733C9E2E42387900333F80 /* ArXiv FinderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ArXiv FinderUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C9CB4952E422A7F00EBFC07 /* ArXiv FinderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ArXiv FinderTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3CBB0F0B2E424E9000E3172D /* ArXiv Finder.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "ArXiv Finder.xctestplan"; sourceTree = "<group>"; };
 		3CDB13F62E412E3E00E718D1 /* ArXivController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArXivController.swift; sourceTree = "<group>"; };
 		3CDB13F82E412E3E00E718D1 /* ArXivPaper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArXivPaper.swift; sourceTree = "<group>"; };
 		3CDB13FA2E412E3E00E718D1 /* ArXivService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArXivService.swift; sourceTree = "<group>"; };
@@ -40,7 +60,34 @@
 		3CE7E8C02E154BAE000C88B6 /* ArXiv Finder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ArXiv Finder.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		3C733C9F2E42387900333F80 /* ArXiv FinderUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "ArXiv FinderUITests";
+			sourceTree = "<group>";
+		};
+		3C9CB4962E422A7F00EBFC07 /* ArXiv FinderTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "ArXiv FinderTests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
+		3C733C9B2E42387900333F80 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C9CB4922E422A7F00EBFC07 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3CE7E8BD2E154BAE000C88B6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -107,7 +154,10 @@
 		3CE7E8B72E154BAE000C88B6 = {
 			isa = PBXGroup;
 			children = (
+				3CBB0F0B2E424E9000E3172D /* ArXiv Finder.xctestplan */,
 				3CDB14072E412E3E00E718D1 /* ArXiv Finder */,
+				3C9CB4962E422A7F00EBFC07 /* ArXiv FinderTests */,
+				3C733C9F2E42387900333F80 /* ArXiv FinderUITests */,
 				3CE7E8C12E154BAE000C88B6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -116,6 +166,8 @@
 			isa = PBXGroup;
 			children = (
 				3CE7E8C02E154BAE000C88B6 /* ArXiv Finder.app */,
+				3C9CB4952E422A7F00EBFC07 /* ArXiv FinderTests.xctest */,
+				3C733C9E2E42387900333F80 /* ArXiv FinderUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -123,6 +175,52 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		3C733C9D2E42387900333F80 /* ArXiv FinderUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C733CA62E42387900333F80 /* Build configuration list for PBXNativeTarget "ArXiv FinderUITests" */;
+			buildPhases = (
+				3C733C9A2E42387900333F80 /* Sources */,
+				3C733C9B2E42387900333F80 /* Frameworks */,
+				3C733C9C2E42387900333F80 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3C733CA52E42387900333F80 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				3C733C9F2E42387900333F80 /* ArXiv FinderUITests */,
+			);
+			name = "ArXiv FinderUITests";
+			packageProductDependencies = (
+			);
+			productName = "ArXiv FinderUITests";
+			productReference = 3C733C9E2E42387900333F80 /* ArXiv FinderUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		3C9CB4942E422A7F00EBFC07 /* ArXiv FinderTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C9CB49D2E422A7F00EBFC07 /* Build configuration list for PBXNativeTarget "ArXiv FinderTests" */;
+			buildPhases = (
+				3C9CB4912E422A7F00EBFC07 /* Sources */,
+				3C9CB4922E422A7F00EBFC07 /* Frameworks */,
+				3C9CB4932E422A7F00EBFC07 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3C9CB49A2E422A7F00EBFC07 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				3C9CB4962E422A7F00EBFC07 /* ArXiv FinderTests */,
+			);
+			name = "ArXiv FinderTests";
+			packageProductDependencies = (
+			);
+			productName = "ArXiv FinderTests";
+			productReference = 3C9CB4952E422A7F00EBFC07 /* ArXiv FinderTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		3CE7E8BF2E154BAE000C88B6 /* ArXiv Finder */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3CE7E8E32E154BAF000C88B6 /* Build configuration list for PBXNativeTarget "ArXiv Finder" */;
@@ -153,6 +251,14 @@
 				LastSwiftUpdateCheck = 1640;
 				LastUpgradeCheck = 1640;
 				TargetAttributes = {
+					3C733C9D2E42387900333F80 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 3CE7E8BF2E154BAE000C88B6;
+					};
+					3C9CB4942E422A7F00EBFC07 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 3CE7E8BF2E154BAE000C88B6;
+					};
 					3CE7E8BF2E154BAE000C88B6 = {
 						CreatedOnToolsVersion = 16.4;
 					};
@@ -176,11 +282,27 @@
 			projectRoot = "";
 			targets = (
 				3CE7E8BF2E154BAE000C88B6 /* ArXiv Finder */,
+				3C9CB4942E422A7F00EBFC07 /* ArXiv FinderTests */,
+				3C733C9D2E42387900333F80 /* ArXiv FinderUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		3C733C9C2E42387900333F80 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C9CB4932E422A7F00EBFC07 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3CE7E8BE2E154BAE000C88B6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -192,6 +314,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		3C733C9A2E42387900333F80 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C9CB4912E422A7F00EBFC07 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3CE7E8BC2E154BAE000C88B6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -213,7 +349,90 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		3C733CA52E42387900333F80 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3CE7E8BF2E154BAE000C88B6 /* ArXiv Finder */;
+			targetProxy = 3C733CA42E42387900333F80 /* PBXContainerItemProxy */;
+		};
+		3C9CB49A2E422A7F00EBFC07 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3CE7E8BF2E154BAE000C88B6 /* ArXiv Finder */;
+			targetProxy = 3C9CB4992E422A7F00EBFC07 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		3C733CA72E42387900333F80 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CNRPT4VS9W;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jhg.ArXiv-FinderUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "ArXiv Finder";
+			};
+			name = Debug;
+		};
+		3C733CA82E42387900333F80 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CNRPT4VS9W;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jhg.ArXiv-FinderUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "ArXiv Finder";
+			};
+			name = Release;
+		};
+		3C9CB49B2E422A7F00EBFC07 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CNRPT4VS9W;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jhg.ArXiv-FinderTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ArXiv Finder.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ArXiv Finder";
+			};
+			name = Debug;
+		};
+		3C9CB49C2E422A7F00EBFC07 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CNRPT4VS9W;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jhg.ArXiv-FinderTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ArXiv Finder.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ArXiv Finder";
+			};
+			name = Release;
+		};
 		3CE7E8E12E154BAF000C88B6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -358,7 +577,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.jhg.ArXiv-Finder";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -395,7 +614,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.jhg.ArXiv-Finder";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -412,6 +631,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3C733CA62E42387900333F80 /* Build configuration list for PBXNativeTarget "ArXiv FinderUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C733CA72E42387900333F80 /* Debug */,
+				3C733CA82E42387900333F80 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3C9CB49D2E422A7F00EBFC07 /* Build configuration list for PBXNativeTarget "ArXiv FinderTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C9CB49B2E422A7F00EBFC07 /* Debug */,
+				3C9CB49C2E422A7F00EBFC07 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		3CE7E8BB2E154BAE000C88B6 /* Build configuration list for PBXProject "ArXiv Finder" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -1,67 +1,67 @@
 {
   "images" : [
     {
-      "filename" : "1024-white 1.png",
+      "filename" : "ArXiv Finder icon.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
     },
     {
-      "filename" : "16-white.png",
+      "filename" : "af-16.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "16x16"
     },
     {
-      "filename" : "32-white 1.png",
+      "filename" : "af-32.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "16x16"
     },
     {
-      "filename" : "32-white.png",
+      "filename" : "af-32 1.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "32x32"
     },
     {
-      "filename" : "64-white.png",
+      "filename" : "af-64.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "32x32"
     },
     {
-      "filename" : "128-white.png",
+      "filename" : "af-128.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "128x128"
     },
     {
-      "filename" : "256-white 1.png",
+      "filename" : "af-256.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "128x128"
     },
     {
-      "filename" : "256-white.png",
+      "filename" : "af-256 1.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "256x256"
     },
     {
-      "filename" : "512-white 1.png",
+      "filename" : "af-512.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "256x256"
     },
     {
-      "filename" : "512-white.png",
+      "filename" : "af-512 1.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "512x512"
     },
     {
-      "filename" : "1024-white.png",
+      "filename" : "ArXiv Finder icon 1.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "512x512"
