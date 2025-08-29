@@ -42,13 +42,21 @@ struct SearchResultsView: View {
     var body: some View {
         VStack(spacing: 0) {
             // Search interface
-            if showSearchInterface || controller.searchResults.isEmpty {
+            if showSearchInterface {
                 searchInterfaceView
             }
             
-            // Results view
-            if !controller.searchResults.isEmpty {
-                resultsView
+            // Results view or no results message
+            if !showSearchInterface {
+                if controller.isSearching {
+                    loadingView
+                } else if controller.errorMessage != nil {
+                    errorView
+                } else if controller.searchResults.isEmpty && controller.isSearchActive {
+                    noResultsView
+                } else if !controller.searchResults.isEmpty {
+                    resultsView
+                }
             }
         }
         .onAppear {
@@ -61,6 +69,9 @@ struct SearchResultsView: View {
                 showSearchInterface = false
             }
         }
+        #if os(macOS)
+        .frame(minWidth: 350)
+        #endif
     }
     
     /// Clean search interface view
@@ -204,6 +215,72 @@ struct SearchResultsView: View {
         .padding(.top)
     }
     
+    /// Loading view
+    private var loadingView: some View {
+        VStack(spacing: 16) {
+            ProgressView()
+                .controlSize(.regular)
+                .scaleEffect(1.2)
+            
+            Text("Searching papers...")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    /// Error view
+    private var errorView: some View {
+        VStack(spacing: 16) {
+            ContentUnavailableView(
+                "Search Error",
+                systemImage: "exclamationmark.triangle",
+                description: Text(controller.errorMessage ?? "Unknown error")
+            )
+            
+            VStack(spacing: 12) {
+                Button("Retry") {
+                    performSearch()
+                }
+                .buttonStyle(.borderedProminent)
+                
+                Button("Clear Error") {
+                    controller.errorMessage = nil
+                }
+                .buttonStyle(.bordered)
+            }
+        }
+        .padding()
+    }
+    
+    /// No results view
+    private var noResultsView: some View {
+        VStack(spacing: 16) {
+            ContentUnavailableView(
+                "No Results Found",
+                systemImage: "magnifyingglass",
+                description: Text("No papers found for '\(controller.searchQuery)'. Try different keywords or check your spelling.")
+            )
+            
+            VStack(spacing: 12) {
+                Button("Try Different Search") {
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        showSearchInterface = true
+                        selectedPaper = nil
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+                
+                Button("Clear Search") {
+                    controller.clearSearch()
+                    selectedPaper = nil
+                }
+                .buttonStyle(.bordered)
+            }
+        }
+        .padding()
+    }
+    
     /// Clean results view
     private var resultsView: some View {
         VStack(spacing: 0) {
@@ -240,55 +317,21 @@ struct SearchResultsView: View {
             .padding()
             .background(Color.gray.opacity(0.1))
             
-            // Results list
-            if controller.isSearching {
-                VStack(spacing: 16) {
-                    ProgressView()
-                        .controlSize(.regular)
-                        .scaleEffect(1.2)
-                    
-                    Text("Searching papers...")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            } else if let error = controller.errorMessage {
-                ContentUnavailableView(
-                    "Search Error",
-                    systemImage: "exclamationmark.triangle",
-                    description: Text(error)
-                )
-                .overlay(alignment: .bottom) {
-                    VStack(spacing: 12) {
-                        Button("Retry") {
-                            performSearch()
-                        }
-                        .buttonStyle(.borderedProminent)
-                        
-                        Button("Clear Error") {
-                            controller.errorMessage = nil
-                        }
-                        .buttonStyle(.bordered)
-                    }
-                    .padding()
-                }
-            } else {
-                // Results list with proper selection handling
-                #if os(macOS)
-                List(controller.searchResults, id: \.id, selection: $selectedPaper) { paper in
-                    ArXivPaperRow(paper: paper, controller: controller)
-                        .tag(paper)
-                }
-                .listStyle(PlainListStyle())
-                #else
-                List(controller.searchResults, id: \.id) { paper in
-                    NavigationLink(destination: PaperDetailView(paper: paper, controller: controller, onBackToList: nil)) {
-                        ArXivPaperRow(paper: paper, controller: controller)
-                    }
-                }
-                .listStyle(DefaultListStyle())
-                #endif
+            // Results list with proper selection handling
+            #if os(macOS)
+            List(controller.searchResults, id: \.id, selection: $selectedPaper) { paper in
+                ArXivPaperRow(paper: paper, controller: controller)
+                    .tag(paper)
             }
+            .listStyle(PlainListStyle())
+            #else
+            List(controller.searchResults, id: \.id) { paper in
+                NavigationLink(destination: PaperDetailView(paper: paper, controller: controller, onBackToList: nil)) {
+                    ArXivPaperRow(paper: paper, controller: controller)
+                }
+            }
+            .listStyle(DefaultListStyle())
+            #endif
         }
     }
     

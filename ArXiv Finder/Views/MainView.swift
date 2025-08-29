@@ -112,7 +112,7 @@ struct MainView: View {
                 )
             }
         }
-        .navigationTitle("ArXiv Papers")
+        .navigationTitle("ArXiv Finder")
         .onKeyPress(.escape) {
             print("⌨️ ESC key pressed - Deselecting paper")
             selectedPaper = nil
@@ -164,7 +164,7 @@ struct MainView: View {
                     loadElectricalEngineeringPapers: { await controller.loadElectricalEngineeringPapers() },
                     loadEconomicsPapers: { await controller.loadEconomicsPapers() }
                 )
-                .navigationTitle("ArXiv Papers")
+                .navigationTitle("ArXiv Finder")
                 .toolbar {
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
                         // Search button
